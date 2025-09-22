@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\OtpCode;
 use App\Models\User;
 use App\Services\SMS\KavenegarService;
+use App\Services\LocalizationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,10 +17,12 @@ use Illuminate\Validation\ValidationException;
 class UnifiedOTPController extends Controller
 {
     protected KavenegarService $kavenegarService;
+    protected LocalizationService $localizationService;
 
-    public function __construct(KavenegarService $kavenegarService)
+    public function __construct(KavenegarService $kavenegarService, LocalizationService $localizationService)
     {
         $this->kavenegarService = $kavenegarService;
+        $this->localizationService = $localizationService;
     }
 
     /**
@@ -35,6 +38,11 @@ class UnifiedOTPController extends Controller
      */
     public function requestOtp(Request $request)
     {
+        // Normalize numerals
+        $request->merge([
+            'phone' => $this->localizationService->toEnglishNumbers($request->input('phone', '')),
+        ]);
+
         $request->validate([
             'phone' => 'required|string|regex:/^09[0-9]{9}$/',
             'role' => 'required|in:buyer,seller',
@@ -114,6 +122,12 @@ class UnifiedOTPController extends Controller
      */
     public function verifyOtp(Request $request)
     {
+        // Normalize numerals
+        $request->merge([
+            'phone' => $this->localizationService->toEnglishNumbers($request->input('phone', session('otp_phone', ''))),
+            'code' => $this->localizationService->toEnglishNumbers($request->input('code', '')),
+        ]);
+
         $request->validate([
             'code' => 'required|string|size:6',
             'phone' => 'required|string|regex:/^09[0-9]{9}$/',

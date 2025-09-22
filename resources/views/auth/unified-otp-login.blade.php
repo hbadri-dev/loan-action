@@ -58,6 +58,27 @@
         </div>
     </form>
 
+    <script>
+        // Normalize Persian/Arabic-Indic digits to English for phone input
+        (function () {
+            var map = {
+                '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9',
+                '٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'
+            };
+            function normalizeDigits(value){
+                return value.replace(/[۰-۹٠-٩]/g, function(d){ return map[d] || d; });
+            }
+            var phone = document.getElementById('phone');
+            if (phone) {
+                phone.addEventListener('input', function(){
+                    var cur = this.selectionStart;
+                    this.value = normalizeDigits(this.value).replace(/[^0-9]/g, '');
+                    this.setSelectionRange(cur, cur);
+                });
+            }
+        })();
+    </script>
+
     <div class="mt-6 text-center">
         <p class="text-sm text-gray-600 mb-3">
             با وارد کردن شماره تلفن، شما موافقت خود را با قوانین و مقررات اعلام می‌دارید

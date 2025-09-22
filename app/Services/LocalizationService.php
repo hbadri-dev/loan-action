@@ -46,10 +46,19 @@ class LocalizationService
      */
     public function toEnglishNumbers(string $text): string
     {
-        $persianDigits = '۰۱۲۳۴۵۶۷۸۹';
-        $englishDigits = '0123456789';
+        $persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+        $arabicIndicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+        $englishDigits = ['0','1','2','3','4','5','6','7','8','9'];
 
-        return str_replace($persianDigits, $englishDigits, $text);
+        // Replace Persian digits
+        $text = str_replace($persianDigits, $englishDigits, $text);
+        // Replace Arabic-Indic digits
+        $text = str_replace($arabicIndicDigits, $englishDigits, $text);
+
+        // Normalize Arabic tatweel and other possible separators
+        $text = str_replace(["\xE2\x80\x8C", "\xD9\x80"], '', $text); // ZWNJ, Tatweel
+
+        return $text;
     }
 
     /**
@@ -306,4 +315,3 @@ class LocalizationService
         ];
     }
 }
-

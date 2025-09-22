@@ -62,19 +62,27 @@
     </div>
 
     <script>
-        // Auto-focus and format OTP input
-        document.getElementById('code').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-
-            // Auto submit when 6 digits are entered
-            if (this.value.length === 6) {
-                this.form.submit();
+        // Normalize Persian/Arabic-Indic digits and format OTP input
+        (function () {
+            var map = {
+                '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9',
+                '٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'
+            };
+            function normalizeDigits(value){
+                return value.replace(/[۰-۹٠-٩]/g, function(d){ return map[d] || d; });
             }
-        });
-
-        // Auto focus on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('code').focus();
-        });
+            var code = document.getElementById('code');
+            if (code) {
+                code.addEventListener('input', function() {
+                    var cur = this.selectionStart;
+                    this.value = normalizeDigits(this.value).replace(/[^0-9]/g, '');
+                    this.setSelectionRange(cur, cur);
+                    if (this.value.length === 6) {
+                        this.form.submit();
+                    }
+                });
+                document.addEventListener('DOMContentLoaded', function() { code.focus(); });
+            }
+        })();
     </script>
 </x-guest-layout>
