@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: loan-auction-app-test
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - loan-auction-network
+    depends_on:
+      - mysql
+    environment:
+      - APP_ENV=testing
+      - APP_DEBUG=true
+      - DB_DATABASE=loan_auction_test
+      - DB_USERNAME=app
+      - DB_PASSWORD=app
+
+  mysql:
+    image: mysql:8.0
+    container_name: loan-auction-mysql-test
+    environment:
+      MYSQL_DATABASE: loan_auction_test
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data_test:/var/lib/mysql
+    networks:
+      - loan-auction-network
+
+networks:
+  loan-auction-network:
+    driver: bridge
+
+volumes:
+  mysql_data_test:
+    driver: local

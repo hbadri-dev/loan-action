@@ -1,0 +1,17 @@
+{
+  "port": 80,
+  "platform": "laravel",
+  "app": "wamsaz",
+  "build": {
+    "location": "iran"
+  },
+  "laravel": {
+    "phpVersion": "8.4"
+  },
+  "disks": [
+    {
+      "name": "storage",
+      "mountTo": "/var/www/html/storage/app/public"
+    }
+  ]
+}

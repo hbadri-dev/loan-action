@@ -1,0 +1,77 @@
+<div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-6 text-center">
+        مراحل شرکت در مزایده
+    </h3>
+
+    <div class="space-y-4">
+        @foreach($steps as $step)
+            <div class="flex items-start space-x-4 space-x-reverse {{ $loop->last ? '' : 'pb-4' }}">
+                <!-- Step Icon -->
+                <div class="flex-shrink-0">
+                    @if($step['status'] === 'completed')
+                        <!-- Completed Step - Green Check -->
+                        <div class="w-8 h-8 {{ ($step['number'] === 1 && $progress->step_name === 'details') ? 'bg-blue-500' : 'bg-green-500' }} rounded-full flex items-center justify-center">
+                            @if($step['number'] === 1 && $progress->step_name === 'details')
+                                <span class="text-white text-sm font-bold">{{ $step['number'] }}</span>
+                            @else
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            @endif
+                        </div>
+                    @elseif($step['status'] === 'current')
+                        <!-- Current Step - Blue Circle -->
+                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                            <span class="text-white text-sm font-bold">{{ $step['number'] }}</span>
+                        </div>
+                    @else
+                        <!-- Pending Step - Gray Circle -->
+                        <div class="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                            <span class="text-gray-600 dark:text-gray-300 text-sm font-bold">{{ $step['number'] }}</span>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Step Content -->
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-sm font-medium {{ $step['status'] === 'completed' ? (($step['number'] === 1 && $progress->step_name === 'details') ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400') : ($step['status'] === 'current' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400') }}">
+                            {{ $step['title'] }}
+                        </h4>
+                        @if($step['status'] === 'completed')
+                            <span class="text-xs {{ ($step['number'] === 1 && $progress->step_name === 'details') ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400' }} font-medium">
+                                @if($step['number'] === 1 && $progress->step_name === 'details')
+                                    مرحله فعلی
+                                @else
+                                    تکمیل شده
+                                @endif
+                            </span>
+                        @elseif($step['status'] === 'current')
+                            <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                                مرحله فعلی
+                            </span>
+                        @endif
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {{ $step['description'] }}
+                    </p>
+                </div>
+
+            </div>
+        @endforeach
+    </div>
+
+    <!-- Progress Summary -->
+    <div class="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-600 dark:text-gray-400">پیشرفت کلی:</span>
+            <span class="font-medium text-gray-900 dark:text-gray-100">
+                {{ $progress->current_step }} از 9 مرحله
+            </span>
+        </div>
+        <div class="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div class="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                 style="width: {{ ($progress->current_step / 9) * 100 }}%"></div>
+        </div>
+    </div>
+</div>

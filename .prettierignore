@@ -1,0 +1,17 @@
+node_modules
+vendor
+public/build
+storage
+bootstrap/cache
+.phpunit.result.cache
+coverage
+.nyc_output
+*.log
+.env
+.env.*
+.git
+.gitignore
+README.md
+LICENSE
+CHANGELOG.md
+CONTRIBUTING.md
