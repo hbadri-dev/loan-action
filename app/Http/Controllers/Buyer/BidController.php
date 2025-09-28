@@ -60,8 +60,8 @@ class BidController extends Controller
         try {
             $bid = $this->biddingService->placeBid($auction, $user, $request->amount);
 
-            // Update buyer progress to step 5 (waiting for seller)
-            $this->progressService->updateProgress($auction, $user, 'waiting-seller', 5);
+            // Update buyer progress to step 4 (waiting for seller)
+            $this->progressService->updateProgress($auction, $user, 'waiting-seller', 4);
 
             $message = $auction->bids()->where('buyer_id', $user->id)->count() > 1
                 ? 'پیشنهاد شما بروزرسانی شد.'

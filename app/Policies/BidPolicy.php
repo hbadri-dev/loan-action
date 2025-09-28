@@ -42,16 +42,7 @@ class BidPolicy
             return false;
         }
 
-        // Check if user has confirmed contract
-        $contract = \App\Models\ContractAgreement::where('auction_id', $auction->id)
-            ->where('user_id', $user->id)
-            ->where('role', 'buyer')
-            ->where('status', 'confirmed')
-            ->first();
-
-        if (!$contract) {
-            return false;
-        }
+        // Contract step removed - no need to check contract confirmation
 
         // Check if buyer fee is approved
         $buyerFee = \App\Models\PaymentReceipt::where('auction_id', $auction->id)

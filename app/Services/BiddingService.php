@@ -29,6 +29,25 @@ class BiddingService
     }
 
     /**
+     * Get the number of bids a user has placed on an auction
+     * Counts all bids including edits
+     */
+    public function getUserBidCount(Auction $auction, User $user): int
+    {
+        return $auction->bids()
+            ->where('buyer_id', $user->id)
+            ->count();
+    }
+
+    /**
+     * Check if user has reached the bid limit (3 bids)
+     */
+    public function hasReachedBidLimit(Auction $auction, User $user): bool
+    {
+        return $this->getUserBidCount($auction, $user) >= 3;
+    }
+
+    /**
      * Place a bid on an auction with atomic transaction
      *
      * @throws \Exception
@@ -57,9 +76,13 @@ class BiddingService
                 ->first();
 
             if ($existingBid) {
-                // Update existing bid
-                $existingBid->update(['amount' => $amount]);
-                $newBid = $existingBid;
+                // Create a new bid record for each edit to count them separately
+                $newBid = Bid::create([
+                    'auction_id' => $auction->id,
+                    'buyer_id' => $buyer->id,
+                    'amount' => $amount,
+                    'status' => BidStatus::PENDING,
+                ]);
             } else {
                 // Create new bid
                 $newBid = Bid::create([
@@ -119,17 +142,9 @@ class BiddingService
      */
     private function validateBuyerPrerequisites(User $buyer, Auction $auction): void
     {
-        // Note: Buyers can update their bids, so we don't restrict multiple bids
-
-        // Check if buyer has confirmed contract for this auction
-        $contract = ContractAgreement::where('user_id', $buyer->id)
-            ->where('auction_id', $auction->id)
-            ->where('role', \App\Enums\ContractRole::BUYER)
-            ->where('status', ContractStatus::CONFIRMED)
-            ->first();
-
-        if (!$contract) {
-            throw new \Exception('برای شرکت در مزایده باید قرارداد را تأیید کنید.');
+        // Check if user has reached the bid limit (3 bids maximum)
+        if ($this->hasReachedBidLimit($auction, $buyer)) {
+            throw new \Exception('شما حداکثر ۳ بار می‌توانید پیشنهاد ثبت کنید. تعداد پیشنهادات شما به حد مجاز رسیده است.');
         }
 
         // Check if buyer has approved fee payment
@@ -155,6 +170,15 @@ class BiddingService
             throw new \Exception(
                 'مبلغ پیشنهادی باید بیشتر از حداقل قیمت خرید (' .
                 number_format($auction->min_purchase_price) . ' تومان) باشد.'
+            );
+        }
+
+        // Check maximum bid limit (50% of loan amount)
+        $maxBidAmount = $auction->principal_amount * 0.5;
+        if ($amount > $maxBidAmount) {
+            throw new \Exception(
+                'مبلغ پیشنهادی نمی‌تواند بیشتر از ۵۰ درصد مبلغ وام (' .
+                number_format($maxBidAmount) . ' تومان) باشد.'
             );
         }
 

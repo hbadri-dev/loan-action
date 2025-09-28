@@ -71,7 +71,8 @@ class SaleFlowController extends Controller
     }
 
     /**
-     * Continue from details to contract (Step 1 -> Step 2)
+     * Continue from details to payment (Step 1 -> Step 2)
+     * Skip contract step as requested
      */
     public function continueToContract(Request $request, Auction $auction)
     {
@@ -88,11 +89,14 @@ class SaleFlowController extends Controller
                 ->with('error', 'فروش یافت نشد.');
         }
 
-        // Update seller sale step
-        $sellerSale->update(['current_step' => 2]);
+        // Skip contract step and go directly to payment step
+        $sellerSale->update([
+            'current_step' => 2,
+            'status' => SaleStatus::FEE_APPROVED // Skip contract confirmation
+        ]);
 
         return redirect()->route('seller.auction.show', $auction)
-            ->with('success', 'مرحله اول تکمیل شد.');
+            ->with('success', 'مرحله اول تکمیل شد و به مرحله پرداخت منتقل شدید.');
     }
 
     /**
@@ -338,7 +342,7 @@ class SaleFlowController extends Controller
             $sellerSale->update([
                 'selected_bid_id' => $highestBid->id,
                 'status' => SaleStatus::AWAITING_BUYER_PAYMENT,
-                'current_step' => 5,
+                'current_step' => 4,
             ]);
 
             // Cancel other seller sales for this auction
@@ -414,7 +418,7 @@ class SaleFlowController extends Controller
             // Update seller sale status to loan transfer step
             $sellerSale->update([
                 'status' => SaleStatus::BUYER_PAYMENT_APPROVED,
-                'current_step' => 6,
+                'current_step' => 5,
             ]);
 
             $response['redirect'] = route('seller.sale.loan-transfer', $auction);

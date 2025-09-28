@@ -51,7 +51,7 @@ class BuyerProgressService
         if ($progress) {
             $progress->update([
                 'step_name' => 'complete',
-                'current_step' => 9,
+                'current_step' => 8,  // Updated to reflect new step count
                 'is_completed' => true,
                 'last_activity_at' => now(),
             ]);
@@ -96,14 +96,13 @@ class BuyerProgressService
 
         $stepOrder = [
             'details' => 1,
-            'contract' => 2,
-            'payment' => 3,
-            'bid' => 4,
-            'waiting-seller' => 5,
-            'purchase-payment' => 6,
-            'awaiting-seller-transfer' => 7,
-            'confirm-transfer' => 8,
-            'complete' => 9,
+            'payment' => 2,  // Contract step removed, payment is now step 2
+            'bid' => 3,      // Bid is now step 3
+            'waiting-seller' => 4,
+            'purchase-payment' => 5,
+            'awaiting-seller-transfer' => 6,
+            'confirm-transfer' => 7,
+            'complete' => 8,
         ];
 
         $currentStepNumber = $stepOrder[$progress->step_name] ?? 1;

@@ -88,19 +88,18 @@
                                         </div>
 
                                         <div class="ml-4">
-
-                                        <!-- اگه تکمیل شده بود دیگه دکمه نداریم -->
-                                        @if($userProgress->step_display_name === 'تکمیل شده')
-                                            <span class="bg-gray-300 text-gray-500 font-bold py-2 px-4 rounded cursor-not-allowed">
-                                                فرآیند تکمیل شده
-                                            </span>
-                                        @else
-                                        <a href="{{ route('buyer.auction.show', $bid->auction) }}"
-                                               class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                                                ادامه فرآیند
-                                            </a>
+                                            <!-- اگه تکمیل شده بود دیگه دکمه نداریم -->
+                                            @if($userProgress && $userProgress->step_display_name === 'تکمیل شده')
+                                                <span class="bg-gray-300 text-gray-500 font-bold py-2 px-4 rounded cursor-not-allowed">
+                                                    فرآیند تکمیل شده
+                                                </span>
+                                            @else
+                                                <a href="{{ route('buyer.auction.show', $bid->auction) }}"
+                                                   class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                                    ادامه فرآیند
+                                                </a>
+                                            @endif
                                         </div>
-                                        @endif
                                     </div>
                                 </div>
                             @endforeach

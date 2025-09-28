@@ -87,7 +87,7 @@ class ReceiptReviewController extends Controller
             if ($sellerSale) {
                 $sellerSale->update([
                     'status' => SaleStatus::FEE_APPROVED,
-                    'current_step' => 4, // Move to step 4 (bid acceptance)
+                    'current_step' => 3, // Move to step 3 (bid acceptance)
                 ]);
             }
         }
@@ -98,7 +98,7 @@ class ReceiptReviewController extends Controller
             if ($sellerSale) {
                 $sellerSale->update([
                     'status' => SaleStatus::BUYER_PAYMENT_APPROVED,
-                    'current_step' => 6,
+                    'current_step' => 5,
                 ]);
             }
 
@@ -122,7 +122,7 @@ class ReceiptReviewController extends Controller
             if ($sellerSale) {
                 $sellerSale->update([
                     'status' => SaleStatus::TRANSFER_CONFIRMED,
-                    'current_step' => 8,
+                    'current_step' => 7,
                 ]);
             }
 

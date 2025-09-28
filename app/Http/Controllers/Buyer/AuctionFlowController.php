@@ -11,16 +11,19 @@ use App\Enums\ContractStatus;
 use App\Enums\BidStatus;
 use App\Services\SMS\KavenegarService;
 use App\Services\BuyerProgressService;
+use App\Services\BiddingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuctionFlowController extends Controller
 {
     protected BuyerProgressService $progressService;
+    protected BiddingService $biddingService;
 
-    public function __construct(BuyerProgressService $progressService)
+    public function __construct(BuyerProgressService $progressService, BiddingService $biddingService)
     {
         $this->progressService = $progressService;
+        $this->biddingService = $biddingService;
     }
 
     /**
@@ -123,32 +126,21 @@ class AuctionFlowController extends Controller
                 ->first();
         }
 
-        return view('buyer.auction.show', compact('auction', 'highestBid', 'progress', 'contractAgreement', 'paymentReceipt'));
+        $biddingService = $this->biddingService;
+        return view('buyer.auction.show', compact('auction', 'highestBid', 'progress', 'contractAgreement', 'paymentReceipt', 'biddingService'));
     }
 
     /**
-     * Continue from details to contract (Step 1 -> Step 2)
+     * Continue from details to payment (Step 1 -> Step 2)
      */
     public function continueToContract(Request $request, Auction $auction)
     {
         $user = Auth::user();
 
-        // Create or update contract agreement
-        ContractAgreement::updateOrCreate(
-            [
-                'auction_id' => $auction->id,
-                'user_id' => $user->id,
-                'role' => 'buyer',
-            ],
-            [
-                'status' => ContractStatus::PENDING,
-            ]
-        );
+        // Update buyer progress to step 2 (payment)
+        $this->progressService->updateProgress($auction, $user, 'payment', 2);
 
-        // Update buyer progress to step 2 (contract)
-        $this->progressService->updateProgress($auction, $user, 'contract', 2);
-
-        // Redirect back to the same page (showDetails) which will now show step 2 content
+        // Redirect back to the same page (showDetails) which will now show step 2 payment content
         return redirect()->route('buyer.auction.details', $auction);
     }
 
@@ -515,10 +507,12 @@ class AuctionFlowController extends Controller
      */
     public function uploadPurchasePayment(Request $request, Auction $auction)
     {
-        \Log::info('Purchase payment upload started', [
+            \Log::info('Purchase payment upload started', [
             'user_id' => Auth::id(),
             'auction_id' => $auction->id,
-            'request_data' => $request->all()
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'national_id' => $request->input('national_id')
         ]);
 
         $user = Auth::user();
@@ -545,6 +539,8 @@ class AuctionFlowController extends Controller
 
         \Log::info('Starting validation for purchase payment upload');
         $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'national_id' => 'required|string|size:10',
             'receipt_image' => 'required|file|mimes:jpg,jpeg,png,webp|max:5120', // 5MB max
         ]);
@@ -559,9 +555,18 @@ class AuctionFlowController extends Controller
             $imagePath = $fileUploadService->storeReceiptImage($request->file('receipt_image'), $user->id);
             \Log::info('File uploaded successfully for purchase payment', ['image_path' => $imagePath]);
 
-            // Update user's national_id
-            \Log::info('Updating user national_id');
-            $user->update(['national_id' => $request->input('national_id')]);
+            // Update user's name and national_id
+            \Log::info('Updating user name and national_id');
+            $fullName = trim($request->input('first_name') . ' ' . $request->input('last_name'));
+            $user->update([
+                'name' => $fullName,
+                'national_id' => $request->input('national_id')
+            ]);
+            \Log::info('User updated successfully', [
+                'user_id' => $user->id,
+                'full_name' => $fullName,
+                'national_id' => $request->input('national_id')
+            ]);
 
             // Get accepted bid amount
             $userBid = $auction->bids()

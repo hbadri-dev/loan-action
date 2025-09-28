@@ -95,14 +95,22 @@
                     </div>
 
                     <!-- Payment Amount -->
+                    @php
+                        $totalAmount = $userBid->amount + ($userBid->amount * 0.01); // Add 1% to bid amount
+                    @endphp
                     <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 mb-6">
                         <div class="text-center">
                             <h3 class="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
                                 مبلغ قابل پرداخت
                             </h3>
                             <p class="text-3xl font-bold text-red-600 dark:text-red-400">
-                                {{ number_format($userBid->amount) }} تومان
+                                {{ number_format($totalAmount) }} تومان
                             </p>
+                            <div class="mt-4 text-sm text-red-700 dark:text-red-300">
+                                <p>مبلغ پیشنهادی: {{ number_format($userBid->amount) }} تومان</p>
+                                <p>کارمزد (۱٪): {{ number_format($userBid->amount * 0.01) }} تومان</p>
+                                <p class="font-semibold">مجموع: {{ number_format($totalAmount) }} تومان</p>
+                            </div>
                         </div>
                     </div>
 
@@ -155,6 +163,31 @@
                             <form method="POST" action="{{ route('buyer.auction.purchase-payment.receipt', $auction) }}"
                                   enctype="multipart/form-data" class="mb-6">
                                 @csrf
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            نام
+                                        </label>
+                                        <input id="first_name"
+                                               name="first_name"
+                                               type="text"
+                                               required
+                                               class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+                                               placeholder="نام خود را وارد کنید">
+                                    </div>
+                                    <div>
+                                        <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            نام خانوادگی
+                                        </label>
+                                        <input id="last_name"
+                                               name="last_name"
+                                               type="text"
+                                               required
+                                               class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+                                               placeholder="نام خانوادگی خود را وارد کنید">
+                                    </div>
+                                </div>
 
                                 <div class="mb-4">
                                     <label for="national_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -231,6 +264,31 @@
                         <form method="POST" action="{{ route('buyer.auction.purchase-payment.receipt', $auction) }}"
                               enctype="multipart/form-data" class="mb-6">
                             @csrf
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        نام
+                                    </label>
+                                    <input id="first_name"
+                                           name="first_name"
+                                           type="text"
+                                           required
+                                           class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+                                           placeholder="نام خود را وارد کنید">
+                                </div>
+                                <div>
+                                    <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        نام خانوادگی
+                                    </label>
+                                    <input id="last_name"
+                                           name="last_name"
+                                           type="text"
+                                           required
+                                           class="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:text-white"
+                                           placeholder="نام خانوادگی خود را وارد کنید">
+                                </div>
+                            </div>
 
                             <div class="mb-4">
                                 <label for="national_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

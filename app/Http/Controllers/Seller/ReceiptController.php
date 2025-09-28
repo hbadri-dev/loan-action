@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 class ReceiptController extends Controller
 {
     /**
-     * Show payment form (Step 3)
+     * Show payment form (Step 2)
      */
     public function showPayment(Auction $auction)
     {
@@ -25,20 +25,11 @@ class ReceiptController extends Controller
             ->where('seller_id', $user->id)
             ->first();
 
-        if (!$sellerSale || $sellerSale->current_step < 3) {
+        if (!$sellerSale || $sellerSale->current_step < 2) {
             return redirect()->route('seller.sale.details', $auction);
         }
 
-        // Check if contract is confirmed
-        $contract = \App\Models\ContractAgreement::where('auction_id', $auction->id)
-            ->where('user_id', $user->id)
-            ->where('role', 'seller')
-            ->where('status', 'confirmed')
-            ->first();
-
-        if (!$contract) {
-            return redirect()->route('seller.sale.contract', $auction);
-        }
+        // Skip contract check - go directly to payment
 
         // Get or create payment receipt
         $paymentReceipt = PaymentReceipt::firstOrCreate(
@@ -48,7 +39,7 @@ class ReceiptController extends Controller
                 'type' => PaymentType::SELLER_FEE,
             ],
             [
-                'amount' => 3000000, // 3,000,000 Toman
+                'amount' => 200000, // 200,000 Toman
                 'status' => PaymentStatus::PENDING_REVIEW,
             ]
         );
@@ -57,7 +48,7 @@ class ReceiptController extends Controller
     }
 
     /**
-     * Upload payment receipt (Step 3)
+     * Upload payment receipt (Step 2)
      */
     public function uploadPaymentReceipt(Request $request, Auction $auction)
     {
@@ -93,10 +84,12 @@ class ReceiptController extends Controller
             ->where('seller_id', $user->id)
             ->first();
 
-        $sellerSale->update(['current_step' => 4]);
+        $sellerSale->update([
+            'current_step' => 3, // Go to step 3 (bid acceptance)
+            'status' => SaleStatus::FEE_APPROVED
+        ]);
 
         return redirect()->route('seller.sale.payment', $auction)
             ->with('success', 'رسید پرداخت آپلود شد و در انتظار بررسی است.');
     }
 }
-

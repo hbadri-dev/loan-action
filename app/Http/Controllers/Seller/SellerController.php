@@ -139,7 +139,7 @@ class SellerController extends Controller
             ->where('seller_id', $user->id)
             ->first();
 
-        if (!$sellerSale || $sellerSale->current_step != 3) {
+        if (!$sellerSale || $sellerSale->current_step != 2) {
             return redirect()->route('seller.dashboard')->with('error', 'دسترسی غیرمجاز');
         }
 
@@ -163,7 +163,7 @@ class SellerController extends Controller
                 [
                     'image_path' => $imagePath,
                     'status' => \App\Enums\PaymentStatus::PENDING_REVIEW,
-                    'amount' => 3000000, // 3 million Toman
+                    'amount' => 200000, // 200,000 Toman
                 ]
             );
 
@@ -613,8 +613,8 @@ class SellerController extends Controller
             // Update seller sale
             $sellerSale->update([
                 'selected_bid_id' => $highestBid->id,
-                'status' => SaleStatus::OFFER_ACCEPTED,
-                'current_step' => 5,
+                'status' => SaleStatus::AWAITING_BUYER_PAYMENT,
+                'current_step' => 4,
             ]);
 
             // Create loan transfer record
@@ -924,8 +924,8 @@ class SellerController extends Controller
                 ->with('error', 'شما دسترسی به این مزایده ندارید');
         }
 
-        // Check if user is on step 6
-        if ($sellerSale->current_step != 6) {
+        // Check if user is on step 5 (loan transfer step)
+        if ($sellerSale->current_step != 5) {
             return redirect()->route('seller.auction.show', $auction)
                 ->with('error', 'شما در مرحله مناسب نیستید');
         }

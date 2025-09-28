@@ -44,72 +44,9 @@
                         </p>
                     </div>
 
-                    @if($progress && $progress->step_name === 'contract')
-                        <!-- Contract Content for Step 2 -->
-                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-8">
-                            <h2 class="text-xl font-bold text-blue-800 dark:text-blue-200 mb-4">
-                                متن قرارداد
-                            </h2>
-                            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-blue-200 dark:border-blue-700">
-                                <div class="prose dark:prose-invert max-w-none">
-                                    <div class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-sm">
-                                        <p class="text-center font-bold text-lg mb-6">شرایط و قوانین مشارکت در خرید امتیاز وام در پلتفرم «وام‌ساز»</p>
-
-                                        <p class="mb-4">
-                                            این سند به منزله یک قرارداد قانونی و الزام‌آور میان پلتفرم آنلاین «وام‌ساز» (که از این پس «پلتفرم» نامیده می‌شود) و کاربری است که قصد خرید امتیاز وام را از طریق خدمات این پلتفرم دارد (که از این پس «خریدار» نامیده می‌شود). ثبت‌نام و شرکت در مزایده‌های این پلتفرم، به معنای مطالعه دقیق، درک کامل و پذیرش تمامی بندهای این قرارداد از سوی خریدار است.
-                                        </p>
-
-                                        <div class="space-y-4">
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۱- موضوع قرارداد</h4>
-                                                <p>
-                                                    موضوع این قرارداد، ایجاد یک بستر آنلاین (بازار مزایده) است که از طریق آن، خریدار می‌تواند در رقابت برای به دست آوردن امتیاز وام‌های عرضه‌شده توسط فروشندگان شرکت کند. پلتفرم به عنوان واسطه، فرآیند مزایده و هماهنگی‌های لازم برای انتقال امتیاز وام از فروشنده به خریدار برنده را مدیریت می‌کند. مسئولیت بررسی مشخصات کامل هر وام (شامل مبلغ، شرایط بازپرداخت، بانک عامل و...) پیش از ارائه پیشنهاد، بر عهده خریدار است.
-                                                </p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۲- مبالغ و نحوه پرداخت</h4>
-                                                <p class="mb-2">۱-۲- خریدار برای شرکت در هر مزایده، موظف است مبلغی را تحت عنوان «ورودی مزایده» که میزان آن برای هر وام به صورت مجزا مشخص شده است، به حساب معرفی‌شده توسط پلتفرم واریز نماید. این مبلغ به عنوان تضمین تعهد خریدار برای تکمیل فرآیند خرید در صورت برنده شدن، در نظر گرفته می‌شود.</p>
-                                                <p>۲-۲- در صورت برنده شدن در مزایده، خریدار موظف است کل مبلغ نهایی پیشنهاد شده در مزایده را حداکثر ظرف مدت ۴ ساعت کاری به حساب پلتفرم واریز نماید. در غیر این صورت، انصراف تلقی شده و مشمول جرائم مندرج در این قرارداد خواهد شد.</p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۳- تعهدات خریدار</h4>
-                                                <p class="mb-2">۱-۳- خریدار متعهد است کلیه شرایط لازم برای دریافت وام از بانک عامل، از جمله معرفی ضامنین معتبر و ارائه مدارک مورد نیاز بانک را فراهم آورد. مسئولیت هرگونه تاخیر یا لغو فرآیند انتقال به دلیل عدم احراز شرایط توسط بانک، مستقیماً بر عهده خریدار خواهد بود.</p>
-                                                <p class="mb-2">۲-۳- خریدار مکلف است در تاریخ و ساعت هماهنگ‌شده توسط پلتفرم، در شعبه بانک مربوطه حضور یافته و کلیه مراحل اداری و امضای اسناد لازم برای انتقال رسمی امتیاز وام را تکمیل نماید.</p>
-                                                <p>۳-۳- چنانچه خریدار پس از برنده شدن در مزایده، از پرداخت مابقی مبلغ وام یا تکمیل فرآیند انصراف دهد، مبلغ «ورودی مزایده» وی ضبط شده و غیرقابل استرداد خواهد بود. همچنین، معادل پنجاه درصد (۵۰%) از این مبلغ به عنوان خسارت عدم انجام تعهد، به فروشنده‌ای که امتیاز وام او در مزایده عرضه شده بود، پرداخت می‌گردد. خریدار با پذیرش این شرایط، حق هرگونه اعتراض در این خصوص را از خود سلب می‌نماید.</p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۴- تعهدات پلتفرم</h4>
-                                                <p class="mb-2">۱-۴- پلتفرم متعهد به برگزاری صحیح مزایده، حفظ وجوه پرداختی خریدار تا زمان انتقال قطعی وام و هماهنگی‌های لازم جهت حضور طرفین در بانک است. پلتفرم هیچ‌گونه مسئولیتی در قبال فرآیندهای داخلی بانک یا نتایج اعتبارسنجی خریدار و ضامنین وی نخواهد داشت.</p>
-                                                <p>۲-۴- در صورتی که انتقال امتیاز وام به دلیل انصراف یا قصور فروشنده و یا به دلایل غیرمنتظره از سوی شعبه بانک ممکن نباشد، پلتفرم متعهد است تمامی وجوه پرداختی خریدار (شامل مبلغ ورودی و مبلغ نهایی وام) را به طور کامل به وی بازگرداند.</p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۵- فسخ و بازگشت وجه</h4>
-                                                <p class="mb-2">۱-۵- در صورتی که خریدار پیش از اعلام برنده شدن در یک مزایده، از ادامه رقابت منصرف شود، مبلغ «ورودی مزایده» پرداختی وی به طور کامل مسترد خواهد شد.</p>
-                                                <p>۲-۵- چنانچه پلتفرم در انجام تعهدات خود مبنی بر فراهم آوردن شرایط انتقال امتیاز وام از سوی یک فروشنده معتبر کوتاهی کند، خریدار حق فسخ قرارداد و استرداد کامل وجوه پرداختی خود را خواهد داشت.</p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۶- حل اختلاف</h4>
-                                                <p>در صورت بروز هرگونه اختلاف ناشی از تفسیر یا اجرای این قرارداد، طرفین تلاش خواهند کرد تا موضوع را از طریق مذاکره مستقیم و مسالمت‌آمیز حل‌وفصل نمایند. در صورت عدم دستیابی به توافق ظرف مدت ۷ روز کاری، مرجع صالح برای رسیدگی به اختلاف، مراجع قضایی ذیصلاح شهر تهران خواهد بود.</p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۷- مقررات عمومی</h4>
-                                                <p>این قرارداد به عنوان توافق‌نامه کامل میان پلتفرم و خریدار تلقی می‌شود. پلتفرم حق تغییر یا به‌روزرسانی مفاد این قرارداد را در هر زمان برای خود محفوظ می‌دارد و نسخه جدید از طریق وب‌سایت به اطلاع کاربران خواهد رسید. ادامه استفاده کاربر از خدمات پلتفرم به منزله پذیرش تغییرات جدید خواهد بود.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
 
                     @if($progress && $progress->step_name === 'payment')
-                        <!-- Payment Content for Step 3 -->
+                        <!-- Payment Content for Step 2 -->
                         <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-green-800 dark:text-green-200 mb-4">
                                 پرداخت کارمزد
@@ -121,7 +58,7 @@
                                             مبلغ کارمزد
                                         </h3>
                                         <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                                            3,000,000 تومان
+                                            200,000 تومان
                                         </p>
                                     </div>
 
@@ -199,7 +136,7 @@
                     @endif
 
                     @if($progress && $progress->step_name === 'bid')
-                        <!-- Bid Content for Step 4 -->
+                        <!-- Bid Content for Step 3 -->
                         <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-purple-800 dark:text-purple-200 mb-4">
                                 ثبت پیشنهاد
@@ -241,37 +178,68 @@
 
                                     <!-- Bid Submission Form -->
                                     <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-                                        <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-4">ثبت پیشنهاد جدید</h4>
-                                        <form method="POST" action="{{ route('buyer.auction.bid.post', $auction) }}" id="bid-form">
-                                            @csrf
-                                            <div class="space-y-4">
-                                                <div>
-                                                    <label for="bid_amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                        مبلغ پیشنهاد (تومان)
-                                                    </label>
-                                                    <input type="number"
-                                                           id="bid_amount"
-                                                           name="amount"
-                                                           min="{{ $highestBid ? $highestBid->amount + 1000000 : $auction->min_purchase_price + 1000000 }}"
-                                                           step="100000"
-                                                           required
-                                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-lg"
-                                                           placeholder="مبلغ پیشنهاد را وارد کنید">
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                        حداقل مبلغ:
-                                                        @if($highestBid)
-                                                            {{ number_format($highestBid->amount + 1000000) }} تومان
-                                                        @else
-                                                            {{ number_format($auction->min_purchase_price + 1000000) }} تومان
-                                                        @endif
-                                                    </p>
-                                                </div>
-                                                <button type="submit"
-                                                        class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
-                                                    ثبت پیشنهاد
-                                                </button>
+                                        <div class="flex justify-between items-center mb-4">
+                                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">ثبت پیشنهاد جدید</h4>
+                                            @php
+                                                $userBidCount = $biddingService->getUserBidCount($auction, Auth::user());
+                                                $remainingBids = 3 - $userBidCount;
+                                            @endphp
+                                            <div class="text-sm text-gray-600 dark:text-gray-400">
+                                                <span class="font-medium">پیشنهادات باقی‌مانده:</span>
+                                                <span class="font-bold text-blue-600 dark:text-blue-400">{{ str_replace(['0','1','2','3','4','5','6','7','8','9'], ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'], $remainingBids) }}</span>
+                                                <span class="text-gray-500">/ ۳</span>
                                             </div>
-                                        </form>
+                                        </div>
+                                        @if($remainingBids > 0)
+                                            <form method="POST" action="{{ route('buyer.auction.bid.post', $auction) }}" id="bid-form">
+                                                @csrf
+                                                <div class="space-y-4">
+                                                    <div>
+                                                        <label for="bid_amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                            مبلغ پیشنهاد (تومان)
+                                                        </label>
+                                                        @php
+                                                            $maxBidAmount = $auction->principal_amount * 0.5;
+                                                        @endphp
+                                                        <input type="number"
+                                                               id="bid_amount"
+                                                               name="amount"
+                                                               min="{{ $highestBid ? $highestBid->amount + 1000000 : $auction->min_purchase_price + 1000000 }}"
+                                                               max="{{ $maxBidAmount }}"
+                                                               step="100000"
+                                                               required
+                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-lg"
+                                                               placeholder="مبلغ پیشنهاد را وارد کنید">
+                                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                            حداقل مبلغ:
+                                                            @if($highestBid)
+                                                                {{ number_format($highestBid->amount + 1000000) }} تومان
+                                                            @else
+                                                                {{ number_format($auction->min_purchase_price + 1000000) }} تومان
+                                                            @endif
+                                                            <br>
+                                                            حداکثر مبلغ: {{ number_format($maxBidAmount) }} تومان (۵۰٪ مبلغ وام)
+                                                        </p>
+                                                    </div>
+                                                    <button type="submit"
+                                                            class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                                                        ثبت پیشنهاد
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        @else
+                                            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                                                <div class="flex items-center space-x-3">
+                                                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                                    </svg>
+                                                    <div>
+                                                        <h4 class="font-semibold text-red-800 dark:text-red-200">حد مجاز پیشنهادات تکمیل شده</h4>
+                                                        <p class="text-sm text-red-700 dark:text-red-300">شما حداکثر ۳ بار می‌توانید پیشنهاد ثبت کنید. تعداد پیشنهادات شما به حد مجاز رسیده است.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
 
                                     <!-- Auction Details for Reference -->
@@ -306,7 +274,7 @@
                     @endif
 
                     @if($progress && $progress->step_name === 'waiting-seller')
-                        <!-- Waiting for Seller Approval Content for Step 5 -->
+                        <!-- Waiting for Seller Approval Content for Step 4 -->
                         <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-orange-800 dark:text-orange-200 mb-4">
                                 در انتظار تأیید فروشنده
@@ -331,6 +299,9 @@
                                                     <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
                                                         {{ number_format($userBid->amount) }} تومان
                                                     </p>
+                                                    <p class="text-sm text-blue-500 dark:text-blue-300">
+                                                        (مبلغ قابل پرداخت: {{ number_format($userBid->amount + ($userBid->amount * 0.01)) }} تومان)
+                                                    </p>
                                                     <p class="text-sm text-blue-600 dark:text-blue-400">
                                                         بالاترین پیشنهاد فعلی
                                                     </p>
@@ -346,55 +317,84 @@
 
                                     <!-- Edit Bid Button -->
                                     <div class="text-center">
-                                        <button type="button" id="show-edit-form-btn"
-                                                class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
-                                            ویرایش پیشنهاد
-                                        </button>
+                                        @php
+                                            $userBidCount = $biddingService->getUserBidCount($auction, Auth::user());
+                                            $remainingBids = 3 - $userBidCount;
+                                        @endphp
+                                        @if($remainingBids > 0)
+                                            <button type="button" id="show-edit-form-btn"
+                                                    class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                                                ویرایش پیشنهاد
+                                            </button>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                                                پیشنهادات باقی‌مانده: <span class="font-bold text-blue-600">{{ str_replace(['0','1','2','3','4','5','6','7','8','9'], ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'], $remainingBids) }}</span> / ۳
+                                            </p>
+                                        @else
+                                            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                                                <div class="flex items-center space-x-3">
+                                                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                                    </svg>
+                                                    <div>
+                                                        <h4 class="font-semibold text-red-800 dark:text-red-200">حد مجاز پیشنهادات تکمیل شده</h4>
+                                                        <p class="text-sm text-red-700 dark:text-red-300">شما حداکثر ۳ بار می‌توانید پیشنهاد ثبت کنید. تعداد پیشنهادات شما به حد مجاز رسیده است.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
 
                                     <!-- Bid Edit Form (Hidden by default) -->
-                                    <div id="bid-edit-form-container" class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hidden">
-                                        <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-4">ویرایش پیشنهاد</h4>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                            می‌توانید مبلغ پیشنهادی خود را افزایش دهید تا شانس بیشتری برای پذیرش داشته باشید.
-                                        </p>
-                                        <form method="POST" action="{{ route('buyer.auction.bid.post', $auction) }}" id="edit-bid-form">
-                                            @csrf
-                                            <div class="space-y-4">
-                                                <div>
-                                                    <label for="edit_bid_amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                        مبلغ پیشنهاد جدید (تومان)
-                                                    </label>
-                                                    <input type="number"
-                                                           id="edit_bid_amount"
-                                                           name="amount"
-                                                           min="{{ $userBid ? $userBid->amount + 1000000 : $auction->min_purchase_price + 1000000 }}"
-                                                           step="100000"
-                                                           required
-                                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-lg"
-                                                           placeholder="مبلغ پیشنهاد جدید را وارد کنید">
-                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                        حداقل مبلغ جدید:
-                                                        @if($userBid)
-                                                            {{ number_format($userBid->amount + 1000000) }} تومان
-                                                        @else
-                                                            {{ number_format($auction->min_purchase_price + 1000000) }} تومان
-                                                        @endif
-                                                    </p>
+                                    @if($remainingBids > 0)
+                                        <div id="bid-edit-form-container" class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hidden">
+                                            <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-4">ویرایش پیشنهاد</h4>
+                                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                                می‌توانید مبلغ پیشنهادی خود را افزایش دهید تا شانس بیشتری برای پذیرش داشته باشید.
+                                            </p>
+                                            <form method="POST" action="{{ route('buyer.auction.bid.post', $auction) }}" id="edit-bid-form">
+                                                @csrf
+                                                <div class="space-y-4">
+                                                    <div>
+                                                        <label for="edit_bid_amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                            مبلغ پیشنهاد جدید (تومان)
+                                                        </label>
+                                                        @php
+                                                            $maxBidAmount = $auction->principal_amount * 0.5;
+                                                        @endphp
+                                                        <input type="number"
+                                                               id="edit_bid_amount"
+                                                               name="amount"
+                                                               min="{{ $userBid ? $userBid->amount + 1000000 : $auction->min_purchase_price + 1000000 }}"
+                                                               max="{{ $maxBidAmount }}"
+                                                               step="100000"
+                                                               required
+                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-lg"
+                                                               placeholder="مبلغ پیشنهاد جدید را وارد کنید">
+                                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                            حداقل مبلغ جدید:
+                                                            @if($userBid)
+                                                                {{ number_format($userBid->amount + 1000000) }} تومان
+                                                            @else
+                                                                {{ number_format($auction->min_purchase_price + 1000000) }} تومان
+                                                            @endif
+                                                            <br>
+                                                            حداکثر مبلغ: {{ number_format($maxBidAmount) }} تومان (۵۰٪ مبلغ وام)
+                                                        </p>
+                                                    </div>
+                                                    <div class="flex gap-2">
+                                                        <button type="submit"
+                                                                class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                                                            بروزرسانی پیشنهاد
+                                                        </button>
+                                                        <button type="button" id="cancel-edit-btn"
+                                                                class="flex-1 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                                                            انصراف
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="flex gap-2">
-                                                    <button type="submit"
-                                                            class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                                                        بروزرسانی پیشنهاد
-                                                    </button>
-                                                    <button type="button" id="cancel-edit-btn"
-                                                            class="flex-1 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                                                        انصراف
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
+                                            </form>
+                                        </div>
+                                    @endif
 
                                     <!-- Waiting Status -->
                                     <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
@@ -434,7 +434,7 @@
                     @endif
 
                     @if($progress && $progress->step_name === 'purchase-payment')
-                        <!-- Purchase Payment Content for Step 6 -->
+                        <!-- Purchase Payment Content for Step 5 -->
                         <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-red-800 dark:text-red-200 mb-4">
                                 پرداخت مبلغ خرید
@@ -481,13 +481,19 @@
                                         </div>
 
                                         <!-- Payment Instructions -->
+                                        @php
+                                            $totalAmount = $userBid->amount + ($userBid->amount * 0.01); // Add 1% to bid amount
+                                        @endphp
                                         <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
                                             <h3 class="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                                                مبلغ قابل پرداخت: {{ number_format($userBid->amount) }} تومان
+                                                مبلغ قابل پرداخت: {{ number_format($totalAmount) }} تومان
                                             </h3>
-                                            <p class="text-sm text-yellow-700 dark:text-yellow-300">
-                                                لطفاً مبلغ بالا را پرداخت کرده و فیش واریزی را آپلود کنید.
-                                            </p>
+                                            <div class="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+                                                <p>مبلغ پیشنهادی: {{ number_format($userBid->amount) }} تومان</p>
+                                                <p>کارمزد (۱٪): {{ number_format($userBid->amount * 0.01) }} تومان</p>
+                                                <p class="font-semibold">مجموع: {{ number_format($totalAmount) }} تومان</p>
+                                                <p class="mt-2">لطفاً مبلغ بالا را پرداخت کرده و فیش واریزی را آپلود کنید.</p>
+                                            </div>
                                         </div>
 
                                         <!-- Payment Methods -->
@@ -557,6 +563,24 @@
                                                         <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-3">آپلود مجدد رسید</h4>
                                                         <form action="{{ route('buyer.auction.purchase.payment.upload', $auction) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                                                             @csrf
+                                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                                <div>
+                                                                    <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                                        نام
+                                                                    </label>
+                                                                    <input type="text" id="first_name" name="first_name" required
+                                                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                           placeholder="نام خود را وارد کنید">
+                                                                </div>
+                                                                <div>
+                                                                    <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                                        نام خانوادگی
+                                                                    </label>
+                                                                    <input type="text" id="last_name" name="last_name" required
+                                                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                           placeholder="نام خانوادگی خود را وارد کنید">
+                                                                </div>
+                                                            </div>
                                                             <div>
                                                                 <label for="national_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                                     کد ملی
@@ -598,6 +622,24 @@
                                                 <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-4">آپلود فیش واریزی</h4>
                                                 <form action="{{ route('buyer.auction.purchase.payment.upload', $auction) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                                                     @csrf
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                                نام
+                                                            </label>
+                                                            <input type="text" id="first_name" name="first_name" required
+                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                   placeholder="نام خود را وارد کنید">
+                                                        </div>
+                                                        <div>
+                                                            <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                                نام خانوادگی
+                                                            </label>
+                                                            <input type="text" id="last_name" name="last_name" required
+                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                   placeholder="نام خانوادگی خود را وارد کنید">
+                                                        </div>
+                                                    </div>
                                                     <div>
                                                         <label for="national_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                             کد ملی
@@ -627,7 +669,7 @@
                     @endif
 
                     @if($progress && $progress->step_name === 'awaiting-seller-transfer')
-                        <!-- Awaiting Seller Transfer Content for Step 7 -->
+                        <!-- Awaiting Seller Transfer Content for Step 6 -->
                         <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-blue-800 dark:text-blue-200 mb-4">
                                 در انتظار انتقال وام
@@ -666,7 +708,7 @@
                                                 <div>
                                                     <h4 class="font-semibold text-green-800 dark:text-green-200">پرداخت تأیید شده</h4>
                                                     <p class="text-sm text-green-700 dark:text-green-300">
-                                                        مبلغ {{ number_format($userBid->amount) }} تومان با موفقیت پرداخت و تأیید شده است.
+                                                        مبلغ {{ number_format($userBid->amount + ($userBid->amount * 0.01)) }} تومان (شامل ۱٪ کارمزد) با موفقیت پرداخت و تأیید شده است.
                                                     </p>
                                                 </div>
                                             </div>
@@ -698,24 +740,14 @@
                                         </div>
                                     </div>
 
-                                    <!-- Contact Information -->
-                                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                                        <h4 class="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                                            اطلاعات تماس فروشنده
-                                        </h4>
-                                        <div class="text-sm text-yellow-700 dark:text-yellow-300">
-                                            <p>در صورت نیاز می‌توانید با فروشنده تماس بگیرید:</p>
-                                            <p class="mt-1"><strong>نام:</strong> {{ $auction->creator->name }}</p>
-                                            <p><strong>تلفن:</strong> {{ $auction->creator->phone }}</p>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
                     @endif
 
                     @if($progress && $progress->step_name === 'complete')
-                        <!-- Completion Content for Step 9 -->
+                        <!-- Completion Content for Step 8 -->
                         <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-green-800 dark:text-green-200 mb-4">
                                 تکمیل معامله
@@ -765,8 +797,11 @@
                                                     <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
                                                         <span class="text-blue-700 dark:text-blue-300">مبلغ پرداخت شده:</span>
                                                         <span class="font-bold text-green-600 dark:text-green-400 text-lg">
-                                                            {{ number_format($userBid->amount) }} تومان
+                                                            {{ number_format($userBid->amount + ($userBid->amount * 0.01)) }} تومان
                                                         </span>
+                                                        <p class="text-xs text-green-500 dark:text-green-300">
+                                                            (شامل ۱٪ کارمزد)
+                                                        </p>
                                                     </div>
                                                     <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
                                                         <span class="text-blue-700 dark:text-blue-300">وضعیت:</span>
@@ -928,35 +963,8 @@
                                     تأیید و ادامه
                                 </button>
                             </form>
-                        @elseif($progress && $progress->step_name === 'contract')
-                            <!-- Step 2: Contract OTP Form -->
-                            <div class="flex-1">
-                                <div id="otp-form" class="space-y-4">
-                                    <div>
-                                        <label for="otp_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            کد تایید به این شماره ارسال میشود: {{ Auth::user()->phone }}
-                                        </label>
-                                        <input type="text" id="otp_code" name="otp_code" maxlength="6"
-                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-center text-lg tracking-widest"
-                                               placeholder="000000">
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <button type="button" id="send-otp-btn"
-                                                class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
-                                            ارسال کد تأیید
-                                        </button>
-                                        <button type="button" id="verify-otp-btn" disabled
-                                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                            تأیید کد
-                                        </button>
-                                    </div>
-                                    <div id="otp-timer" class="text-center text-sm text-gray-500 dark:text-gray-400 hidden">
-                                        ارسال مجدد کد در <span id="countdown">60</span> ثانیه
-                                    </div>
-                                </div>
-                            </div>
                         @elseif($progress && $progress->step_name === 'payment')
-                            <!-- Step 3: Continue to Next Step if receipt is approved -->
+                            <!-- Step 2: Continue to Next Step if receipt is approved -->
                             @if($paymentReceipt && $paymentReceipt->status === \App\Enums\PaymentStatus::APPROVED)
                                 <a href="{{ route('buyer.auction.bid', $auction) }}"
                                    class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-center transition-colors">
@@ -964,23 +972,23 @@
                                 </a>
                             @endif
                         @elseif($progress && $progress->step_name === 'bid')
-                            <!-- Step 4: Bid submission form is already in the content above -->
+                            <!-- Step 3: Bid submission form is already in the content above -->
                         @elseif($progress && $progress->step_name === 'waiting-seller')
-                            <!-- Step 5: Waiting for seller approval - no action buttons needed -->
+                            <!-- Step 4: Waiting for seller approval - no action buttons needed -->
                             <div class="text-center">
                                 <p class="text-gray-500 dark:text-gray-400 text-sm">
                                     لطفاً منتظر پاسخ فروشنده باشید
                                 </p>
                             </div>
                         @elseif($progress && $progress->step_name === 'awaiting-seller-transfer')
-                            <!-- Step 7: Awaiting seller transfer - no action buttons needed -->
+                            <!-- Step 6: Awaiting seller transfer - no action buttons needed -->
                             <div class="text-center">
                                 <p class="text-gray-500 dark:text-gray-400 text-sm">
                                     در انتظار انتقال وام توسط فروشنده
                                 </p>
                             </div>
                         @elseif($progress && $progress->step_name === 'complete')
-                            <!-- Step 9: Transaction completed - no action buttons needed -->
+                            <!-- Step 8: Transaction completed - no action buttons needed -->
                             <div class="text-center">
                                 <p class="text-green-600 dark:text-green-400 text-sm font-medium">
                                     معامله با موفقیت تکمیل شد
@@ -1006,110 +1014,6 @@
         </div>
     </div>
 
-    @if($progress && $progress->step_name === 'contract')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sendOtpBtn = document.getElementById('send-otp-btn');
-            const verifyOtpBtn = document.getElementById('verify-otp-btn');
-            const otpInput = document.getElementById('otp_code');
-            const timerDiv = document.getElementById('otp-timer');
-            const countdownSpan = document.getElementById('countdown');
-            let countdown = 0;
-
-            // Send OTP functionality
-            sendOtpBtn.addEventListener('click', function() {
-                // Disable button immediately
-                sendOtpBtn.disabled = true;
-                sendOtpBtn.textContent = 'در حال ارسال...';
-
-                fetch('{{ route("buyer.auction.contract.otp", $auction) }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        startCountdown();
-                    } else {
-                        alert('خطا در ارسال کد تأیید');
-                        // Re-enable button on error
-                        sendOtpBtn.disabled = false;
-                        sendOtpBtn.textContent = 'ارسال کد تأیید';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('خطا در ارسال کد تأیید');
-                    // Re-enable button on error
-                    sendOtpBtn.disabled = false;
-                    sendOtpBtn.textContent = 'ارسال کد تأیید';
-                });
-            });
-
-            // Verify OTP functionality
-            verifyOtpBtn.addEventListener('click', function() {
-                const otpCode = otpInput.value.trim();
-                if (otpCode.length !== 6) {
-                    alert('لطفاً کد تأیید 6 رقمی را وارد کنید');
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append('otp_code', otpCode);
-                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-
-                fetch('{{ route("buyer.auction.contract.verify-otp", $auction) }}', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (response.ok || response.status === 302) {
-                        // Success - reload the page
-                        window.location.reload();
-                    } else {
-                        return response.text().then(text => {
-                            throw new Error(text);
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('کد تأیید نامعتبر است');
-                });
-            });
-
-            // Enable verify button when OTP is entered
-            otpInput.addEventListener('input', function() {
-                verifyOtpBtn.disabled = this.value.length !== 6;
-            });
-
-            // Start countdown timer
-            function startCountdown() {
-                countdown = 60;
-                sendOtpBtn.disabled = true;
-                sendOtpBtn.textContent = 'ارسال مجدد';
-                timerDiv.classList.remove('hidden');
-
-                const interval = setInterval(() => {
-                    countdownSpan.textContent = countdown;
-                    countdown--;
-
-                    if (countdown < 0) {
-                        clearInterval(interval);
-                        sendOtpBtn.disabled = false;
-                        sendOtpBtn.textContent = 'ارسال کد تأیید';
-                        timerDiv.classList.add('hidden');
-                    }
-                }, 1000);
-            }
-        });
-    </script>
-    @endif
 
     @if($progress && $progress->step_name === 'waiting-seller')
     <script>
@@ -1143,10 +1047,12 @@
                 editBidForm.addEventListener('submit', function(e) {
                     const newAmount = editBidAmount.value;
                     const currentAmount = {{ $userBid ? $userBid->amount : 0 }};
+                    const currentAmountWithFee = {{ $userBid ? $userBid->amount + ($userBid->amount * 0.01) : 0 }};
 
                     if (newAmount && parseInt(newAmount) > currentAmount) {
+                        const newAmountWithFee = parseInt(newAmount) + (parseInt(newAmount) * 0.01);
                         const confirmed = confirm(
-                            `آیا مطمئن هستید که می‌خواهید پیشنهاد خود را از ${currentAmount.toLocaleString()} تومان به ${parseInt(newAmount).toLocaleString()} تومان افزایش دهید؟`
+                            `آیا مطمئن هستید که می‌خواهید پیشنهاد خود را از ${currentAmount.toLocaleString()} تومان به ${parseInt(newAmount).toLocaleString()} تومان افزایش دهید؟\n\nمبلغ قابل پرداخت جدید: ${newAmountWithFee.toLocaleString()} تومان (شامل ۱٪ کارمزد)`
                         );
 
                         if (!confirmed) {

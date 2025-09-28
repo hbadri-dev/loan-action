@@ -146,96 +146,6 @@
                             </div>
                         </div>
                     @elseif($sellerSale && $sellerSale->current_step == 2)
-                        <!-- Contract Content for Step 2 -->
-                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-8">
-                            <h2 class="text-xl font-bold text-blue-800 dark:text-blue-200 mb-4">
-                                تأیید قرارداد
-                            </h2>
-                            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-blue-200 dark:border-blue-700">
-                                <div class="prose dark:prose-invert max-w-none">
-                                    <div class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-sm">
-                                        <p class="text-center font-bold text-lg mb-6">شرایط و قوانین مشارکت در فروش امتیاز وام در پلتفرم «وام‌ساز»</p>
-
-                                        <p class="mb-4">
-                                            این سند به منزله یک قرارداد قانونی و الزام‌آور میان پلتفرم آنلاین «وام‌ساز» (که از این پس «پلتفرم» نامیده می‌شود) و کاربری است که قصد فروش امتیاز وام خود را از طریق خدمات این پلتفرم دارد (که از این پس «فروشنده» نامیده می‌شود). ثبت‌نام و اقدام به عرضه امتیاز وام در این پلتفرم، به معنای مطالعه دقیق، درک کامل و پذیرش تمامی بندهای این قرارداد از سوی فروشنده است.
-                                        </p>
-
-                                        <div class="space-y-4">
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۱- موضوع قرارداد</h4>
-                                                <p>
-                                                    موضوع این قرارداد، ایجاد یک بستر آنلاین برای عرضه و واگذاری امتیاز وام متعلق به فروشنده، به شخص ثالثی (که از این پس «خریدار» نامیده می‌شود) از طریق بازار مزایده‌ای است که توسط پلتفرم مدیریت می‌شود. کلیه مشخصات وام، از جمله مبلغ کل، تعداد اقساط، کارمزد و بانک عامل، توسط فروشنده در هنگام ثبت درخواست در پلتفرم اعلام می‌گردد و مسئولیت صحت اطلاعات وارد شده بر عهده وی می‌باشد.
-                                                </p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۲- مبالغ و نحوه پرداخت</h4>
-                                                <p class="mb-2">۱-۲- فروشنده برای شرکت در بازار مزایده، موظف است مبلغی را تحت عنوان «ورودی مزایده» که میزان آن در هنگام ثبت وام در پلتفرم مشخص شده است، به حساب معرفی‌شده توسط پلتفرم واریز نماید. این مبلغ به عنوان تضمین تعهد فروشنده برای انجام فرآیند واگذاری در نظر گرفته می‌شود.</p>
-                                                <p>۲-۲- پس از انتقال موفقیت‌آمیز امتیاز وام در یکی از شعب بانک عامل به نام خریدار، پلتفرم متعهد است مبلغ نهایی پیشنهاد شده در مزایده را که از خریدار دریافت کرده است، حداکثر ظرف مدت ۴ ساعت کاری به حساب بانکی ثبت‌شده توسط فروشنده در پلتفرم واریز نماید.</p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۳- تعهدات فروشنده</h4>
-                                                <p class="mb-2">۱-۳- فروشنده متعهد می‌شود حداکثر ظرف مدت ۲۴ ساعت پس از اعلام برنده مزایده، با هماهنگی پلتفرم، جهت انجام کلیه مراحل اداری و امضای اسناد لازم برای انتقال امتیاز وام به خریدار معرفی‌شده، در شعبه بانک مربوطه حاضر شود.</p>
-                                                <p class="mb-2">۲-۳- پس از نهایی شدن نتیجه مزایده و مشخص شدن خریدار، فروشنده حق واگذاری یا انتقال امتیاز وام خود را به هیچ شخص دیگری، خارج از چارچوب پلتفرم، نخواهد داشت.</p>
-                                                <p>۳-۳- در صورت انصراف فروشنده پس از پذیرش پیشنهاد خریدار و نهایی شدن مزایده، مبلغ «ورودی مزایده» وی ضبط شده و غیرقابل استرداد خواهد بود. همچنین، معادل پنجاه درصد (۵۰%) از این مبلغ به عنوان خسارت عدم انجام تعهد، به خریداری که از سوی پلتفرم معرفی شده است، پرداخت خواهد شد. فروشنده با پذیرش این شرایط، حق هرگونه اعتراض در این خصوص را از خود سلب می‌نماید.</p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۴- تعهدات پلتفرم</h4>
-                                                <p class="mb-2">۱-۴- پلتفرم متعهد به ایجاد بستر مزایده، معرفی خریدار به فروشنده و هماهنگی‌های لازم جهت حضور طرفین در بانک برای انتقال امتیاز وام است. پلتفرم هیچ‌گونه مسئولیتی در قبال فرآیندهای داخلی بانک یا نتایج ناشی از آن نخواهد داشت.</p>
-                                                <p>۲-۴- در صورتی که خریدار معرفی‌شده از سوی پلتفرم، از تکمیل فرآیند انتقال وام انصراف دهد یا در انجام تعهدات خود کوتاهی کند، پلتفرم موظف است اصل مبلغ «ورودی مزایده» را به فروشنده بازگرداند. علاوه بر آن، معادل پنجاه درصد (۵۰%) از مبلغ ورودی که خریدار پرداخت کرده است، به عنوان خسارت به فروشنده پرداخت خواهد شد.</p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۵- فسخ و بازگشت وجه</h4>
-                                                <p class="mb-2">۱-۵- در صورتی که فروشنده پیش از انتخاب خریدار و نهایی شدن مزایده از فروش امتیاز وام خود منصرف شود، مبلغ «ورودی مزایده» به طور کامل به وی بازگردانده خواهد شد.</p>
-                                                <p>۲-۵- چنانچه پلتفرم در معرفی خریدار واجد شرایط به فروشنده کوتاهی کند یا فرآیند مزایده به دلیلی از سمت پلتفرم لغو گردد، فروشنده حق فسخ قرارداد و استرداد کامل وجه ورودی خود را خواهد داشت.</p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۶- حل اختلاف</h4>
-                                                <p>در صورت بروز هرگونه اختلاف ناشی از تفسیر یا اجرای این قرارداد، طرفین تلاش خواهند کرد تا موضوع را از طریق مذاکره مستقیم و مسالمت‌آمیز حل‌وفصل نمایند. در صورت عدم دستیابی به توافق ظرف مدت ۷ روز کاری، مرجع صالح برای رسیدگی به اختلاف، مراجع قضایی ذیصلاح شهر تهران خواهد بود.</p>
-                                            </div>
-
-                                            <div>
-                                                <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-2">ماده ۷- مقررات عمومی</h4>
-                                                <p>این قرارداد به عنوان توافق‌نامه کامل میان پلتفرم و فروشنده تلقی می‌شود. پلتفرم حق تغییر یا به‌روزرسانی مفاد این قرارداد را در هر زمان برای خود محفوظ می‌دارد و نسخه جدید از طریق وب‌سایت به اطلاع کاربران خواهد رسید. ادامه استفاده کاربر از خدمات پلتفرم به منزله پذیرش تغییرات جدید خواهد بود.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- OTP Form -->
-                                    <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                                        <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-4">تأیید قرارداد با کد تأیید</h4>
-                                        <div id="otp-form" class="space-y-4">
-                                            <div>
-                                                <label for="otp_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                    کد تأیید به این شماره ارسال میشود: {{ Auth::user()->phone }}
-                                                </label>
-                                                <input type="text" id="otp_code" name="otp_code" maxlength="6"
-                                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-center text-lg tracking-widest"
-                                                       placeholder="000000">
-                                            </div>
-                                            <div class="flex gap-2">
-                                                <button type="button" id="send-otp-btn"
-                                                        class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
-                                                    ارسال کد تأیید
-                                                </button>
-                                                <button type="button" id="verify-otp-btn" disabled
-                                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                                    تأیید کد
-                                                </button>
-                                            </div>
-                                            <div id="otp-timer" class="text-center text-sm text-gray-500 dark:text-gray-400 hidden">
-                                                ارسال مجدد کد در <span id="countdown">60</span> ثانیه
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @elseif($sellerSale && $sellerSale->current_step == 3)
                         <!-- Payment Content for Step 3 -->
                         <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-green-800 dark:text-green-200 mb-4">
@@ -245,7 +155,7 @@
                                 <div class="space-y-6">
                                     <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
                                         <h3 class="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                                            مبلغ کارمزد: 3,000,000 تومان
+                                            مبلغ کارمزد: 200,000 تومان
                                         </h3>
                                         <p class="text-sm text-yellow-700 dark:text-yellow-300 mb-4">
                                             برای ادامه فرآیند فروش، لطفاً کارمزد فروش را پرداخت کرده و فیش واریزی را آپلود کنید.
@@ -370,8 +280,8 @@
                                 </div>
                             </div>
                         </div>
-                    @elseif($sellerSale && $sellerSale->current_step == 4)
-                        <!-- Bid Acceptance Content for Step 4 -->
+                    @elseif($sellerSale && $sellerSale->current_step == 3)
+                        <!-- Bid Acceptance Content for Step 3 -->
                         <div class="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-purple-800 dark:text-purple-200 mb-4">
                                 پذیرش پیشنهادات
@@ -477,8 +387,8 @@
                                 </div>
                             </div>
                         </div>
-                    @elseif($sellerSale && $sellerSale->current_step == 6)
-                        <!-- Loan Transfer Content for Step 6 -->
+                    @elseif($sellerSale && $sellerSale->current_step == 5)
+                        <!-- Loan Transfer Content for Step 5 -->
                         <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-green-800 dark:text-green-200 mb-4">
                                 انتقال وام
@@ -501,7 +411,12 @@
                                             </h3>
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div class="space-y-3">
-
+                                                    <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
+                                                        <span class="text-blue-700 dark:text-blue-300">نام و نام خانوادگی:</span>
+                                                        <span class="font-medium text-blue-800 dark:text-blue-200 text-lg">
+                                                            {{ $buyer->name ?? 'ثبت نشده' }}
+                                                        </span>
+                                                    </div>
                                                     <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
                                                         <span class="text-blue-700 dark:text-blue-300">کد ملی:</span>
                                                         <span class="font-medium text-blue-800 dark:text-blue-200 text-lg">
@@ -510,7 +425,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="space-y-3">
-
+                                                    <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
+                                                        <span class="text-blue-700 dark:text-blue-300">شماره تماس:</span>
+                                                        <span class="font-medium text-blue-800 dark:text-blue-200 text-lg">
+                                                            {{ $buyer->phone ?? 'ثبت نشده' }}
+                                                        </span>
+                                                    </div>
                                                     <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
                                                         <span class="text-blue-700 dark:text-blue-300">مبلغ پرداخت:</span>
                                                         <span class="font-bold text-green-600 dark:text-green-400 text-lg">
@@ -689,8 +609,8 @@
                                 </div>
                             </div>
                         </div>
-                    @elseif($sellerSale && $sellerSale->current_step == 8)
-                        <!-- Transfer Confirmation Content for Step 8 -->
+                    @elseif($sellerSale && $sellerSale->current_step == 7)
+                        <!-- Transfer Confirmation Content for Step 7 -->
                         <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-green-800 dark:text-green-200 mb-4">
                                 تأیید انتقال وام
@@ -729,7 +649,12 @@
                                             </h3>
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div class="space-y-3">
-
+                                                    <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
+                                                        <span class="text-blue-700 dark:text-blue-300">نام و نام خانوادگی:</span>
+                                                        <span class="font-medium text-blue-800 dark:text-blue-200">
+                                                            {{ $buyer->name ?? 'ثبت نشده' }}
+                                                        </span>
+                                                    </div>
                                                     <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
                                                         <span class="text-blue-700 dark:text-blue-300">کد ملی:</span>
                                                         <span class="font-medium text-blue-800 dark:text-blue-200">
@@ -738,6 +663,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="space-y-3">
+                                                    <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
+                                                        <span class="text-blue-700 dark:text-blue-300">شماره تماس:</span>
+                                                        <span class="font-medium text-blue-800 dark:text-blue-200">
+                                                            {{ $buyer->phone ?? 'ثبت نشده' }}
+                                                        </span>
+                                                    </div>
                                                     <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
                                                         <span class="text-blue-700 dark:text-blue-300">مبلغ معامله:</span>
                                                         <span class="font-bold text-green-600 dark:text-green-400 text-lg">
@@ -782,11 +713,11 @@
                                 </div>
                             </div>
                         </div>
-                    @elseif($sellerSale && $sellerSale->current_step > 4)
-                        <!-- Content for Steps 5-8 -->
+                    @elseif($sellerSale && $sellerSale->current_step > 3)
+                        <!-- Content for Steps 4-7 -->
                         <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-blue-800 dark:text-blue-200 mb-4">
-                                مرحله {{ $sellerSale->getDisplayStep() }} از 8
+                                مرحله {{ $sellerSale->getDisplayStep() }} از 7
                             </h2>
                             <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-blue-200 dark:border-blue-700">
                                 <div class="space-y-4">
@@ -801,13 +732,12 @@
                                                 @php
                                                     $stepTitles = [
                                                         1 => 'اطلاعات مزایده',
-                                                        2 => 'تأیید قرارداد',
-                                                        3 => 'پرداخت کارمزد',
-                                                        4 => 'پذیرش پیشنهاد',
-                                                        5 => 'انتظار پرداخت خریدار',
-                                                        6 => 'انتقال وام',
-                                                        7 => 'تأیید انتقال',
-                                                        8 => 'تکمیل فروش'
+                                                        2 => 'پرداخت کارمزد',
+                                                        3 => 'پذیرش پیشنهاد',
+                                                        4 => 'انتظار پرداخت خریدار',
+                                                        5 => 'انتقال وام',
+                                                        6 => 'تأیید انتقال',
+                                                        7 => 'تکمیل فروش'
                                                     ];
                                                 @endphp
                                                 {{ $stepTitles[$sellerSale->current_step] ?? 'مرحله ناشناخته' }}
@@ -879,14 +809,7 @@
                                     ادامه به مرحله بعد
                                 </button>
                             </form>
-                        @elseif($sellerSale && $sellerSale->current_step == 2)
-                            <!-- Step 2: OTP form is in the content above -->
-                            <div class="text-center py-3">
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">
-                                    لطفاً قرارداد را با کد تأیید تأیید کنید
-                                </p>
-                            </div>
-                        @elseif($sellerSale && $sellerSale->current_step == 8)
+                        @elseif($sellerSale && $sellerSale->current_step == 7)
                             <!-- Step 8: Transaction completed - no action buttons needed -->
                             <div class="text-center py-3">
                                 <p class="text-green-600 dark:text-green-400 text-sm font-medium">
@@ -894,7 +817,7 @@
                                 </p>
                             </div>
                         @elseif($sellerSale && $sellerSale->current_step > 2)
-                            <!-- Steps 3-7: Show appropriate action based on step -->
+                            <!-- Steps 3-6: Show appropriate action based on step -->
                             @php
                                 $actionRoute = match($sellerSale->status->value) {
                                     'contract_confirmed' => route('seller.sale.payment', $auction),
@@ -937,112 +860,8 @@
         </div>
     </div>
 
-    @if($sellerSale && $sellerSale->current_step == 2)
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sendOtpBtn = document.getElementById('send-otp-btn');
-            const verifyOtpBtn = document.getElementById('verify-otp-btn');
-            const otpInput = document.getElementById('otp_code');
-            const timerDiv = document.getElementById('otp-timer');
-            const countdownSpan = document.getElementById('countdown');
-            let countdown = 0;
 
-            // Send OTP functionality
-            sendOtpBtn.addEventListener('click', function() {
-                // Disable button immediately
-                sendOtpBtn.disabled = true;
-                sendOtpBtn.textContent = 'در حال ارسال...';
-
-                fetch('{{ route("seller.sale.contract.otp-send", $auction) }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        startCountdown();
-                    } else {
-                        alert(data.message || 'خطا در ارسال کد تأیید');
-                        // Re-enable button on error
-                        sendOtpBtn.disabled = false;
-                        sendOtpBtn.textContent = 'ارسال کد تأیید';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('خطا در ارسال کد تأیید');
-                    // Re-enable button on error
-                    sendOtpBtn.disabled = false;
-                    sendOtpBtn.textContent = 'ارسال کد تأیید';
-                });
-            });
-
-            // Verify OTP functionality
-            verifyOtpBtn.addEventListener('click', function() {
-                const otpCode = otpInput.value.trim();
-                if (otpCode.length !== 6) {
-                    alert('لطفاً کد تأیید 6 رقمی را وارد کنید');
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append('otp_code', otpCode);
-                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-
-                fetch('{{ route("seller.sale.contract.verify-otp", $auction) }}', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (response.ok || response.status === 302) {
-                        // Success - reload the page
-                        window.location.reload();
-                    } else {
-                        return response.text().then(text => {
-                            throw new Error(text);
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('کد تأیید نامعتبر است');
-                });
-            });
-
-            // Enable verify button when OTP is entered
-            otpInput.addEventListener('input', function() {
-                verifyOtpBtn.disabled = this.value.length !== 6;
-            });
-
-            // Start countdown timer
-            function startCountdown() {
-                countdown = 60;
-                sendOtpBtn.disabled = true;
-                sendOtpBtn.textContent = 'ارسال مجدد';
-                timerDiv.classList.remove('hidden');
-
-                const interval = setInterval(() => {
-                    countdownSpan.textContent = countdown;
-                    countdown--;
-
-                    if (countdown < 0) {
-                        clearInterval(interval);
-                        sendOtpBtn.disabled = false;
-                        sendOtpBtn.textContent = 'ارسال کد تأیید';
-                        timerDiv.classList.add('hidden');
-                    }
-                }, 1000);
-            }
-        });
-    </script>
-    @endif
-
-    @if($sellerSale && $sellerSale->current_step == 6)
+    @if($sellerSale && $sellerSale->current_step == 5)
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Format IBAN inputs for receipt forms - only numbers

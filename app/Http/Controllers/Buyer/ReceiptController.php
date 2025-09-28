@@ -213,7 +213,7 @@ class ReceiptController extends Controller
         }
 
         // Update progress to awaiting seller transfer step
-        $this->progressService->updateProgress($auction, $user, 'awaiting-seller-transfer', 7);
+        $this->progressService->updateProgress($auction, $user, 'awaiting-seller-transfer', 6);
 
         return redirect()->route('buyer.auction.awaiting-seller-transfer', $auction)
             ->with('success', 'رسید پرداخت آپلود شد و در انتظار بررسی است.');

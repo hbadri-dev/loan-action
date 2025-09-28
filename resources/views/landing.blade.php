@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>وام ساز - پلتفرم آنلاین انتقال وام</title>
+    <title>وام یار - پلتفرم آنلاین انتقال وام</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -63,6 +63,7 @@
             font-weight: 600;
             transition: all 0.3s ease;
             border: 2px solid transparent;
+            white-space: nowrap;
         }
 
         .header-btn.login {
@@ -85,6 +86,100 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
+
+        .header-btn.telegram {
+            background: linear-gradient(135deg, #0088cc, #00a8ff);
+            color: white;
+        }
+
+        .header-btn.telegram:hover {
+            background: linear-gradient(135deg, #0077b3, #0099e6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.3);
+        }
+
+
+
+        /* Mobile Menu Styles */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .hamburger-line {
+            width: 25px;
+            height: 3px;
+            background: #667eea;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .mobile-menu-toggle.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .mobile-menu-toggle.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 0 0 15px 15px;
+            padding: 20px;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu-item {
+            display: block;
+            padding: 15px 20px;
+            margin: 8px 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .mobile-menu-item.telegram {
+            background: linear-gradient(135deg, #0088cc, #00a8ff);
+        }
+
+        .mobile-menu-item.telegram:hover {
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.3);
+        }
+
 
         .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -486,8 +581,7 @@
         .footer {
             background: #2c3e50;
             color: white;
-            padding: 40px 0;
-            text-align: center;
+            padding: 60px 0 30px;
         }
 
         .footer-content {
@@ -496,20 +590,226 @@
             padding: 0 20px;
         }
 
-        .footer-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
         }
 
-        .footer-text {
+        .footer-section {
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ecf0f1;
+        }
+
+        .footer-description {
             color: #bdc3c7;
+            font-size: 1.1rem;
             margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .footer-address {
+            color: #bdc3c7;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-right: 4px solid #3498db;
+        }
+
+        .footer-trust {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-trust img {
+            max-width: 120px;
+            height: auto;
         }
 
         .footer-copyright {
             color: #95a5a6;
             font-size: 0.9rem;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 0;
+                position: relative;
+            }
+
+            .header-content {
+                padding: 0 15px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .header-buttons {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .header-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+                border-radius: 20px;
+            }
+
+            /* Hero section mobile styles */
+            .hero .flex {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .hero .cta-button {
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .footer {
+                padding: 40px 0 20px;
+            }
+
+            .footer-logo {
+                font-size: 1.5rem;
+            }
+
+            .footer-description {
+                font-size: 1rem;
+            }
+
+            .footer-address {
+                font-size: 0.9rem;
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header-content {
+                padding: 0 12px;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .header-buttons {
+                gap: 6px;
+            }
+
+            .header-btn {
+                padding: 7px 14px;
+                font-size: 0.85rem;
+                border-radius: 18px;
+            }
+
+            /* Hero section small mobile styles */
+            .hero .flex {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .hero .cta-button {
+                width: 100%;
+                max-width: 280px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 10px 0;
+            }
+
+            .header-content {
+                padding: 0 10px;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .header-buttons {
+                gap: 4px;
+            }
+
+            .header-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                border-radius: 15px;
+            }
+
+            /* Hero section mobile styles */
+            .hero .flex {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .hero .cta-button {
+                width: 100%;
+                max-width: 260px;
+                padding: 10px 18px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .header-content {
+                padding: 0 8px;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .header-buttons {
+                gap: 3px;
+            }
+
+            .header-btn {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+                border-radius: 12px;
+            }
+
+            /* Hero section extra small mobile styles */
+            .hero .flex {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .hero .cta-button {
+                width: 100%;
+                max-width: 240px;
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
         }
 
         .section-title {
@@ -593,14 +893,36 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <a href="/" class="logo">وام ساز</a>
+            <a href="/" class="logo">وام یار</a>
             <div class="header-buttons">
+                <a href="https://t.me/sajbazar" target="_blank" rel="noopener noreferrer" class="header-btn telegram">
+                    مشاوره تلگرام
+                </a>
                 @auth
                     <a href="{{ route('dashboard') }}" class="header-btn dashboard">داشبورد</a>
                 @else
                     <a href="{{ route('unified.otp.login') }}" class="header-btn dashboard" style="background: linear-gradient(135deg, #16a34a, #3b82f6);">ورود / ثبت نام</a>
                 @endauth
             </div>
+
+            <!-- Mobile Menu Toggle -->
+            <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+                <div class="hamburger-line"></div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="https://t.me/sajbazar" target="_blank" rel="noopener noreferrer" class="mobile-menu-item telegram">
+                مشاوره تلگرام
+            </a>
+            @auth
+                <a href="{{ route('dashboard') }}" class="mobile-menu-item">داشبورد</a>
+            @else
+                <a href="{{ route('unified.otp.login') }}" class="mobile-menu-item">ورود / ثبت نام</a>
+            @endauth
         </div>
     </header>
 
@@ -609,9 +931,12 @@
         <div class="container">
             <h1>پلتفرم آنلاین انتقال وام</h1>
             <p>راهکار های نوین برای افراد حقیقی و حقوقی</p>
-            <p>وام ساز پلتفرم جامعی است که تمامی نیازهای مدیریت وام، مزایده‌گذاری، و ارتباط با بازار دیوار را پوشش می‌دهد. با استفاده از هوش مصنوعی و تکنولوژی‌های نوین، بهترین تجربه را برای شما فراهم می‌کنیم.</p>
-            <div class="flex justify-center items-center">
+            <p>اولین پلتفرم وام‌دهی فرد به فرد در ایران، با ضمانت کامل امانت‌داری پول شما. ما مرجع تخصصی انتقال امن وام هستیم</p>
+            <div class="flex justify-center items-center gap-4 flex-wrap">
                 <a href="{{ route('unified.otp.login') }}" class="cta-button bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700">شروع کنید</a>
+                <a href="https://t.me/sajbazar" target="_blank" rel="noopener noreferrer" class="cta-button bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600">
+                    مشاوره رایگان
+                </a>
             </div>
         </div>
     </section>
@@ -757,16 +1082,56 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
-            <div class="footer-logo">شرکت nationalkind.ir</div>
-            <p class="footer-text">ارائه دهنده راهکار های نوین مالی</p>
-            <p class="footer-text">
-                <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=642085&Code=09HwelsIV9UjcdGw1o3s0dFs2cKyggbC'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=642085&Code=09HwelsIV9UjcdGw1o3s0dFs2cKyggbC' alt='' style='cursor:pointer' code='09HwelsIV9UjcdGw1o3s0dFs2cKyggbC'></a>
-            </p>
+            <div class="footer-grid">
+                <!-- Company Info Section -->
+                <div class="footer-section">
+                    <div class="footer-logo"> nationalkind.ir</div>
+                    <p class="footer-description">ارائه دهنده راهکار های نوین مالی</p>
+                </div>
+
+                <!-- Address Section -->
+                <div class="footer-section">
+                    <div class="footer-address">
+                        <strong>آدرس دفتر:</strong><br>
+                        ایستگاه نوآوری دانشگاه شریف، جنب ساختمان نوآوری ایرانسل و اسنپ، خیابان حبیب الهی، محله تیموری
+                    </div>
+                </div>
+
+                <!-- Trust Section -->
+                <div class="footer-section">
+                    <div class="footer-trust">
+                        <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=642085&Code=09HwelsIV9UjcdGw1o3s0dFs2cKyggbC'>
+                            <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=642085&Code=09HwelsIV9UjcdGw1o3s0dFs2cKyggbC' alt='نماد اعتماد الکترونیکی' style='cursor:pointer' code='09HwelsIV9UjcdGw1o3s0dFs2cKyggbC'>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <p class="footer-copyright">© ۱۴۰۴ تمام حقوق محفوظ است</p>
         </div>
     </footer>
 
     <script>
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            mobileMenu.classList.toggle('active');
+            toggle.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            if (!mobileMenu.contains(event.target) && !toggle.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+                toggle.classList.remove('active');
+            }
+        });
+
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {

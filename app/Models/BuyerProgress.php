@@ -44,7 +44,6 @@ class BuyerProgress extends Model
     {
         return match($this->step_name) {
             'details' => 'جزئیات وام',
-            'contract' => 'تأیید قرارداد',
             'payment' => 'پرداخت کارمزد',
             'bid' => 'ثبت پیشنهاد',
             'waiting-seller' => 'انتظار تأیید فروشنده',

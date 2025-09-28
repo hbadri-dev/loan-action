@@ -61,14 +61,14 @@ class SellerSale extends Model
     {
         return match($this->status) {
             SaleStatus::INITIATED => 1,
-            SaleStatus::CONTRACT_CONFIRMED => 2,
-            SaleStatus::FEE_APPROVED => 3,
-            SaleStatus::OFFER_ACCEPTED => 4,
-            SaleStatus::AWAITING_BUYER_PAYMENT => 5,
-            SaleStatus::BUYER_PAYMENT_APPROVED => 6,
-            SaleStatus::LOAN_TRANSFERRED => 7,
-            SaleStatus::TRANSFER_CONFIRMED => 8,
-            SaleStatus::COMPLETED => 6, // نمایش مرحله 6 برای وضعیت تکمیل شده
+            SaleStatus::CONTRACT_CONFIRMED => 2, // Skip this step in UI but keep for backward compatibility
+            SaleStatus::FEE_APPROVED => 2,
+            SaleStatus::OFFER_ACCEPTED => 3,
+            SaleStatus::AWAITING_BUYER_PAYMENT => 4,
+            SaleStatus::BUYER_PAYMENT_APPROVED => 5,
+            SaleStatus::LOAN_TRANSFERRED => 6,
+            SaleStatus::TRANSFER_CONFIRMED => 7,
+            SaleStatus::COMPLETED => 7, // نمایش مرحله 7 برای وضعیت تکمیل شده
             default => 1,
         };
     }
