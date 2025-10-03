@@ -191,6 +191,9 @@ class UnifiedOTPController extends Controller
         // Login user
         Auth::login($user);
 
+        // Store current role in session
+        session(['current_role' => $role]);
+
         // Clear session
         session()->forget(['otp_phone', 'otp_role']);
 

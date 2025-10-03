@@ -136,6 +136,10 @@ class OtpVerifyController extends Controller
         // Create web session
         Auth::login($user);
 
+        // Store current role in session (default to buyer if multiple roles)
+        $defaultRole = $user->hasRole('buyer') ? 'buyer' : 'seller';
+        session(['current_role' => $defaultRole]);
+
         // Redirect based on role
         if ($user->hasRole('buyer')) {
             return redirect()->route('buyer.dashboard');
@@ -146,4 +150,3 @@ class OtpVerifyController extends Controller
         return redirect()->route('dashboard');
     }
 }
-

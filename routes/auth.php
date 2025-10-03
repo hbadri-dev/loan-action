@@ -100,4 +100,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    // Role switching route
+    Route::get('switch-role/{role}', [\App\Http\Controllers\RoleSwitchController::class, 'switchRole'])
+        ->name('switch-role');
 });

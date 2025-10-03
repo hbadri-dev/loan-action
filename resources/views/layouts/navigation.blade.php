@@ -4,25 +4,32 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
+                <div class="shrink-0 flex items-center ml-4">
                     <a href="{{ route('dashboard') }}" class="text-xl font-bold text-gray-800 dark:text-gray-200">
-                        {{ config('app.name', 'Laravel') }}
+                        وام یار
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 @auth
+                    @php
+                        $currentRole = session('current_role', 'buyer'); // default role
+                    @endphp
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         @if(auth()->user()->hasRole('admin'))
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
                                 {{ __('پنل مدیریت') }}
                             </x-nav-link>
-                        @elseif(auth()->user()->hasRole('buyer'))
-                            <x-nav-link :href="route('buyer.dashboard')" :active="request()->routeIs('buyer.*')">
+                        @endif
+
+                        @if(auth()->user()->hasRole('buyer'))
+                            <x-nav-link :href="route('buyer.dashboard')" :active="request()->routeIs('buyer.*') && $currentRole === 'buyer'">
                                 {{ __('پنل خریدار') }}
                             </x-nav-link>
-                        @elseif(auth()->user()->hasRole('seller'))
-                            <x-nav-link :href="route('seller.dashboard')" :active="request()->routeIs('seller.*')">
+                        @endif
+
+                        @if(auth()->user()->hasRole('seller'))
+                            <x-nav-link :href="route('seller.dashboard')" :active="request()->routeIs('seller.*') && $currentRole === 'seller'">
                                 {{ __('پنل فروشنده') }}
                             </x-nav-link>
                         @endif
@@ -55,6 +62,28 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            <!-- Role Switcher -->
+                            @if(auth()->user()->hasRole('buyer') && auth()->user()->hasRole('seller'))
+                                @php
+                                    $currentRole = session('current_role', 'buyer');
+                                @endphp
+                                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">
+                                    <div class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">تعویض نقش:</div>
+                                    <div class="space-y-1">
+                                        @if($currentRole !== 'buyer')
+                                            <a href="{{ route('switch-role', 'buyer') }}" class="block px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                                                خریدار
+                                            </a>
+                                        @endif
+                                        @if($currentRole !== 'seller')
+                                            <a href="{{ route('switch-role', 'seller') }}" class="block px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                                                فروشنده
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -96,21 +125,29 @@
 
     <!-- Responsive Navigation Menu -->
     @auth
+        @php
+            $currentRole = session('current_role', 'buyer'); // default role
+        @endphp
         <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
             <div class="pt-2 pb-3 space-y-1">
                 @if(auth()->user()->hasRole('admin'))
                     <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
                         {{ __('پنل مدیریت') }}
                     </x-responsive-nav-link>
-                @elseif(auth()->user()->hasRole('buyer'))
-                    <x-responsive-nav-link :href="route('buyer.dashboard')" :active="request()->routeIs('buyer.*')">
+                @endif
+
+                @if(auth()->user()->hasRole('buyer'))
+                    <x-responsive-nav-link :href="route('buyer.dashboard')" :active="request()->routeIs('buyer.*') && $currentRole === 'buyer'">
                         {{ __('پنل خریدار') }}
                     </x-responsive-nav-link>
-                @elseif(auth()->user()->hasRole('seller'))
-                    <x-responsive-nav-link :href="route('seller.dashboard')" :active="request()->routeIs('seller.*')">
+                @endif
+
+                @if(auth()->user()->hasRole('seller'))
+                    <x-responsive-nav-link :href="route('seller.dashboard')" :active="request()->routeIs('seller.*') && $currentRole === 'seller'">
                         {{ __('پنل فروشنده') }}
                     </x-responsive-nav-link>
                 @endif
+
                 @if(auth()->user()->hasRole('buyer') || auth()->user()->hasRole('seller'))
                     <a href="https://t.me/sajbazar" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
                         پشتیبانی تلگرام
