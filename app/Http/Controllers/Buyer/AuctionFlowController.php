@@ -131,17 +131,17 @@ class AuctionFlowController extends Controller
     }
 
     /**
-     * Continue from details to payment (Step 1 -> Step 2)
+     * Continue from details to bid (Step 1 -> Step 3, skipping payment step)
      */
     public function continueToContract(Request $request, Auction $auction)
     {
         $user = Auth::user();
 
-        // Update buyer progress to step 2 (payment)
-        $this->progressService->updateProgress($auction, $user, 'payment', 2);
+        // Update buyer progress to step 3 (bid) - skipping step 2 (payment)
+        $this->progressService->updateProgress($auction, $user, 'bid', 3);
 
-        // Redirect back to the same page (showDetails) which will now show step 2 payment content
-        return redirect()->route('buyer.auction.details', $auction);
+        // Redirect back to the same page (showDetails) which will now show step 3 bid content
+        return redirect()->route('buyer.auction.show', $auction);
     }
 
     /**
@@ -157,7 +157,7 @@ class AuctionFlowController extends Controller
         // Check if user is on contract step
         $progress = $this->progressService->getProgress($auction, $user);
         if (!$progress || $progress->step_name !== 'contract') {
-            return redirect()->route('buyer.auction.details', $auction);
+            return redirect()->route('buyer.auction.show', $auction);
         }
 
         // Verify OTP
@@ -185,21 +185,8 @@ class AuctionFlowController extends Controller
             $contract->update(['status' => ContractStatus::CONFIRMED]);
         }
 
-        // Update buyer progress to step 3 (payment)
-        $this->progressService->updateProgress($auction, $user, 'payment', 3);
-
-        // Create payment receipt for commission payment if it doesn't exist
-        \App\Models\PaymentReceipt::updateOrCreate(
-            [
-                'auction_id' => $auction->id,
-                'user_id' => $user->id,
-                'type' => \App\Enums\PaymentType::BUYER_FEE,
-            ],
-            [
-                'amount' => 3000000, // 3 million toman commission
-                'status' => \App\Enums\PaymentStatus::PENDING_REVIEW,
-            ]
-        );
+        // Update buyer progress to step 3 (bid) - skipping payment step
+        $this->progressService->updateProgress($auction, $user, 'bid', 3);
 
         return redirect()->route('buyer.auction.details', $auction)
             ->with('success', 'قرارداد با موفقیت تأیید شد.');
@@ -218,13 +205,13 @@ class AuctionFlowController extends Controller
             ->first();
 
         if (!$contract) {
-            return redirect()->route('buyer.auction.details', $auction);
+            return redirect()->route('buyer.auction.show', $auction);
         }
 
         if ($contract->status === ContractStatus::CONFIRMED) {
-            // Update progress to next step
-            $this->progressService->updateProgress($auction, $user, 'payment', 3);
-            return redirect()->route('buyer.auction.details', $auction);
+            // Update progress to next step - skip payment and go to bid
+            $this->progressService->updateProgress($auction, $user, 'bid', 3);
+            return redirect()->route('buyer.auction.show', $auction);
         }
 
         // Update progress
@@ -599,8 +586,8 @@ class AuctionFlowController extends Controller
                 'image_path' => $imagePath
             ]);
 
-            \Log::info('Redirecting to buyer.auction.details for purchase payment');
-            return redirect()->route('buyer.auction.details', $auction)
+            \Log::info('Redirecting to buyer.auction.show for purchase payment');
+            return redirect()->route('buyer.auction.show', $auction)
                 ->with('success', 'رسید پرداخت مبلغ خرید با موفقیت آپلود شد و در انتظار بررسی مدیر است.');
 
         } catch (\Exception $e) {

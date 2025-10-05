@@ -76,6 +76,16 @@ class Auction extends Model
         return $this->hasMany(BuyerProgress::class);
     }
 
+    public function loanTransfers(): HasMany
+    {
+        return $this->hasMany(LoanTransfer::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     /**
      * Set the status attribute and sync is_locked
      */

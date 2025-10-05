@@ -22,7 +22,7 @@
 
                 <div class="bg-green-100 dark:bg-green-900 p-4 rounded-lg">
                     <h4 class="font-medium">مزایدات فعال</h4>
-                    <p class="text-2xl font-bold">{{ $activeAuctions->total() }}</p>
+                    <p class="text-2xl font-bold">{{ $activeAuctions->count() }}</p>
                 </div>
 
                 <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg">
@@ -186,7 +186,7 @@
                                                     </a>
                                                 </div>
                                             @else
-                                                <a href="{{ route('buyer.auction.join', $auction) }}"
+                                                <a href="{{ route('buyer.auction.show', $auction) }}"
                                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                                     شرکت در مزایده
                                                 </a>
@@ -197,10 +197,7 @@
                             @endforeach
                         </div>
 
-                        <!-- Pagination -->
-                        <div class="mt-6">
-                            {{ $activeAuctions->links() }}
-                        </div>
+                        <!-- No pagination needed for filtered collection -->
                     @else
                         <div class="text-center py-8">
                             <p class="text-gray-500 dark:text-gray-400">در حال حاضر مزایده فعالی وجود ندارد.</p>

@@ -17,7 +17,7 @@ class EnsureRole
     public function handle(Request $request, Closure $next, string $role): Response
     {
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect()->route('unified.otp.login');
         }
 
         $user = Auth::user();
@@ -29,4 +29,3 @@ class EnsureRole
         return $next($request);
     }
 }
-

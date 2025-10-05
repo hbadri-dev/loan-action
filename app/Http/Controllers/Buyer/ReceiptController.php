@@ -24,7 +24,7 @@ class ReceiptController extends Controller
         $this->fileUploadService = $fileUploadService;
     }
     /**
-     * Show payment form (Step 3)
+     * Show payment form (Step 3) - Now uses Zarinpal
      */
     public function showPayment(Auction $auction)
     {
@@ -41,20 +41,19 @@ class ReceiptController extends Controller
             return redirect()->route('buyer.auction.contract', $auction);
         }
 
-        // Get or create payment receipt
-        $paymentReceipt = PaymentReceipt::firstOrCreate(
-            [
-                'auction_id' => $auction->id,
-                'user_id' => $user->id,
-                'type' => PaymentType::BUYER_FEE,
-            ],
-            [
-                'amount' => 3000000, // 3,000,000 Toman
-                'status' => PaymentStatus::PENDING_REVIEW,
-            ]
-        );
+        // Check if payment already exists and is completed
+        $payment = \App\Models\Payment::where('auction_id', $auction->id)
+            ->where('user_id', $user->id)
+            ->where('type', PaymentType::BUYER_FEE)
+            ->where('status', \App\Enums\PaymentStatus::COMPLETED)
+            ->first();
 
-        return view('buyer.auction.payment', compact('auction', 'paymentReceipt'));
+        if ($payment) {
+            // Payment already completed, redirect to next step
+            return redirect()->route('buyer.auction.bid', $auction);
+        }
+
+        return view('buyer.auction.payment', compact('auction'));
     }
 
     /**
@@ -119,8 +118,8 @@ class ReceiptController extends Controller
             'image_path' => $imagePath
         ]);
 
-        \Log::info('Redirecting to buyer.auction.details');
-        return redirect()->route('buyer.auction.details', $auction)
+        \Log::info('Redirecting to buyer.auction.show');
+        return redirect()->route('buyer.auction.show', $auction)
             ->with('success', 'رسید پرداخت آپلود شد و در انتظار بررسی است.');
         } catch (\Exception $e) {
             \Log::error('Payment receipt upload error', [
@@ -136,7 +135,7 @@ class ReceiptController extends Controller
     }
 
     /**
-     * Show purchase payment form (Step 6)
+     * Show purchase payment form (Step 6) - Now uses Zarinpal
      */
     public function showPurchasePayment(Auction $auction)
     {
@@ -152,20 +151,19 @@ class ReceiptController extends Controller
             return redirect()->route('buyer.dashboard');
         }
 
-        // Get or create purchase payment receipt
-        $paymentReceipt = PaymentReceipt::firstOrCreate(
-            [
-                'auction_id' => $auction->id,
-                'user_id' => $user->id,
-                'type' => PaymentType::BUYER_PURCHASE_AMOUNT,
-            ],
-            [
-                'amount' => $userBid->amount,
-                'status' => PaymentStatus::PENDING_REVIEW,
-            ]
-        );
+        // Check if payment already exists and is completed
+        $payment = \App\Models\Payment::where('auction_id', $auction->id)
+            ->where('user_id', $user->id)
+            ->where('type', PaymentType::BUYER_PURCHASE_AMOUNT)
+            ->where('status', \App\Enums\PaymentStatus::COMPLETED)
+            ->first();
 
-        return view('buyer.auction.purchase-payment', compact('auction', 'paymentReceipt', 'userBid'));
+        if ($payment) {
+            // Payment already completed, redirect to next step
+            return redirect()->route('buyer.auction.awaiting-seller-transfer', $auction);
+        }
+
+        return view('buyer.auction.purchase-payment', compact('auction', 'userBid'));
     }
 
     /**
@@ -191,6 +189,9 @@ class ReceiptController extends Controller
 
         // Store the uploaded file using FileUploadService
         $imagePath = $this->fileUploadService->storeReceiptImage($request->file('receipt_image'), $user->id);
+
+        // Update user's national_id
+        $user->update(['national_id' => $request->national_id]);
 
         // Update payment receipt
         $paymentReceipt->update([

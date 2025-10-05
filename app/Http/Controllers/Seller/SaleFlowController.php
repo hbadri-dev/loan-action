@@ -421,7 +421,7 @@ class SaleFlowController extends Controller
                 'current_step' => 5,
             ]);
 
-            $response['redirect'] = route('seller.sale.loan-transfer', $auction);
+            $response['redirect'] = route('seller.auction.show', $auction);
         }
 
         return response()->json($response);
@@ -447,7 +447,7 @@ class SaleFlowController extends Controller
             ->where('seller_id', $user->id)
             ->first();
 
-        return view('seller.sale.loan-transfer', compact('auction', 'sellerSale', 'loanTransfer'));
+        return redirect()->route('seller.auction.show', $auction);
     }
 
     /**

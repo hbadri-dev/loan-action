@@ -20,6 +20,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Authentication Routes
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the login and register routes for your application.
+    | These routes are used by the authentication middleware to redirect users
+    | to the appropriate login page.
+    |
+    */
+
+    'routes' => [
+        'login' => 'unified.otp.login',
+        'register' => 'unified.otp.login',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Authentication Guards
     |--------------------------------------------------------------------------
     |
@@ -98,6 +114,18 @@ return [
             'throttle' => 60,
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Login Path
+    |--------------------------------------------------------------------------
+    |
+    | This is the path where users will be redirected when they are not
+    | authenticated and try to access protected routes.
+    |
+    */
+
+    'login_path' => '/unified/otp/login',
 
     /*
     |--------------------------------------------------------------------------

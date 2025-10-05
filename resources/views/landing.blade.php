@@ -931,7 +931,7 @@
         <div class="container">
             <h1>پلتفرم آنلاین انتقال وام</h1>
             <p>راهکار های نوین برای افراد حقیقی و حقوقی</p>
-            <p>اولین پلتفرم وام‌دهی فرد به فرد در ایران، با ضمانت کامل امانت‌داری پول شما. ما مرجع تخصصی انتقال امن وام هستیم</p>
+            <p>اولین پلتفرم وام‌دهی فرد به فرد در ایران، با ضمانت کامل امانت‌داری پول شما.</p>
             <div class="flex justify-center items-center gap-4 flex-wrap">
                 <a href="{{ route('unified.otp.login') }}" class="cta-button bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700">شروع کنید</a>
                 <a href="https://t.me/sajbazar" target="_blank" rel="noopener noreferrer" class="cta-button bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600">

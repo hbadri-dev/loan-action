@@ -115,25 +115,25 @@ class BuyerProgressService
     /**
      * Get the appropriate redirect route based on progress
      */
-    public function getRedirectRoute(Auction $auction, User $user): string
+public function getRedirectRoute(Auction $auction, User $user): string
     {
         $progress = $this->getProgress($auction, $user);
 
         if (!$progress || $progress->is_completed) {
-            return route('buyer.auction.details', $auction);
+            return route('buyer.auction.show', $auction);
         }
 
         return match($progress->step_name) {
-            'details' => route('buyer.auction.details', $auction),
-            'contract' => route('buyer.auction.contract', $auction),
-            'payment' => route('buyer.auction.payment', $auction),
-            'bid' => route('buyer.auction.bid', $auction),
-            'waiting-seller' => route('buyer.auction.waiting-seller', $auction),
-            'purchase-payment' => route('buyer.auction.purchase-payment', $auction),
-            'awaiting-seller-transfer' => route('buyer.auction.awaiting-seller-transfer', $auction),
-            'confirm-transfer' => route('buyer.auction.confirm-transfer', $auction),
-            'complete' => route('buyer.auction.complete', $auction),
-            default => route('buyer.auction.details', $auction),
+            'details' => route('buyer.auction.show', $auction),
+            'contract' => route('buyer.auction.show', $auction),
+            'payment' => route('buyer.auction.show', $auction),
+            'bid' => route('buyer.auction.show', $auction),
+            'waiting-seller' => route('buyer.auction.show', $auction),
+            'purchase-payment' => route('buyer.auction.show', $auction),
+            'awaiting-seller-transfer' => route('buyer.auction.show', $auction),
+            'confirm-transfer' => route('buyer.auction.show', $auction),
+            'complete' => route('buyer.auction.show', $auction),
+            default => route('buyer.auction.show', $auction),
         };
     }
 }

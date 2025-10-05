@@ -17,14 +17,14 @@ class EnsureOTPUser
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            return redirect()->route('otp.login');
+            return redirect()->route('unified.otp.login');
         }
 
         $user = Auth::user();
 
         // Check if user is authenticated and has phone verification
         if (!$user->is_phone_verified) {
-            return redirect()->route('otp.login')
+            return redirect()->route('unified.otp.login')
                 ->with('error', 'لطفاً شماره تلفن خود را تأیید کنید.');
         }
 

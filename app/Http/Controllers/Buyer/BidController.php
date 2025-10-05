@@ -37,7 +37,7 @@ class BidController extends Controller
         }
 
         // Redirect to the main auction details page which now handles step 4
-        return redirect()->route('buyer.auction.details', $auction);
+        return redirect()->route('buyer.auction.show', $auction);
     }
 
     /**

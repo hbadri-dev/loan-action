@@ -7,7 +7,7 @@
         <p class="text-gray-600">برای دسترسی به حساب کاربری خود وارد شوید</p>
     </div>
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('unified.otp.login') }}">
         @csrf
 
         <!-- Email Address -->

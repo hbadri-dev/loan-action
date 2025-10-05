@@ -131,6 +131,35 @@ class AuctionController extends Controller
     }
 
     /**
+     * Force delete auction completely (admin only)
+     */
+    public function forceDelete(Auction $auction)
+    {
+        try {
+            // Delete all related data first
+            $auction->bids()->delete();
+            $auction->buyerProgress()->delete();
+            $auction->sellerSales()->delete();
+            $auction->contractAgreements()->delete();
+            $auction->paymentReceipts()->delete();
+            $auction->loanTransfers()->delete();
+
+            // Delete payments first, then payment transactions will be deleted automatically via cascade
+            $auction->payments()->delete();
+
+            // Force delete the auction
+            $auction->forceDelete();
+
+            return redirect()->route('admin.auctions.index')
+                ->with('success', 'مزایده و تمامی اطلاعات مرتبط با آن با موفقیت حذف شد.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'خطا در حذف مزایده: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Toggle auction lock status
      */
     public function toggleLock(Auction $auction)

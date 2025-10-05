@@ -146,135 +146,303 @@
                             </div>
                         </div>
                     @elseif($sellerSale && $sellerSale->current_step == 2)
-                        <!-- Payment Content for Step 3 -->
+                        <!-- Payment Content for Step 2 -->
                         <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-green-800 dark:text-green-200 mb-4">
                                 پرداخت کارمزد فروش
                             </h2>
                             <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-green-200 dark:border-green-700">
                                 <div class="space-y-6">
-                                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                                        <h3 class="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                                            مبلغ کارمزد: 200,000 تومان
-                                        </h3>
-                                        <p class="text-sm text-yellow-700 dark:text-yellow-300 mb-4">
-                                            برای ادامه فرآیند فروش، لطفاً کارمزد فروش را پرداخت کرده و فیش واریزی را آپلود کنید.
-                                        </p>
-
-                                        <!-- Payment Information -->
-                                        <div class="bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-4 border border-indigo-400 dark:border-indigo-600">
-                                            <h4 class="font-semibold text-indigo-700 dark:text-amber-400 mb-3 text-center">
-                                                اطلاعات پرداخت
-                                            </h4>
-                                            <div class="text-center space-y-2">
-                                                <div class="bg-indigo-100 dark:bg-indigo-800 rounded-lg p-3">
-                                                    <span class="text-2xl md:text-3xl font-extrabold text-indigo-800 dark:text-amber-300 tracking-widest select-all">6037-9915-6739-2208</span>
-                                                </div>
-                                                <div class="bg-indigo-50 dark:bg-indigo-900 rounded-lg p-3">
-                                                    <span class="text-base md:text-lg font-semibold text-indigo-900 dark:text-indigo-100">سجاد باقری آذر چشمقان</span>
-                                                </div>
-                                            </div>
+                                    <!-- Payment Amount -->
+                                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+                                        <div class="text-center">
+                                            <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                                                مبلغ قابل پرداخت
+                                            </h3>
+                               <p class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
+                                   {{ number_format(200000) }} تومان
+                               </p>
+                                            <p class="text-sm text-yellow-700 dark:text-yellow-300 mt-2">
+                                                کارمزد فروشنده
+                                            </p>
                                         </div>
                                     </div>
 
                                     @php
-                                        $sellerReceipt = \App\Models\PaymentReceipt::where('auction_id', $auction->id)
+                                        $sellerPayment = \App\Models\Payment::where('auction_id', $auction->id)
                                             ->where('user_id', Auth::id())
                                             ->where('type', \App\Enums\PaymentType::SELLER_FEE)
+                                            ->where('status', \App\Enums\PaymentStatus::COMPLETED)
+                                            ->first();
+
+                                        $expiredPayment = \App\Models\Payment::where('auction_id', $auction->id)
+                                            ->where('user_id', Auth::id())
+                                            ->where('type', \App\Enums\PaymentType::SELLER_FEE)
+                                            ->where('status', \App\Enums\PaymentStatus::EXPIRED)
+                                            ->latest()
+                                            ->first();
+
+                                        $pendingPayment = \App\Models\Payment::where('auction_id', $auction->id)
+                                            ->where('user_id', Auth::id())
+                                            ->where('type', \App\Enums\PaymentType::SELLER_FEE)
+                                            ->where('status', \App\Enums\PaymentStatus::PENDING)
+                                            ->latest()
                                             ->first();
                                     @endphp
 
-                                    @if($sellerReceipt && $sellerReceipt->image_path)
-                                        <!-- Receipt Status -->
-                                        <div class="space-y-4">
-                                            @if($sellerReceipt->status === \App\Enums\PaymentStatus::APPROVED)
-                                                <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-                                                    <div class="flex items-center space-x-3">
-                                                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                        </svg>
-                                                        <div>
-                                                            <h4 class="font-semibold text-green-800 dark:text-green-200">رسید تأیید شده</h4>
-                                                            <p class="text-sm text-green-700 dark:text-green-300">رسید پرداخت کارمزد شما توسط مدیر تأیید شده است.</p>
-                                                        </div>
-                                                    </div>
+                                    @if($sellerPayment)
+                                        <!-- Payment Completed -->
+                                        <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
+                                            <div class="flex items-center space-x-4">
+                                                <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                <div>
+                                                    <h3 class="text-lg font-semibold text-green-800 dark:text-green-200">
+                                                        پرداخت با موفقیت انجام شد
+                                                    </h3>
+                                                    <p class="text-sm text-green-700 dark:text-green-300 mt-1">
+                                                        کارمزد فروشنده پرداخت شده است. می‌توانید به مرحله بعد بروید.
+                                                    </p>
+                                                    @if($sellerPayment->ref_id)
+                                                        <p class="text-xs text-green-600 dark:text-green-400 mt-2">
+                                                            شماره پیگیری: {{ $sellerPayment->ref_id }}
+                                                        </p>
+                                                    @endif
                                                 </div>
-                                                <div class="text-center">
-                                                    <a href="{{ route('seller.sale.bid-acceptance', $auction) }}"
-                                                       class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-colors">
-                                                        ادامه به مرحله بعد
-                                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                                        </svg>
-                                                    </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <a href="{{ route('seller.auction.show', $auction) }}"
+                                               class="inline-flex items-center px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition-colors">
+                                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                </svg>
+                                                ادامه به مرحله بعد
+                                            </a>
+                                        </div>
+                                    @elseif($expiredPayment)
+                                        <!-- Payment Expired -->
+                                        <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-6">
+                                            <div class="flex items-center space-x-4">
+                                                <svg class="w-12 h-12 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                <div>
+                                                    <h3 class="text-lg font-semibold text-orange-800 dark:text-orange-200">
+                                                        جلسه پرداخت منقضی شده است
+                                                    </h3>
+                                                    <p class="text-sm text-orange-700 dark:text-orange-300 mt-1">
+                                                        جلسه پرداخت قبلی منقضی شده است. لطفاً مجدداً تلاش کنید.
+                                                    </p>
+                                                    @if($expiredPayment->created_at)
+                                                        <p class="text-xs text-orange-600 dark:text-orange-400 mt-2">
+                                                            تاریخ ایجاد: {{ $expiredPayment->created_at->format('Y/m/d H:i') }}
+                                                        </p>
+                                                    @endif
                                                 </div>
-                                            @elseif($sellerReceipt->status === \App\Enums\PaymentStatus::REJECTED)
-                                                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-                                                    <div class="flex items-center space-x-3">
-                                                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                        </svg>
-                                                        <div>
-                                                            <h4 class="font-semibold text-red-800 dark:text-red-200">رسید رد شده</h4>
-                                                            <p class="text-sm text-red-700 dark:text-red-300">رسید پرداخت کارمزد شما توسط مدیر رد شده است.</p>
-                                                            @if($sellerReceipt->reject_reason)
-                                                                <p class="text-sm text-red-600 dark:text-red-400 mt-1">
-                                                                    <strong>دلیل رد:</strong> {{ $sellerReceipt->reject_reason }}
-                                                                </p>
-                                                            @endif
-                                                        </div>
-                                                    </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Retry Payment -->
+                                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mt-4">
+                                            <div class="text-center">
+                                                <div class="flex items-center justify-center mb-4">
+                                                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                    </svg>
+                                                    <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200">
+                                                        ایجاد پرداخت جدید
+                                                    </h3>
                                                 </div>
-                                                <!-- Re-upload form -->
-                                                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                                    <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-3">آپلود مجدد رسید</h4>
-                                                    <form action="{{ route('seller.receipt.upload', $auction) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-                                                        @csrf
+                                                <p class="text-gray-700 dark:text-gray-300 mb-6">
+                                                    پرداخت امن و سریع از طریق درگاه پرداخت زرین‌پال
+                                                </p>
+
+                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4">
+                                                    @csrf
+                                                    <input type="hidden" name="auction_id" value="{{ $auction->id }}">
+                                                    <input type="hidden" name="type" value="seller_fee">
+                                                    <input type="hidden" name="amount" value="200000">
+
+                                                    <!-- Required Fields -->
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         <div>
-                                                            <label for="receipt_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                                فیش واریزی (فرمت‌های مجاز: JPG, PNG, PDF - حداکثر 5MB)
+                                                            <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                                نام <span class="text-red-500">*</span>
                                                             </label>
-                                                            <input type="file" id="receipt_image" name="receipt_image" accept=".jpg,.jpeg,.png,.pdf" required
-                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                                            <input type="text" id="first_name" name="first_name" required
+                                                                   value="{{ Auth::user()->name }}"
+                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                   placeholder="نام خود را وارد کنید">
                                                         </div>
-                                                        <button type="submit"
-                                                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                                                            آپلود رسید
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            @else
-                                                <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                                                    <div class="flex items-center space-x-3">
-                                                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                        </svg>
                                                         <div>
-                                                            <h4 class="font-semibold text-yellow-800 dark:text-yellow-200">در انتظار تأیید</h4>
-                                                            <p class="text-sm text-yellow-700 dark:text-yellow-300">رسید پرداخت کارمزد شما در انتظار بررسی و تأیید مدیر است.</p>
+                                                            <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                                نام خانوادگی <span class="text-red-500">*</span>
+                                                            </label>
+                                                            <input type="text" id="last_name" name="last_name" required
+                                                                   value="{{ Auth::user()->name }}"
+                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                   placeholder="نام خانوادگی خود را وارد کنید">
                                                         </div>
                                                     </div>
-                                                </div>
-                                            @endif
+                                                    <div>
+                                                        <label for="national_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                            کد ملی <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="text" id="national_id" name="national_id" required
+                                                               value="{{ Auth::user()->national_id }}"
+                                                               pattern="[0-9]{10}"
+                                                               maxlength="10"
+                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
+                                                               placeholder="کد ملی 10 رقمی خود را وارد کنید">
+                                                    </div>
+
+                                                    <button type="submit"
+                                                            class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                        </svg>
+                                                        شروع پرداخت جدید
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    @elseif($pendingPayment || $expiredPayment)
+                                        <!-- Start New Payment -->
+                                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                                            <div class="text-center">
+                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4">
+                                                    @csrf
+                                                    <input type="hidden" name="auction_id" value="{{ $auction->id }}">
+                                                    <input type="hidden" name="type" value="seller_fee">
+                                                    <input type="hidden" name="amount" value="200000">
+
+                                                    <!-- Required Fields -->
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label for="first_name_2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                                نام <span class="text-red-500">*</span>
+                                                            </label>
+                                                            <input type="text" id="first_name_2" name="first_name" required
+                                                                   value="{{ Auth::user()->name }}"
+                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                   placeholder="نام خود را وارد کنید">
+                                                        </div>
+                                                        <div>
+                                                            <label for="last_name_2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                                نام خانوادگی <span class="text-red-500">*</span>
+                                                            </label>
+                                                            <input type="text" id="last_name_2" name="last_name" required
+                                                                   value="{{ Auth::user()->name }}"
+                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                   placeholder="نام خانوادگی خود را وارد کنید">
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label for="national_id_2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                            کد ملی <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="text" id="national_id_2" name="national_id" required
+                                                               value="{{ Auth::user()->national_id }}"
+                                                               pattern="[0-9]{10}"
+                                                               maxlength="10"
+                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
+                                                               placeholder="کد ملی 10 رقمی خود را وارد کنید">
+                                                    </div>
+
+                                                    <button type="submit"
+                                                            class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                                        </svg>
+                                                        پرداخت از طریق زرین‌پال
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
                                     @else
-                                        <!-- Upload Form -->
-                                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
-                                            <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-4">آپلود فیش واریزی</h4>
-                                            <form action="{{ route('seller.receipt.upload', $auction) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-                                                @csrf
-                                                <div>
-                                                    <label for="receipt_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                        فیش واریزی (فرمت‌های مجاز: JPG, PNG, PDF - حداکثر 5MB)
-                                                    </label>
-                                                    <input type="file" id="receipt_image" name="receipt_image" accept=".jpg,.jpeg,.png,.pdf" required
-                                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                        <!-- Payment Gateway -->
+                                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                                            <div class="text-center">
+                                                <div class="flex items-center justify-center mb-4">
+                                                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                                    </svg>
+                                                    <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200">
+                                                        پرداخت آنلاین از طریق زرین‌پال
+                                                    </h3>
                                                 </div>
-                                                <button type="submit"
-                                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
-                                                    آپلود رسید
-                                                </button>
-                                            </form>
+                                                <p class="text-gray-700 dark:text-gray-300 mb-6">
+                                                    پرداخت امن و سریع از طریق درگاه پرداخت زرین‌پال
+                                                </p>
+
+                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4">
+                                                    @csrf
+                                                    <input type="hidden" name="auction_id" value="{{ $auction->id }}">
+                                                    <input type="hidden" name="type" value="seller_fee">
+                                                    <input type="hidden" name="amount" value="200000">
+
+                                                    <!-- Required Fields -->
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label for="first_name_3" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                                نام <span class="text-red-500">*</span>
+                                                            </label>
+                                                            <input type="text" id="first_name_3" name="first_name" required
+                                                                   value="{{ Auth::user()->name }}"
+                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                   placeholder="نام خود را وارد کنید">
+                                                        </div>
+                                                        <div>
+                                                            <label for="last_name_3" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                                نام خانوادگی <span class="text-red-500">*</span>
+                                                            </label>
+                                                            <input type="text" id="last_name_3" name="last_name" required
+                                                                   value="{{ Auth::user()->name }}"
+                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                   placeholder="نام خانوادگی خود را وارد کنید">
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label for="national_id_3" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                            کد ملی <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="text" id="national_id_3" name="national_id" required
+                                                               value="{{ Auth::user()->national_id }}"
+                                                               pattern="[0-9]{10}"
+                                                               maxlength="10"
+                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
+                                                               placeholder="کد ملی 10 رقمی خود را وارد کنید">
+                                                    </div>
+
+                                                    <button type="submit"
+                                                            class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                                        </svg>
+                                                        پرداخت از طریق زرین‌پال
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <!-- Security Notice -->
+                                        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                            <div class="flex items-start">
+                                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <div>
+                                                    <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
+                                                        امنیت پرداخت
+                                                    </h4>
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                                                        پرداخت شما از طریق درگاه امن زرین‌پال انجام می‌شود و تمام اطلاعات محرمانه شما محفوظ خواهد ماند.
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
@@ -425,12 +593,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="space-y-3">
-                                                    <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
+                                                    <!-- <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
                                                         <span class="text-blue-700 dark:text-blue-300">شماره تماس:</span>
                                                         <span class="font-medium text-blue-800 dark:text-blue-200 text-lg">
                                                             {{ $buyer->phone ?? 'ثبت نشده' }}
                                                         </span>
-                                                    </div>
+                                                    </div> -->
                                                     <div class="flex justify-between items-center py-2 border-b border-blue-200 dark:border-blue-700">
                                                         <span class="text-blue-700 dark:text-blue-300">مبلغ پرداخت:</span>
                                                         <span class="font-bold text-green-600 dark:text-green-400 text-lg">
@@ -716,9 +884,7 @@
                     @elseif($sellerSale && $sellerSale->current_step > 3)
                         <!-- Content for Steps 4-7 -->
                         <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mb-8">
-                            <h2 class="text-xl font-bold text-blue-800 dark:text-blue-200 mb-4">
-                                مرحله {{ $sellerSale->getDisplayStep() }} از 7
-                            </h2>
+
                             <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-blue-200 dark:border-blue-700">
                                 <div class="space-y-4">
                                     <div class="flex items-center space-x-3">
@@ -819,17 +985,8 @@
                         @elseif($sellerSale && $sellerSale->current_step > 2)
                             <!-- Steps 3-6: Show appropriate action based on step -->
                             @php
-                                $actionRoute = match($sellerSale->status->value) {
-                                    'contract_confirmed' => route('seller.sale.payment', $auction),
-                                    'fee_approved' => route('seller.sale.bid-acceptance', $auction),
-                                    'offer_accepted' => route('seller.sale.awaiting-buyer-payment', $auction),
-                                    'awaiting_buyer_payment' => route('seller.sale.awaiting-buyer-payment', $auction),
-                                    'buyer_payment_approved' => route('seller.sale.loan-transfer', $auction),
-                                    'loan_transferred' => route('seller.sale.awaiting-transfer-confirmation', $auction),
-                                    'transfer_confirmed' => route('seller.sale.completion', $auction),
-                                    'completed' => route('seller.sale.completion', $auction),
-                                    default => null,
-                                };
+                                // All actions are now handled within the show page
+                                $actionRoute = null;
                             @endphp
 
                             @if($actionRoute)
@@ -850,11 +1007,12 @@
                     </div>
 
                     <!-- Step Progress Component -->
-                    @if($sellerSale)
+                    {{-- Temporarily disabled --}}
+                    {{-- @if($sellerSale)
                         <div class="mt-6">
                             <x-seller-step-progress :sellerSale="$sellerSale" />
                         </div>
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>
@@ -883,6 +1041,48 @@
 
                     // Prevent non-numeric characters
                     ibanInput.addEventListener('keydown', function(e) {
+                        // Allow: backspace, delete, tab, escape, enter, arrows
+                        if ([8, 9, 27, 13, 46, 37, 38, 39, 40].indexOf(e.keyCode) !== -1 ||
+                            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                            (e.keyCode === 65 && e.ctrlKey === true) ||
+                            (e.keyCode === 67 && e.ctrlKey === true) ||
+                            (e.keyCode === 86 && e.ctrlKey === true) ||
+                            (e.keyCode === 88 && e.ctrlKey === true)) {
+                            return;
+                        }
+                        // Ensure that it is a number and stop the keypress
+                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                            e.preventDefault();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    @endif
+
+    @if($sellerSale && $sellerSale->current_step == 2)
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Format national ID inputs - only numbers
+            const nationalIdInputs = document.querySelectorAll('#national_id, #national_id_2, #national_id_3');
+
+            nationalIdInputs.forEach(nationalIdInput => {
+                if (nationalIdInput) {
+                    // Format national ID input - only allow numbers
+                    nationalIdInput.addEventListener('input', function(e) {
+                        let value = e.target.value.replace(/\D/g, ''); // Only digits
+
+                        // Limit to 10 characters
+                        if (value.length > 10) {
+                            value = value.substring(0, 10);
+                        }
+
+                        e.target.value = value;
+                    });
+
+                    // Prevent non-numeric characters
+                    nationalIdInput.addEventListener('keydown', function(e) {
                         // Allow: backspace, delete, tab, escape, enter, arrows
                         if ([8, 9, 27, 13, 46, 37, 38, 39, 40].indexOf(e.keyCode) !== -1 ||
                             // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X

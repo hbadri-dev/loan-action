@@ -72,10 +72,11 @@
                                                         {{ $sale->status->label() }}
                                                     </span>
                                                 </div>
-                                                <div>
-                                                    <span class="text-sm text-gray-500 dark:text-gray-400">مرحله:</span>
-                                                    <p class="font-medium text-gray-900 dark:text-gray-100">{{ $sale->current_step }}/8</p>
-                                                </div>
+                                                {{-- Temporarily disabled --}}
+                                                {{-- <div>
+                                                    <span class="text-sm text-gray-500 dark:text-gray-400">وضعیت:</span>
+                                                    <p class="font-medium text-gray-900 dark:text-gray-100">{{ $sale->getDisplayStep() }}</p>
+                                                </div> --}}
                                                 <div>
                                                     <span class="text-sm text-gray-500 dark:text-gray-400">مبلغ وام:</span>
                                                     <p class="font-medium text-gray-900 dark:text-gray-100">{{ number_format($sale->auction->principal_amount) }} تومان</p>
@@ -98,7 +99,8 @@
                                             </div>
 
                                             <!-- Progress Bar -->
-                                            <div class="mt-3">
+                                            {{-- Temporarily disabled --}}
+                                            {{-- <div class="mt-3">
                                                 <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                                                     <span>پیشرفت فرآیند</span>
                                                     <span>{{ round(($sale->getDisplayStep() / 8) * 100) }}%</span>
@@ -107,13 +109,13 @@
                                                     <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
                                                          style="width: {{ ($sale->getDisplayStep() / 8) * 100 }}%"></div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
 
                                         <div class="ml-4 flex flex-col gap-2">
 
                                         <!-- اگه تکمیل شده بود دیگه دکمه نداریم -->
-                                        @if($sale->status->label() === 'انتقال تأیید شده')
+                                        @if($sale->status === \App\Enums\SaleStatus::TRANSFER_CONFIRMED || $sale->status === \App\Enums\SaleStatus::COMPLETED)
                                             <span class="bg-gray-300 text-gray-500 font-bold py-2 px-4 rounded cursor-not-allowed">
                                                 فرآیند تکمیل شده
                                             </span>
@@ -123,9 +125,10 @@
                                                 ادامه فرآیند
                                             </a>
                                         @endif
-                                            <span class="text-xs text-gray-500 dark:text-gray-400 text-center">
-                                                مرحله {{ $sale->getDisplayStep() }} از 8
-                                            </span>
+                                            {{-- Temporarily disabled --}}
+                                            {{-- <span class="text-xs text-gray-500 dark:text-gray-400 text-center">
+                                                {{ $sale->getDisplayStep() }}
+                                            </span> --}}
                                         </div>
                                     </div>
                                 </div>

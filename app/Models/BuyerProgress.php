@@ -103,16 +103,16 @@ class BuyerProgress extends Model
         }
 
         return match($this->step_name) {
-            'details' => route('buyer.auction.details', $this->auction),
-            'contract' => route('buyer.auction.contract', $this->auction),
-            'payment' => route('buyer.auction.payment', $this->auction),
-            'bid' => route('buyer.auction.bid', $this->auction),
-            'waiting-seller' => route('buyer.auction.waiting-seller', $this->auction),
-            'purchase-payment' => route('buyer.auction.purchase-payment', $this->auction),
-            'awaiting-seller-transfer' => route('buyer.auction.awaiting-seller-transfer', $this->auction),
-            'confirm-transfer' => route('buyer.auction.confirm-transfer', $this->auction),
-            'complete' => route('buyer.auction.complete', $this->auction),
-            default => route('buyer.auction.details', $this->auction),
+            'details' => route('buyer.auction.show', $this->auction),
+            'contract' => route('buyer.auction.show', $this->auction),
+            'payment' => route('buyer.auction.show', $this->auction),
+            'bid' => route('buyer.auction.show', $this->auction),
+            'waiting-seller' => route('buyer.auction.show', $this->auction),
+            'purchase-payment' => route('buyer.auction.show', $this->auction),
+            'awaiting-seller-transfer' => route('buyer.auction.show', $this->auction),
+            'confirm-transfer' => route('buyer.auction.show', $this->auction),
+            'complete' => route('buyer.auction.show', $this->auction),
+            default => route('buyer.auction.show', $this->auction),
         };
     }
 }

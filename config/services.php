@@ -41,4 +41,11 @@ return [
         'base_url' => env('KAVENEGAR_BASE_URL', 'https://api.kavenegar.com/v1'),
     ],
 
+    'zarinpal' => [
+        'merchant_id' => env('ZARINPAL_MERCHANT_ID', '3163ddfe-bd9a-46d2-830e-d2587c67ee46'),
+        'sandbox' => filter_var(env('ZARINPAL_SANDBOX', true), FILTER_VALIDATE_BOOLEAN), // true برای sandbox، false برای production
+        'callback_url' => env('ZARINPAL_CALLBACK_URL', 'http://localhost:8080/payment/callback'),
+        'test_merchant_id' => '00000000-0000-0000-0000-000000000000', // Merchant ID تست برای sandbox
+    ],
+
 ];

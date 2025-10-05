@@ -43,15 +43,9 @@ class BidPolicy
         }
 
         // Contract step removed - no need to check contract confirmation
+        // Payment step removed - no need to check buyer fee payment
 
-        // Check if buyer fee is approved
-        $buyerFee = \App\Models\PaymentReceipt::where('auction_id', $auction->id)
-            ->where('user_id', $user->id)
-            ->where('type', 'buyer_fee')
-            ->where('status', 'approved')
-            ->first();
-
-        return (bool) $buyerFee;
+        return true;
     }
 
     /**

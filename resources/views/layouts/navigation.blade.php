@@ -20,16 +20,12 @@
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
                                 {{ __('پنل مدیریت') }}
                             </x-nav-link>
-                        @endif
-
-                        @if(auth()->user()->hasRole('buyer'))
-                            <x-nav-link :href="route('buyer.dashboard')" :active="request()->routeIs('buyer.*') && $currentRole === 'buyer'">
+                        @elseif(auth()->user()->hasRole('buyer') && $currentRole === 'buyer')
+                            <x-nav-link :href="route('buyer.dashboard')" :active="request()->routeIs('buyer.*')">
                                 {{ __('پنل خریدار') }}
                             </x-nav-link>
-                        @endif
-
-                        @if(auth()->user()->hasRole('seller'))
-                            <x-nav-link :href="route('seller.dashboard')" :active="request()->routeIs('seller.*') && $currentRole === 'seller'">
+                        @elseif(auth()->user()->hasRole('seller') && $currentRole === 'seller')
+                            <x-nav-link :href="route('seller.dashboard')" :active="request()->routeIs('seller.*')">
                                 {{ __('پنل فروشنده') }}
                             </x-nav-link>
                         @endif
@@ -62,28 +58,6 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <!-- Role Switcher -->
-                            @if(auth()->user()->hasRole('buyer') && auth()->user()->hasRole('seller'))
-                                @php
-                                    $currentRole = session('current_role', 'buyer');
-                                @endphp
-                                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-600">
-                                    <div class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">تعویض نقش:</div>
-                                    <div class="space-y-1">
-                                        @if($currentRole !== 'buyer')
-                                            <a href="{{ route('switch-role', 'buyer') }}" class="block px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                                خریدار
-                                            </a>
-                                        @endif
-                                        @if($currentRole !== 'seller')
-                                            <a href="{{ route('switch-role', 'seller') }}" class="block px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                                فروشنده
-                                            </a>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -109,7 +83,7 @@
                 </div>
             @else
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
-                    <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                    <a href="{{ route('unified.otp.login') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                         {{ __('ورود') }}
                     </a>
                     <a href="{{ route('register.buyer') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium mr-4">
@@ -134,16 +108,12 @@
                     <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
                         {{ __('پنل مدیریت') }}
                     </x-responsive-nav-link>
-                @endif
-
-                @if(auth()->user()->hasRole('buyer'))
-                    <x-responsive-nav-link :href="route('buyer.dashboard')" :active="request()->routeIs('buyer.*') && $currentRole === 'buyer'">
+                @elseif(auth()->user()->hasRole('buyer') && $currentRole === 'buyer')
+                    <x-responsive-nav-link :href="route('buyer.dashboard')" :active="request()->routeIs('buyer.*')">
                         {{ __('پنل خریدار') }}
                     </x-responsive-nav-link>
-                @endif
-
-                @if(auth()->user()->hasRole('seller'))
-                    <x-responsive-nav-link :href="route('seller.dashboard')" :active="request()->routeIs('seller.*') && $currentRole === 'seller'">
+                @elseif(auth()->user()->hasRole('seller') && $currentRole === 'seller')
+                    <x-responsive-nav-link :href="route('seller.dashboard')" :active="request()->routeIs('seller.*')">
                         {{ __('پنل فروشنده') }}
                     </x-responsive-nav-link>
                 @endif

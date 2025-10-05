@@ -43,5 +43,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('viewTransferReceipt', [FileAccessPolicy::class, 'viewTransferReceipt']);
         Gate::define('upload', [FileAccessPolicy::class, 'upload']);
         Gate::define('manage', [FileAccessPolicy::class, 'manage']);
+
+        // Configure authentication redirect
+        \Illuminate\Support\Facades\Auth::setDefaultDriver('web');
     }
 }

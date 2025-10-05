@@ -191,11 +191,35 @@ class SellerController extends Controller
             }, 'creator'])
             ->paginate(10);
 
-        // Get seller's sales in progress
+        // Get seller's sales in progress - exclude completed and inaccessible
         $salesInProgress = SellerSale::where('seller_id', $user->id)
             ->whereNotIn('status', [SaleStatus::COMPLETED, SaleStatus::CANCELLED])
+            ->whereHas('auction', function($query) {
+                $query->whereNotIn('status', [AuctionStatus::COMPLETED])
+                      ->where('status', '!=', AuctionStatus::CANCELLED);
+            })
             ->with(['auction', 'selectedBid'])
-            ->get();
+            ->get()
+            ->filter(function($sale) {
+                // Additional filter: exclude sales where user has no access to continue
+
+                // If auction is completed or cancelled, exclude
+                if (in_array($sale->auction->status->value, ['completed', 'cancelled'])) {
+                    return false;
+                }
+
+                // If sale is completed or cancelled, exclude
+                if (in_array($sale->status->value, ['completed', 'cancelled'])) {
+                    return false;
+                }
+
+                // If sale is at final step and user can't continue, exclude
+                if ($sale->status === SaleStatus::TRANSFER_CONFIRMED) {
+                    return false;
+                }
+
+                return true;
+            });
 
         return view('seller.dashboard', compact('activeAuctions', 'salesInProgress'));
     }
@@ -461,7 +485,7 @@ class SellerController extends Controller
     }
 
     /**
-     * Show seller fee payment (Step 3)
+     * Show seller fee payment (Step 3) - Now uses Zarinpal
      */
     public function showPayment(Auction $auction)
     {
@@ -476,23 +500,19 @@ class SellerController extends Controller
             return redirect()->route('seller.dashboard');
         }
 
-        // Get or create payment receipt
-        $paymentReceipt = PaymentReceipt::where('auction_id', $auction->id)
+        // Check if payment already exists and is completed
+        $payment = \App\Models\Payment::where('auction_id', $auction->id)
             ->where('user_id', $user->id)
             ->where('type', PaymentType::SELLER_FEE)
+            ->where('status', \App\Enums\PaymentStatus::COMPLETED)
             ->first();
 
-        if (!$paymentReceipt) {
-            $paymentReceipt = PaymentReceipt::create([
-                'auction_id' => $auction->id,
-                'user_id' => $user->id,
-                'type' => PaymentType::SELLER_FEE,
-                'amount' => 3000000, // 3,000,000 Toman
-                'status' => PaymentStatus::PENDING_REVIEW,
-            ]);
+        if ($payment) {
+            // Payment already completed, redirect to next step
+            return redirect()->route('seller.sale.bid-acceptance', $auction);
         }
 
-        return view('seller.sale.payment', compact('auction', 'sellerSale', 'paymentReceipt'));
+        return view('seller.sale.payment', compact('auction', 'sellerSale'));
     }
 
     /**
@@ -622,7 +642,7 @@ class SellerController extends Controller
                 'auction_id' => $auction->id,
                 'seller_id' => $sellerSale->seller_id,
                 'buyer_id' => $highestBid->buyer_id,
-                'national_id_of_buyer' => 'TBD', // TODO: Add national_id field to users table
+                'national_id_of_buyer' => $highestBid->buyer->national_id ?? 'تعیین نشده',
                 'transfer_receipt_path' => '', // Will be filled later when seller uploads transfer receipt
             ]);
 
@@ -726,7 +746,7 @@ class SellerController extends Controller
             return redirect()->route('seller.dashboard');
         }
 
-        return view('seller.sale.loan-transfer', compact('auction', 'sellerSale', 'loanTransfer'));
+        return redirect()->route('seller.auction.show', $auction);
     }
 
     /**
@@ -895,7 +915,7 @@ class SellerController extends Controller
             case SaleStatus::OFFER_ACCEPTED:
                 return redirect()->route('seller.sale.awaiting-buyer-payment', $auction);
             case SaleStatus::BUYER_PAYMENT_APPROVED:
-                return redirect()->route('seller.sale.loan-transfer', $auction);
+                return redirect()->route('seller.auction.show', $auction);
             case SaleStatus::LOAN_TRANSFERRED:
                 return redirect()->route('seller.sale.awaiting-transfer-confirmation', $auction);
             case SaleStatus::TRANSFER_CONFIRMED:
@@ -987,7 +1007,7 @@ class SellerController extends Controller
                     'auction_id' => $auction->id,
                     'seller_id' => $user->id,
                     'buyer_id' => $acceptedBid->buyer_id,
-                    'national_id_of_buyer' => $acceptedBid->buyer->national_id ?? 'TBD',
+                    'national_id_of_buyer' => $acceptedBid->buyer->national_id ?? 'تعیین نشده',
                     'transfer_receipt_path' => $filePath,
                 ]);
             }

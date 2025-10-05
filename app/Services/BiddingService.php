@@ -147,16 +147,7 @@ class BiddingService
             throw new \Exception('شما حداکثر ۳ بار می‌توانید پیشنهاد ثبت کنید. تعداد پیشنهادات شما به حد مجاز رسیده است.');
         }
 
-        // Check if buyer has approved fee payment
-        $feePayment = PaymentReceipt::where('user_id', $buyer->id)
-            ->where('auction_id', $auction->id)
-            ->where('type', \App\Enums\PaymentType::BUYER_FEE)
-            ->where('status', PaymentStatus::APPROVED)
-            ->first();
-
-        if (!$feePayment) {
-            throw new \Exception('برای شرکت در مزایده باید کارمزد خریدار را پرداخت کرده باشید.');
-        }
+        // Buyer fee payment step removed - no need to check payment receipt
     }
 
     /**

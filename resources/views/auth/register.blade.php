@@ -56,7 +56,7 @@
     <div class="mt-6 text-center">
         <p class="text-sm text-gray-600">
             قبلاً ثبت نام کرده‌اید؟
-            <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+            <a href="{{ route('unified.otp.login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
                 وارد شوید
             </a>
         </p>

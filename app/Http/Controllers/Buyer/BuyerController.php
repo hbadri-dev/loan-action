@@ -43,15 +43,60 @@ class BuyerController extends Controller
             }, 'buyerProgress' => function($query) use ($user) {
                 $query->where('user_id', $user->id);
             }])
-            ->paginate(10);
+            ->get()
+            ->filter(function($auction) use ($user) {
+                $userProgress = $auction->buyerProgress->where('user_id', $user->id)->first();
 
-        // Get user's bids in progress
+                // If user has completed progress or is at 'complete' step, don't show auction
+                if ($userProgress && ($userProgress->is_completed || $userProgress->step_name === 'complete')) {
+                    return false;
+                }
+
+                // If auction is completed or cancelled, don't show
+                if (in_array($auction->status->value, ['completed', 'cancelled'])) {
+                    return false;
+                }
+
+                return true;
+            });
+
+        // Get user's bids in progress - exclude completed and inaccessible
         $inProgressBids = Bid::where('buyer_id', $user->id)
             ->whereIn('status', [BidStatus::PENDING, BidStatus::HIGHEST, BidStatus::ACCEPTED])
+            ->whereHas('auction', function($query) {
+                $query->whereNotIn('status', [AuctionStatus::COMPLETED])
+                      ->where('status', '!=', AuctionStatus::CANCELLED);
+            })
             ->with(['auction', 'auction.creator'])
             ->orderBy('created_at', 'desc')
             ->take(5)
-            ->get();
+            ->get()
+            ->filter(function($bid) {
+                // Additional filter: exclude bids where user has no access to continue the process
+                $userProgress = $bid->auction->buyerProgress->where('user_id', auth()->id())->first();
+
+                // If auction is completed or cancelled, exclude
+                if (in_array($bid->auction->status->value, ['completed', 'cancelled'])) {
+                    return false;
+                }
+
+                // If user progress is completed or at 'complete' step, exclude
+                if ($userProgress && ($userProgress->is_completed || $userProgress->step_name === 'complete')) {
+                    return false;
+                }
+
+                // If bid is outbid and user has no active progress, exclude
+                if ($bid->status === BidStatus::OUTBID && (!$userProgress || $userProgress->is_completed)) {
+                    return false;
+                }
+
+                // If bid is rejected and user has no active progress, exclude
+                if ($bid->status === BidStatus::REJECTED) {
+                    return false;
+                }
+
+                return true;
+            });
 
         return view('buyer.dashboard', compact('activeAuctions', 'inProgressBids'));
     }
@@ -593,18 +638,62 @@ class BuyerController extends Controller
     {
         $user = Auth::user();
 
-        // Get user's auction progress
-        $userProgress = $this->progressService->getUserProgress($user);
+        // Get user's auction progress - filter out completed and inaccessible
+        $userProgress = $this->progressService->getUserProgress($user)
+            ->filter(function($progress) {
+                // Exclude completed progress
+                if ($progress->is_completed) {
+                    return false;
+                }
+
+                // Exclude progress for completed or cancelled auctions
+                if (in_array($progress->auction->status->value, ['completed', 'cancelled'])) {
+                    return false;
+                }
+
+                // Exclude progress where user has no access to continue
+                // Check if auction is locked and user doesn't have accepted bid
+                if ($progress->auction->status->value === 'locked') {
+                    $userBid = $progress->auction->bids()
+                        ->where('buyer_id', auth()->id())
+                        ->where('status', \App\Enums\BidStatus::ACCEPTED)
+                        ->first();
+
+                    if (!$userBid) {
+                        return false; // User doesn't have accepted bid for locked auction
+                    }
+                }
+
+                return true;
+            });
 
         // Get user's bids with related auctions
         $bids = Bid::where('buyer_id', $user->id)
-            ->with(['auction', 'auction.creator'])
+            ->with(['auction', 'auction.creator', 'auction.buyerProgress' => function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            }])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        // Categorize bids
+        // Categorize bids - exclude completed and inaccessible
         $inProgress = $bids->filter(function ($bid) {
-            return in_array($bid->status->value, ['pending', 'highest', 'accepted']);
+            // Exclude completed or cancelled auctions
+            if (in_array($bid->auction->status->value, ['completed', 'cancelled'])) {
+                return false;
+            }
+
+            // Only include bids where user can continue the process
+            if (in_array($bid->status->value, ['pending', 'highest', 'accepted'])) {
+                return true;
+            }
+
+            // For outbid bids, only include if user has active progress
+            if ($bid->status->value === 'outbid') {
+                $userProgress = $bid->auction->buyerProgress->first();
+                return $userProgress && !$userProgress->is_completed;
+            }
+
+            return false;
         });
 
         $completed = $bids->filter(function ($bid) {
@@ -612,7 +701,17 @@ class BuyerController extends Controller
         });
 
         $otherSelected = $bids->filter(function ($bid) {
-            return $bid->status->value === 'outbid' || $bid->status->value === 'rejected';
+            // Include rejected bids and outbid bids without active progress
+            if ($bid->status->value === 'rejected') {
+                return true;
+            }
+
+            if ($bid->status->value === 'outbid') {
+                $userProgress = $bid->auction->buyerProgress->first();
+                return !$userProgress || $userProgress->is_completed;
+            }
+
+            return false;
         });
 
         return view('buyer.orders', compact('userProgress', 'inProgress', 'completed', 'otherSelected'));

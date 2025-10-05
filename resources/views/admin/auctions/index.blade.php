@@ -147,6 +147,17 @@
                                                     </button>
                                                 </form>
                                             @endif
+
+                                            <!-- Force Delete Button -->
+                                            <form method="POST" action="{{ route('admin.auctions.force-delete', $auction) }}" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                                        onclick="return confirm('⚠️ هشدار: این عمل غیرقابل بازگشت است!\n\nآیا از حذف کامل این مزایده و تمامی اطلاعات مرتبط با آن اطمینان دارید؟\n\nاین شامل:\n- تمام پیشنهادات\n- پیشرفت خریداران\n- فروش‌های فروشندگان\n- قراردادها\n- رسیدهای پرداخت\n- انتقالات وام\n\nاین عمل قابل بازگشت نیست!')">
+                                                    حذف کامل
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -169,4 +180,3 @@
         </div>
     </div>
 </x-app-layout>
-

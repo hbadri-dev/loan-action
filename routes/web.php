@@ -34,6 +34,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     // Auction Management
     Route::resource('auctions', \App\Http\Controllers\Admin\AuctionController::class);
     Route::post('auctions/{auction}/toggle-lock', [\App\Http\Controllers\Admin\AuctionController::class, 'toggleLock'])->name('auctions.toggle-lock');
+    Route::delete('auctions/{auction}/force-delete', [\App\Http\Controllers\Admin\AuctionController::class, 'forceDelete'])->name('auctions.force-delete');
 
     // Payment Receipt Moderation
     Route::prefix('payment-receipts')->name('payment-receipts.')->group(function () {
@@ -72,52 +73,20 @@ Route::prefix('buyer')->name('buyer.')->middleware(['auth', 'role:buyer'])->grou
     Route::get('dashboard', [\App\Http\Controllers\Buyer\BuyerController::class, 'dashboard'])->name('dashboard');
     Route::get('orders', [\App\Http\Controllers\Buyer\BuyerController::class, 'orders'])->name('orders');
 
-    // Auction Flow (Steps 1-7)
+    // Auction Flow - All handled in show page
     Route::prefix('auction/{auction}')->name('auction.')->group(function () {
-        // Join auction - redirect to appropriate step based on progress
-        Route::get('join', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'joinAuction'])->name('join');
-
-        // Step 1: Auction Details
+        // Main auction show page - handles all steps
         Route::get('/', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'showDetails'])->name('show');
-        Route::get('details', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'showDetails'])->name('details');
+
+        // Action routes for show page functionality
         Route::post('continue', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'continueToContract'])->name('continue');
-
-        // Step 2: Contract Confirmation
-        Route::get('contract', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'showContract'])->name('contract');
-        Route::post('contract/otp', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'sendContractOtp'])->name('contract.otp');
-        Route::post('contract/verify-otp', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'verifyContractOtp'])->name('contract.verify-otp');
-        Route::get('contract/verify', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'showContractVerification'])->name('verify-contract');
-        Route::post('contract/verify', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'verifyContract'])->name('verify-contract.post');
-
-        // Step 3: Payment Receipt Upload
-        Route::get('payment', [\App\Http\Controllers\Buyer\ReceiptController::class, 'showPayment'])->name('payment');
+        Route::post('bid', [\App\Http\Controllers\Buyer\BidController::class, 'submitBid'])->name('bid.post');
+        Route::post('purchase-payment/upload', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'uploadPurchasePayment'])->name('purchase.payment.upload');
         Route::post('payment/receipt', [\App\Http\Controllers\Buyer\ReceiptController::class, 'uploadPaymentReceipt'])->name('payment.receipt');
 
-        // Step 4: Bid Submission
-        Route::get('bid', [\App\Http\Controllers\Buyer\BidController::class, 'showBidForm'])->name('bid');
-        Route::post('bid', [\App\Http\Controllers\Buyer\BidController::class, 'submitBid'])->name('bid.post');
-
-        // Step 5: Waiting for Seller
-        Route::get('waiting-seller', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'showWaitingSeller'])->name('waiting-seller');
+        // API routes for status checks
         Route::get('bid/status', [\App\Http\Controllers\Buyer\BidController::class, 'getBidStatus'])->name('bid.status');
-
-        // Step 6: Purchase Payment
-        Route::get('purchase-payment', [\App\Http\Controllers\Buyer\ReceiptController::class, 'showPurchasePayment'])->name('purchase-payment');
-        Route::post('purchase-payment/receipt', [\App\Http\Controllers\Buyer\ReceiptController::class, 'uploadPurchaseReceipt'])->name('purchase-payment.receipt');
-
-        // Unified purchase payment upload for show page
-        Route::post('purchase-payment/upload', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'uploadPurchasePayment'])->name('purchase.payment.upload');
-
-        // Step 7: Awaiting Seller Transfer
-        Route::get('awaiting-seller-transfer', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'showAwaitingSellerTransfer'])->name('awaiting-seller-transfer');
         Route::get('seller-transfer/status', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'getSellerTransferStatus'])->name('seller-transfer.status');
-
-        // Step 8: Confirm Transfer
-        Route::get('confirm-transfer', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'showConfirmTransfer'])->name('confirm-transfer');
-        Route::post('loan-transfer/confirm', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'confirmLoanTransfer'])->name('loan-transfer.confirm');
-
-        // Final: Completion
-        Route::get('complete', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'showComplete'])->name('complete');
     });
 });
 
@@ -140,48 +109,16 @@ Route::prefix('seller')->name('seller.')->middleware(['auth', 'role:seller'])->g
     // IBAN Update
     Route::post('iban/update', [\App\Http\Controllers\Seller\SellerController::class, 'updateIban'])->name('iban.update');
 
-    // Sale Flow (Steps 1-8)
+    // Sale Flow - All handled in auction show page
     Route::prefix('sale/{auction}')->name('sale.')->group(function () {
-        // Start Sale
-        Route::post('start', [\App\Http\Controllers\Seller\SaleFlowController::class, 'startSale'])->name('start');
-
-        // Step 1: Sale Details
-        Route::get('details', [\App\Http\Controllers\Seller\SaleFlowController::class, 'showSaleDetails'])->name('details');
+        // Action routes for show page functionality
         Route::post('continue', [\App\Http\Controllers\Seller\SaleFlowController::class, 'continueToContract'])->name('continue');
-
-        // Step 2: Contract Confirmation
-        Route::get('contract', [\App\Http\Controllers\Seller\SaleFlowController::class, 'showContract'])->name('contract');
-        Route::post('contract/otp', [\App\Http\Controllers\Seller\SaleFlowController::class, 'sendContractOtp'])->name('contract.otp');
-        Route::get('contract/verify', [\App\Http\Controllers\Seller\SaleFlowController::class, 'showContractVerification'])->name('verify-contract');
-        Route::post('contract/verify', [\App\Http\Controllers\Seller\SaleFlowController::class, 'verifyContract'])->name('verify-contract.post');
-
-        // OTP routes for seller show page
-        Route::post('contract/otp-send', [\App\Http\Controllers\Seller\SellerController::class, 'sendContractOtp'])->name('contract.otp-send');
-        Route::post('contract/verify-otp', [\App\Http\Controllers\Seller\SellerController::class, 'verifyContractOtp'])->name('contract.verify-otp');
-
-        // Step 3: Payment Receipt Upload
-        Route::get('payment', [\App\Http\Controllers\Seller\ReceiptController::class, 'showPayment'])->name('payment');
-        Route::post('payment/receipt', [\App\Http\Controllers\Seller\ReceiptController::class, 'uploadPaymentReceipt'])->name('seller.payment.receipt');
-
-        // Step 4: Bid Acceptance
-        Route::get('bid-acceptance', [\App\Http\Controllers\Seller\SaleFlowController::class, 'showBidAcceptance'])->name('bid-acceptance');
         Route::post('accept-bid', [\App\Http\Controllers\Seller\SaleFlowController::class, 'acceptBid'])->name('accept-bid');
-
-        // Step 5: Awaiting Buyer Payment
-        Route::get('awaiting-buyer-payment', [\App\Http\Controllers\Seller\SaleFlowController::class, 'showAwaitingBuyerPayment'])->name('awaiting-buyer-payment');
-        Route::get('buyer-payment/status', [\App\Http\Controllers\Seller\SaleFlowController::class, 'getBuyerPaymentStatus'])->name('buyer-payment.status');
-
-        // Step 6: Loan Transfer
-        Route::get('loan-transfer', [\App\Http\Controllers\Seller\SaleFlowController::class, 'showLoanTransfer'])->name('loan-transfer');
         Route::post('loan-transfer/receipt', [\App\Http\Controllers\Seller\SaleFlowController::class, 'uploadLoanTransferReceipt'])->name('loan-transfer.receipt');
 
-        // Step 7: Awaiting Transfer Confirmation
-        Route::get('awaiting-transfer-confirmation', [\App\Http\Controllers\Seller\SaleFlowController::class, 'showAwaitingTransferConfirmation'])->name('awaiting-transfer-confirmation');
+        // API routes for status checks
+        Route::get('buyer-payment/status', [\App\Http\Controllers\Seller\SaleFlowController::class, 'getBuyerPaymentStatus'])->name('buyer-payment.status');
         Route::get('transfer-confirmation/status', [\App\Http\Controllers\Seller\SaleFlowController::class, 'getTransferConfirmationStatus'])->name('transfer-confirmation.status');
-
-        // Step 8: Sale Completion
-        Route::get('completion', [\App\Http\Controllers\Seller\SaleFlowController::class, 'showSaleCompletion'])->name('completion');
-        Route::post('complete', [\App\Http\Controllers\Seller\SaleFlowController::class, 'completeSale'])->name('complete');
     });
 });
 
@@ -212,6 +149,46 @@ Route::middleware('auth')->group(function () {
     Route::post('contract/otp/verify', [OTPController::class, 'verifyContractOtp'])->name('contract.otp.verify');
 });
 
+// Payment Routes
+Route::prefix('payment')->name('payment.')->middleware('auth')->group(function () {
+    Route::post('initiate', [\App\Http\Controllers\PaymentController::class, 'initiate'])->name('initiate');
+    Route::get('callback', [\App\Http\Controllers\PaymentController::class, 'callback'])->name('callback');
+    Route::get('success/{payment}', [\App\Http\Controllers\PaymentController::class, 'success'])->name('success');
+    Route::get('failed/{payment}', [\App\Http\Controllers\PaymentController::class, 'failed'])->name('failed');
+
+    // Debug route for sandbox status
+    Route::get('debug/sandbox', function () {
+        $zarinpalService = app(\App\Services\ZarinpalService::class);
+
+        // Use reflection to get actual service values
+        $reflection = new \ReflectionClass($zarinpalService);
+        $sandboxProperty = $reflection->getProperty('sandbox');
+        $sandboxProperty->setAccessible(true);
+        $serviceSandbox = $sandboxProperty->getValue($zarinpalService);
+
+        $merchantIdProperty = $reflection->getProperty('merchantId');
+        $merchantIdProperty->setAccessible(true);
+        $serviceMerchantId = $merchantIdProperty->getValue($zarinpalService);
+
+        $baseUrlProperty = $reflection->getProperty('baseUrl');
+        $baseUrlProperty->setAccessible(true);
+        $serviceBaseUrl = $baseUrlProperty->getValue($zarinpalService);
+
+        return response()->json([
+            'env_sandbox' => env('ZARINPAL_SANDBOX'),
+            'config_sandbox' => config('services.zarinpal.sandbox'),
+            'service_sandbox' => $serviceSandbox,
+            'service_merchant_id' => $serviceMerchantId,
+            'service_base_url' => $serviceBaseUrl,
+            'config_merchant_id' => config('services.zarinpal.merchant_id'),
+            'config_test_merchant_id' => config('services.zarinpal.test_merchant_id'),
+            'callback_url' => config('services.zarinpal.callback_url'),
+            'app_env' => env('APP_ENV'),
+            'debug' => env('APP_DEBUG'),
+        ]);
+    })->name('debug.sandbox');
+});
+
 // Dashboard redirect based on role
 Route::get('dashboard', function () {
     $user = auth()->user();
@@ -224,7 +201,7 @@ Route::get('dashboard', function () {
         return redirect()->route('seller.dashboard');
     }
 
-    return redirect()->route('login');
+    return redirect()->route('unified.otp.login');
 })->middleware('auth')->name('dashboard');
 
 // File access routes (protected by policies)

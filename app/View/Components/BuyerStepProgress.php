@@ -38,7 +38,7 @@ class BuyerStepProgress extends Component
                 'name' => 'details',
                 'title' => 'جزئیات وام',
                 'description' => 'بررسی و تأیید جزئیات وام',
-                'route' => route('buyer.auction.details', $this->progress->auction),
+                'route' => route('buyer.auction.show', $this->progress->auction),
             ],
             [
                 'number' => 2,
