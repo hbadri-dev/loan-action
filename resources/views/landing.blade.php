@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>وام یار - پلتفرم آنلاین انتقال وام</title>
+    <title>NationalKind - پلتفرم مشاوره مالی آنلاین</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -345,6 +345,105 @@
         .feature-description {
             color: #666;
             line-height: 1.6;
+        }
+
+        .products-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .products-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.08)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.04)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .products-section .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .products-section .section-title {
+            color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .products-section .section-subtitle {
+            color: #b8c5d6;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .product-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        }
+
+        .product-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+        }
+
+        .product-description {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .product-price {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .product-type {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .how-it-works {
@@ -893,7 +992,7 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <a href="/" class="logo">وام یار</a>
+            <a href="/" class="logo">NationalKind</a>
             <div class="header-buttons">
                 <a href="https://t.me/sajbazar" target="_blank" rel="noopener noreferrer" class="header-btn telegram">
                     مشاوره تلگرام
@@ -929,9 +1028,8 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>پلتفرم آنلاین انتقال وام</h1>
-            <p>راهکار های نوین برای افراد حقیقی و حقوقی</p>
-            <p>اولین پلتفرم وام‌دهی فرد به فرد در ایران، با ضمانت کامل امانت‌داری پول شما.</p>
+            <h1>پلتفرم مشاوره مالی آنلاین</h1>
+            <p>راهکار های نوین مالی برای افراد حقیقی و حقوقی</p>
             <div class="flex justify-center items-center gap-4 flex-wrap">
                 <a href="{{ route('unified.otp.login') }}" class="cta-button bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700">شروع کنید</a>
                 <a href="https://t.me/sajbazar" target="_blank" rel="noopener noreferrer" class="cta-button bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600">
@@ -950,8 +1048,8 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number">100+</div>
-                    <div class="stat-label">وام فعال</div>
-                    <div class="stat-description">وام‌های در حال پردازش</div>
+                    <div class="stat-label">مشاوره های آنلاین انجام شده</div>
+                    <div class="stat-description">مشاوره‌های در حال پردازش</div>
                 </div>
 
                 <div class="stat-card">
@@ -968,8 +1066,8 @@
 
                 <div class="stat-card">
                     <div class="stat-number">100%</div>
-                    <div class="stat-label">امنیت بانکی</div>
-                    <div class="stat-description">بانک امین دارایی شما</div>
+                    <div class="stat-label">تضمین موفقیت مالی شما</div>
+                    <div class="stat-description">تضمین موفقیت مالی شما</div>
                 </div>
             </div>
         </div>
@@ -978,103 +1076,103 @@
     <!-- Features Section -->
     <section class="features-section">
         <div class="container">
-            <h2 class="section-title">امکانات پیشرفته وام ساز</h2>
-            <p class="section-subtitle">تمامی ابزار های مورد نیاز برای خرید و فروش سریع و به صرفه وام شما</p>
+            <h2 class="section-title">امکانات پیشرفته پلتفرم</h2>
+            <p class="section-subtitle">حوزه های تخصصی ارائه مشاوره مالی</p>
 
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3 class="feature-title">فروش سریع وام</h3>
-                    <p class="feature-description">فروش سریع وام شما</p>
+                    <div class="feature-icon">📈</div>
+                    <h3 class="feature-title">بورس</h3>
+                    <p class="feature-description">مشاوره تخصصی سرمایه گذاری در بورس</p>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">💰</div>
-                    <h3 class="feature-title">بهترین قیمت خرید</h3>
-                    <p class="feature-description">پیدا کردن بهترین قیمت خرید وام</p>
+                    <div class="feature-icon">₿</div>
+                    <h3 class="feature-title">ارز های دیجیتال</h3>
+                    <p class="feature-description">راهنمایی کامل خرید و فروش ارزهای دیجیتال</p>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">🛡️</div>
-                    <h3 class="feature-title">ضمانت های قابل اتکا</h3>
-                    <p class="feature-description">وجود ضمانت های قابل اتکا</p>
+                    <div class="feature-icon">🏆</div>
+                    <h3 class="feature-title">طلا و دلار</h3>
+                    <p class="feature-description">مشاوره سرمایه گذاری در طلا و ارز</p>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">📈</div>
                     <h3 class="feature-title">سود سالانه بالا</h3>
-                    <p class="feature-description">کسب سود سالانه بالاتر از هر راهکار درآمد ثابت برای انتقال دهنده وام</p>
+                    <p class="feature-description">کسب سود سالانه بالاتر از هر راهکار درآمد ثابت</p>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">🧮</div>
-                    <h3 class="feature-title">محاسبه بلادرنگ</h3>
-                    <p class="feature-description">ابزار محاسبه اقساط و سود با پارامترهای مختلف</p>
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">مشاوره تخصصی کم ریسک</h3>
+                    <p class="feature-description">راهنمایی سرمایه گذاری با کمترین ریسک</p>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3 class="feature-title">امنیت بالا</h3>
-                    <p class="feature-description">امنیت بالا به دلیل امین دارایی بودن بانک</p>
+                    <div class="feature-icon">⚙️</div>
+                    <h3 class="feature-title">متناسب با نیاز شما</h3>
+                    <p class="feature-description">راهکارهای شخصی سازی شده برای هر فرد</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- How It Works Section -->
-    <section class="how-it-works">
+    <!-- Products Section -->
+    <section class="products-section">
         <div class="container">
-            <h2 class="section-title">چگونه کار می‌کند؟</h2>
-            <p class="section-subtitle">در سه مرحله ساده شروع به کار کنید</p>
+            <h2 class="section-title">محصولات مشاوره مالی</h2>
+            <p class="section-subtitle">خدمات تخصصی ما برای موفقیت مالی شما</p>
 
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">۱</div>
-                    <h3 class="step-title">ثبت نام</h3>
-                    <p class="step-description">با شماره موبایل خود ثبت نام کرده و هویت خود را تایید کنید</p>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-icon">🎯</div>
+                    <h3 class="product-title">مشاوره مالی اختصاصی</h3>
+                    <p class="product-description">مشاوره شخصی‌سازی شده برای اهداف مالی شما</p>
+                    <div class="product-price">8,500,000 تومان</div>
+                    <div class="product-type">جلسه‌ای</div>
                 </div>
 
-                <div class="step-card">
-                    <div class="step-number">۲</div>
-                    <h3 class="step-title">مدیریت وام‌ها</h3>
-                    <p class="step-description">وام‌های خود را ثبت کرده و از ابزارهای مدیریت استفاده کنید</p>
+                <div class="product-card">
+                    <div class="product-icon">📈</div>
+                    <h3 class="product-title">مشاوره سرمایه‌گذاری بورس</h3>
+                    <p class="product-description">راهنمایی تخصصی برای ورود به بازار بورس</p>
+                    <div class="product-price">1,800,000 تومان</div>
+                    <div class="product-type">ساعتی</div>
                 </div>
 
-                <div class="step-card">
-                    <div class="step-number">۳</div>
-                    <h3 class="step-title">فروش و مزایده</h3>
-                    <p class="step-description">در بازار مزایده شرکت کرده و با دیوار ارتباط برقرار کنید</p>
+                <div class="product-card">
+                    <div class="product-icon">₿</div>
+                    <h3 class="product-title">مشاوره ارزهای دیجیتال</h3>
+                    <p class="product-description">راهنمایی کامل خرید و فروش رمزارزها</p>
+                    <div class="product-price">3,200,000 تومان</div>
+                    <div class="product-type">جلسه‌ای</div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Quick Access Section -->
-    <section class="quick-access">
-        <div class="container">
-            <h2 class="section-title">شروع آسان</h2>
-            <p class="section-subtitle">فقط با شماره موبایل خود وارد شوید</p>
-
-            <div class="flex justify-center items-center">
-                <div class="access-card">
-                    <div class="access-icon">📱</div>
-                    <h3>ورود / ثبت نام</h3>
-                    <p>شماره موبایل خود را وارد کنید و کد تأیید دریافت کنید</p>
-                    <div class="access-buttons">
-                        <a href="{{ route('unified.otp.login') }}" class="access-btn primary" style="background: linear-gradient(135deg, #16a34a, #3b82f6);">شروع کنید</a>
-                    </div>
+                <div class="product-card">
+                    <div class="product-icon">🏆</div>
+                    <h3 class="product-title">مشاوره طلا و ارز</h3>
+                    <p class="product-description">استراتژی سرمایه‌گذاری در طلا و دلار</p>
+                    <div class="product-price">1,500,000 تومان</div>
+                    <div class="product-type">ساعتی</div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Final CTA Section -->
-    <section class="final-cta">
-        <div class="container">
-            <h2>آماده شروع هستید؟</h2>
-            <p>همین امروز با وام ساز شروع کنید و تجربه جدیدی از مدیریت وام داشته باشید</p>
-            <div class="flex justify-center items-center">
-                <a href="{{ route('unified.otp.login') }}" class="cta-button bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700">شروع رایگان</a>
+                <div class="product-card">
+                    <div class="product-icon">💼</div>
+                    <h3 class="product-title">مشاوره کسب‌وکار</h3>
+                    <p class="product-description">راهنمایی مالی برای توسعه کسب‌وکار</p>
+                    <div class="product-price">6,500,000 تومان</div>
+                    <div class="product-type">جلسه‌ای</div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-icon">🛡️</div>
+                    <h3 class="product-title">مشاوره مدیریت ریسک</h3>
+                    <p class="product-description">راهکارهای کاهش ریسک در سرمایه‌گذاری</p>
+                    <div class="product-price">2,200,000 تومان</div>
+                    <div class="product-type">ساعتی</div>
+                </div>
             </div>
         </div>
     </section>
