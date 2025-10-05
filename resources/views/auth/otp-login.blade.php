@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">ورود به وام ساز</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">ورود به پلتفرم</h2>
         <p class="text-gray-600">با شماره تلفن و کد تأیید وارد شوید</p>
     </div>
 

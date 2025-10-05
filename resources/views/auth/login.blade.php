@@ -3,7 +3,7 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="mb-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">ورود به وام ساز</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">ورود به پلتفرم</h2>
         <p class="text-gray-600">برای دسترسی به حساب کاربری خود وارد شوید</p>
     </div>
 

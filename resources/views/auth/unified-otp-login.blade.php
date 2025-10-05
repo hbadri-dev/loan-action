@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">ورود / ثبت نام در وام ساز</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">ورود / ثبت نام در پلتفرم</h2>
         <p class="text-gray-600">شماره تلفن و نقش خود را انتخاب کنید</p>
     </div>
 
@@ -38,14 +38,14 @@
                 <label class="flex items-center">
                     <input type="radio" name="role" value="buyer" class="form-radio text-green-600"
                            {{ old('role') == 'buyer' ? 'checked' : '' }} required>
-                    <span class="mr-2 text-sm text-gray-700">خریدار وام</span>
-                    <span class="text-xs text-gray-500">(خرید وام از مزایده‌ها)</span>
+                    <span class="mr-2 text-sm text-gray-700">مشتری</span>
+                    <span class="text-xs text-gray-500">(دریافت مشاوره مالی)</span>
                 </label>
                 <label class="flex items-center">
                     <input type="radio" name="role" value="seller" class="form-radio text-blue-600"
                            {{ old('role') == 'seller' ? 'checked' : '' }} required>
-                    <span class="mr-2 text-sm text-gray-700">فروشنده وام</span>
-                    <span class="text-xs text-gray-500">(فروش وام در مزایده‌ها)</span>
+                    <span class="mr-2 text-sm text-gray-700">مشاور</span>
+                    <span class="text-xs text-gray-500">(ارائه خدمات مشاوره)</span>
                 </label>
             </div>
             <x-input-error :messages="$errors->get('role')" class="mt-2" />

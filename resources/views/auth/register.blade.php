@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">ثبت نام در وام ساز</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">ثبت نام در پلتفرم</h2>
         <p class="text-gray-600">حساب کاربری جدید ایجاد کنید</p>
     </div>
 

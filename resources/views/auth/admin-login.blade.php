@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
         <h2 class="text-2xl font-bold text-gray-900 mb-2">ورود مدیر</h2>
-        <p class="text-gray-600">دسترسی به پنل مدیریت وام ساز</p>
+        <p class="text-gray-600">دسترسی به پنل مدیریت</p>
     </div>
 
     <!-- Session Status -->
