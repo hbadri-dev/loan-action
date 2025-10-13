@@ -4,11 +4,10 @@ namespace App\Notifications;
 
 use App\Models\Bid;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class BidAccepted extends Notification implements ShouldQueue
+class BidAccepted extends Notification
 {
     use Queueable;
 
@@ -59,15 +58,17 @@ class BidAccepted extends Notification implements ShouldQueue
 
     /**
      * Get the SMS representation of the notification.
+     * Uses SellerConfirmationNotice template from Kavenegar
      */
     public function toSms(object $notifiable): array
     {
-        $message = "تبریک! پیشنهاد شما برای مزایده " . $this->bid->auction->title . " پذیرفته شد. لطفاً مبلغ خرید را پرداخت کنید.";
+        // Use buyer's phone number as token (fallback to name if phone is not available)
+        $token = $notifiable->phone ?? $notifiable->name ?? 'کاربر';
 
         return [
             'phone' => $notifiable->phone,
-            'message' => $message,
+            'template' => 'SellerConfirmationNotice',
+            'token' => $token,
         ];
     }
 }
-

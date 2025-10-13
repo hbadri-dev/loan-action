@@ -25,12 +25,25 @@ class SmsChannel
 
         $data = $notification->toSms($notifiable);
 
-        if (!isset($data['phone']) || !isset($data['message'])) {
+        if (!isset($data['phone'])) {
             return;
         }
 
-        // Dispatch SMS to queue
-        \App\Jobs\SendSmsJob::dispatch($data['phone'], $data['message']);
+        try {
+            // Check if it's a template-based SMS or simple message
+            if (isset($data['template']) && isset($data['token'])) {
+                // Send template-based SMS immediately
+                $this->kavenegarService->sendTemplateSMS($data['phone'], $data['token'], $data['template']);
+            } elseif (isset($data['message'])) {
+                // Send simple message SMS immediately
+                $this->kavenegarService->sendMessage($data['phone'], $data['message']);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send SMS notification', [
+                'phone' => $data['phone'],
+                'error' => $e->getMessage(),
+                'notification' => get_class($notification)
+            ]);
+        }
     }
 }
-

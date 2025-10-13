@@ -39,6 +39,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register SMS notification channel
+        \Illuminate\Support\Facades\Notification::extend('sms', function ($app) {
+            return $app->make(\App\Notifications\Channels\SmsChannel::class);
+        });
     }
 }

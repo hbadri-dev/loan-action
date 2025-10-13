@@ -190,6 +190,85 @@ class KavenegarService
     }
 
     /**
+     * Send template-based SMS using Kavenegar verify/lookup API
+     * This method is used for sending predefined templates with token substitution
+     *
+     * @param string $mobile The recipient's mobile number
+     * @param string $token The token value to replace in the template (e.g., name, phone number)
+     * @param string $template The template name registered in Kavenegar
+     * @return bool
+     */
+    public function sendTemplateSMS(string $mobile, string $token, string $template): bool
+    {
+        try {
+            $formattedMobile = $this->formatMobile($mobile);
+
+            // Sandbox mode - just log instead of calling API
+            if ($this->sandbox) {
+                Log::info('SMS Sandbox Mode - Template SMS would be sent', [
+                    'mobile' => $mobile,
+                    'formatted_mobile' => $formattedMobile,
+                    'template' => $template,
+                    'token' => $token,
+                    'api_key' => substr($this->apiKey, 0, 8) . '...'
+                ]);
+                return true;
+            }
+
+            $response = $this->client->post("{$this->baseUrl}/{$this->apiKey}/verify/lookup.json", [
+                'form_params' => [
+                    'receptor' => $formattedMobile,
+                    'token' => $token,
+                    'template' => $template,
+                ],
+                'timeout' => config('sms.settings.timeout', 30),
+                'connect_timeout' => config('sms.settings.connect_timeout', 10),
+            ]);
+
+            $result = json_decode($response->getBody()->getContents(), true);
+
+            // Check if the response is valid
+            if (!isset($result['return']['status'])) {
+                throw new \Exception('Invalid response from Kavenegar API: ' . json_encode($result));
+            }
+
+            // Check if status is 200 (success)
+            if ($result['return']['status'] != 200) {
+                $errorMessage = $result['return']['message'] ?? 'Unknown error';
+                throw new \Exception("Kavenegar API error: {$errorMessage} (Status: {$result['return']['status']})");
+            }
+
+            Log::info('Template SMS sent successfully', [
+                'mobile' => $mobile,
+                'formatted_mobile' => $formattedMobile,
+                'template' => $template,
+                'token' => $token,
+                'response' => $result
+            ]);
+
+            return true;
+
+        } catch (GuzzleException $e) {
+            Log::error('Template SMS service HTTP error', [
+                'mobile' => $mobile,
+                'template' => $template,
+                'token' => $token,
+                'error' => $e->getMessage(),
+                'code' => $e->getCode()
+            ]);
+            throw new \Exception('Failed to send template SMS: Network error - ' . $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error('Template SMS service error', [
+                'mobile' => $mobile,
+                'template' => $template,
+                'token' => $token,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
      * Generate random OTP code (6 digits by default)
      */
     public function generateOTP(int $length = null): string
