@@ -8,6 +8,7 @@ services:
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
+      - ZARINPAL_SANDBOX=true
     command: >
       sh -c "composer install --no-interaction &&
              npm install &&

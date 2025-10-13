@@ -497,8 +497,7 @@ class AuctionFlowController extends Controller
             \Log::info('Purchase payment upload started', [
             'user_id' => Auth::id(),
             'auction_id' => $auction->id,
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
+            'full_name' => $request->input('full_name'),
             'national_id' => $request->input('national_id')
         ]);
 
@@ -526,8 +525,7 @@ class AuctionFlowController extends Controller
 
         \Log::info('Starting validation for purchase payment upload');
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'national_id' => 'required|string|size:10',
             'receipt_image' => 'required|file|mimes:jpg,jpeg,png,webp|max:5120', // 5MB max
         ]);
@@ -544,7 +542,7 @@ class AuctionFlowController extends Controller
 
             // Update user's name and national_id
             \Log::info('Updating user name and national_id');
-            $fullName = trim($request->input('first_name') . ' ' . $request->input('last_name'));
+            $fullName = trim($request->input('full_name'));
             $user->update([
                 'name' => $fullName,
                 'national_id' => $request->input('national_id')

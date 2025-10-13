@@ -17,6 +17,7 @@ services:
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
+      - ZARINPAL_SANDBOX=true
 
   nginx:
     image: nginx:alpine

@@ -31,8 +31,7 @@ class PaymentController extends Controller
             'auction_id' => 'required|exists:auctions,id',
             'type' => 'required|string|in:buyer_fee,seller_fee,buyer_purchase_amount',
             'amount' => 'required|integer|min:1000',
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'national_id' => 'required|string|size:10|regex:/^\d{10}$/',
         ]);
 
@@ -73,6 +72,21 @@ class PaymentController extends Controller
         $result = $this->zarinpalService->createPaymentRequest($paymentData);
 
         if ($result['success']) {
+            // Update payment with user info
+            $payment = Payment::find($result['payment_id']);
+            if ($payment) {
+                $payment->update([
+                    'full_name' => trim($request->full_name),
+                    'national_id' => $request->national_id,
+                ]);
+            }
+
+            // Update user info (name and national_id)
+            $user->update([
+                'name' => trim($request->full_name),
+                'national_id' => $request->national_id,
+            ]);
+
             return redirect($result['gateway_url']);
         } else {
             return back()->with('error', $result['error']);

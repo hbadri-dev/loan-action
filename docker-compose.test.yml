@@ -19,6 +19,7 @@ services:
       - DB_DATABASE=loan_auction_test
       - DB_USERNAME=app
       - DB_PASSWORD=app
+      - ZARINPAL_SANDBOX=true
 
   mysql:
     image: mysql:8.0

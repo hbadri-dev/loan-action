@@ -25,8 +25,7 @@ class Payment extends Model
         'gateway_url',
         'paid_at',
         'metadata',
-        'first_name',
-        'last_name',
+        'full_name',
         'national_id',
     ];
 

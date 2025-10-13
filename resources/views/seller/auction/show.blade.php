@@ -260,51 +260,46 @@
                                                     پرداخت امن و سریع از طریق درگاه پرداخت زرین‌پال
                                                 </p>
 
-                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4">
+                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4" id="payment-form-1">
                                                     @csrf
                                                     <input type="hidden" name="auction_id" value="{{ $auction->id }}">
                                                     <input type="hidden" name="type" value="seller_fee">
                                                     <input type="hidden" name="amount" value="200000">
 
                                                     <!-- Required Fields -->
-                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                        <div>
-                                                            <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                                نام <span class="text-red-500">*</span>
-                                                            </label>
-                                                            <input type="text" id="first_name" name="first_name" required
-                                                                   value="{{ Auth::user()->name }}"
-                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                                                   placeholder="نام خود را وارد کنید">
-                                                        </div>
-                                                        <div>
-                                                            <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                                نام خانوادگی <span class="text-red-500">*</span>
-                                                            </label>
-                                                            <input type="text" id="last_name" name="last_name" required
-                                                                   value="{{ Auth::user()->name }}"
-                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                                                   placeholder="نام خانوادگی خود را وارد کنید">
-                                                        </div>
+                                                    <div>
+                                                        <label for="full_name_1" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                            نام و نام خانوادگی <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="text" id="full_name_1" name="full_name" required
+                                                               value="{{ Auth::user()->name }}"
+                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                               placeholder="نام و نام خانوادگی خود را وارد کنید">
                                                     </div>
                                                     <div>
-                                                        <label for="national_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                        <label for="national_id_1" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                             کد ملی <span class="text-red-500">*</span>
                                                         </label>
-                                                        <input type="text" id="national_id" name="national_id" required
+                                                        <input type="text" id="national_id_1" name="national_id" required
                                                                value="{{ Auth::user()->national_id }}"
                                                                pattern="[0-9]{10}"
                                                                maxlength="10"
-                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
+                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
                                                                placeholder="کد ملی 10 رقمی خود را وارد کنید">
                                                     </div>
 
-                                                    <button type="submit"
-                                                            class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                                    <div id="payment-warning-1" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 text-center">
+                                                        <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                                                            ⚠️ تکمیل فرم قبل از پرداخت اجباری است
+                                                        </p>
+                                                    </div>
+
+                                                    <button type="submit" id="payment-submit-1" disabled
+                                                            class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                                         <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                                                         </svg>
-                                                        شروع پرداخت جدید
+                                                        پرداخت از طریق درگاه آنلاین
                                                     </button>
                                                 </form>
                                             </div>
@@ -313,32 +308,21 @@
                                         <!-- Start New Payment -->
                                         <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
                                             <div class="text-center">
-                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4">
+                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4" id="payment-form-2">
                                                     @csrf
                                                     <input type="hidden" name="auction_id" value="{{ $auction->id }}">
                                                     <input type="hidden" name="type" value="seller_fee">
                                                     <input type="hidden" name="amount" value="200000">
 
                                                     <!-- Required Fields -->
-                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                        <div>
-                                                            <label for="first_name_2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                                نام <span class="text-red-500">*</span>
-                                                            </label>
-                                                            <input type="text" id="first_name_2" name="first_name" required
-                                                                   value="{{ Auth::user()->name }}"
-                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                                                   placeholder="نام خود را وارد کنید">
-                                                        </div>
-                                                        <div>
-                                                            <label for="last_name_2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                                نام خانوادگی <span class="text-red-500">*</span>
-                                                            </label>
-                                                            <input type="text" id="last_name_2" name="last_name" required
-                                                                   value="{{ Auth::user()->name }}"
-                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                                                   placeholder="نام خانوادگی خود را وارد کنید">
-                                                        </div>
+                                                    <div>
+                                                        <label for="full_name_2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                            نام و نام خانوادگی <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="text" id="full_name_2" name="full_name" required
+                                                               value="{{ Auth::user()->name }}"
+                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                               placeholder="نام و نام خانوادگی خود را وارد کنید">
                                                     </div>
                                                     <div>
                                                         <label for="national_id_2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -348,16 +332,22 @@
                                                                value="{{ Auth::user()->national_id }}"
                                                                pattern="[0-9]{10}"
                                                                maxlength="10"
-                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
+                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
                                                                placeholder="کد ملی 10 رقمی خود را وارد کنید">
                                                     </div>
 
-                                                    <button type="submit"
-                                                            class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                                    <div id="payment-warning-2" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 text-center">
+                                                        <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                                                            ⚠️ تکمیل فرم قبل از پرداخت اجباری است
+                                                        </p>
+                                                    </div>
+
+                                                    <button type="submit" id="payment-submit-2" disabled
+                                                            class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                                         <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                                                         </svg>
-                                                        پرداخت از طریق زرین‌پال
+                                                        پرداخت از طریق درگاه آنلاین
                                                     </button>
                                                 </form>
                                             </div>
@@ -378,32 +368,21 @@
                                                     پرداخت امن و سریع از طریق درگاه پرداخت زرین‌پال
                                                 </p>
 
-                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4">
+                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4" id="payment-form-3">
                                                     @csrf
                                                     <input type="hidden" name="auction_id" value="{{ $auction->id }}">
                                                     <input type="hidden" name="type" value="seller_fee">
                                                     <input type="hidden" name="amount" value="200000">
 
                                                     <!-- Required Fields -->
-                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                        <div>
-                                                            <label for="first_name_3" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                                نام <span class="text-red-500">*</span>
-                                                            </label>
-                                                            <input type="text" id="first_name_3" name="first_name" required
-                                                                   value="{{ Auth::user()->name }}"
-                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                                                   placeholder="نام خود را وارد کنید">
-                                                        </div>
-                                                        <div>
-                                                            <label for="last_name_3" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                                نام خانوادگی <span class="text-red-500">*</span>
-                                                            </label>
-                                                            <input type="text" id="last_name_3" name="last_name" required
-                                                                   value="{{ Auth::user()->name }}"
-                                                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                                                   placeholder="نام خانوادگی خود را وارد کنید">
-                                                        </div>
+                                                    <div>
+                                                        <label for="full_name_3" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                            نام و نام خانوادگی <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="text" id="full_name_3" name="full_name" required
+                                                               value="{{ Auth::user()->name }}"
+                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                               placeholder="نام و نام خانوادگی خود را وارد کنید">
                                                     </div>
                                                     <div>
                                                         <label for="national_id_3" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -413,16 +392,22 @@
                                                                value="{{ Auth::user()->national_id }}"
                                                                pattern="[0-9]{10}"
                                                                maxlength="10"
-                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
+                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
                                                                placeholder="کد ملی 10 رقمی خود را وارد کنید">
                                                     </div>
 
-                                                    <button type="submit"
-                                                            class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                                                    <div id="payment-warning-3" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 text-center">
+                                                        <p class="text-sm text-yellow-800 dark:text-yellow-200">
+                                                            ⚠️ تکمیل فرم قبل از پرداخت اجباری است
+                                                        </p>
+                                                    </div>
+
+                                                    <button type="submit" id="payment-submit-3" disabled
+                                                            class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                                         <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                                                         </svg>
-                                                        پرداخت از طریق زرین‌پال
+                                                        پرداخت از طریق درگاه آنلاین
                                                     </button>
                                                 </form>
                                             </div>
@@ -1065,7 +1050,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Format national ID inputs - only numbers
-            const nationalIdInputs = document.querySelectorAll('#national_id, #national_id_2, #national_id_3');
+            const nationalIdInputs = document.querySelectorAll('#national_id_1, #national_id_2, #national_id_3');
 
             nationalIdInputs.forEach(nationalIdInput => {
                 if (nationalIdInput) {
@@ -1079,6 +1064,10 @@
                         }
 
                         e.target.value = value;
+
+                        // Trigger form validation
+                        const formId = e.target.closest('form').id;
+                        validateForm(formId);
                     });
 
                     // Prevent non-numeric characters
@@ -1098,6 +1087,50 @@
                         }
                     });
                 }
+            });
+
+            // Form validation function
+            function validateForm(formId) {
+                const form = document.getElementById(formId);
+                if (!form) return;
+
+                const formNumber = formId.replace('payment-form-', '');
+                const fullNameInput = document.getElementById('full_name_' + formNumber);
+                const nationalIdInput = document.getElementById('national_id_' + formNumber);
+                const submitButton = document.getElementById('payment-submit-' + formNumber);
+                const warningDiv = document.getElementById('payment-warning-' + formNumber);
+
+                if (!fullNameInput || !nationalIdInput || !submitButton || !warningDiv) return;
+
+                const fullName = fullNameInput.value.trim();
+                const nationalId = nationalIdInput.value.trim();
+
+                // Check if both fields are filled and national ID is 10 digits
+                const isValid = fullName.length > 0 && nationalId.length === 10;
+
+                if (isValid) {
+                    submitButton.disabled = false;
+                    warningDiv.style.display = 'none';
+                } else {
+                    submitButton.disabled = true;
+                    warningDiv.style.display = 'block';
+                }
+            }
+
+            // Add input listeners to full name fields
+            const fullNameInputs = document.querySelectorAll('#full_name_1, #full_name_2, #full_name_3');
+            fullNameInputs.forEach(fullNameInput => {
+                if (fullNameInput) {
+                    fullNameInput.addEventListener('input', function(e) {
+                        const formId = e.target.closest('form').id;
+                        validateForm(formId);
+                    });
+                }
+            });
+
+            // Initial validation on page load
+            ['payment-form-1', 'payment-form-2', 'payment-form-3'].forEach(formId => {
+                validateForm(formId);
             });
         });
     </script>
