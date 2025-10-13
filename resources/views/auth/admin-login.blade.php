@@ -1,3 +1,4 @@
+@section('title', 'ورود مدیر')
 <x-guest-layout>
     <div class="mb-6 text-center">
         <h2 class="text-2xl font-bold text-gray-900 mb-2">ورود مدیر</h2>

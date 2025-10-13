@@ -1,3 +1,4 @@
+@section('title', 'ورود')
 <x-guest-layout>
     <div class="mb-6 text-center">
         <h2 class="text-2xl font-bold text-gray-900 mb-2">ورود به پلتفرم</h2>
@@ -42,10 +43,5 @@
         </div>
     </div>
 
-    <div class="mt-6 text-center">
-        <a href="{{ route('admin.login') }}"
-           class="text-sm text-gray-600 hover:text-gray-500 underline">
-            ورود مدیر
-        </a>
-    </div>
+
 </x-guest-layout>
