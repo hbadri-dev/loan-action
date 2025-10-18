@@ -18,6 +18,8 @@ class SellerSale extends Model
         'status',
         'current_step',
         'selected_bid_id',
+        'payment_link',
+        'payment_link_used',
     ];
 
     protected function casts(): array

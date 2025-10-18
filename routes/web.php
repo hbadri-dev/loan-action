@@ -70,6 +70,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::get('/', [\App\Http\Controllers\Admin\AdminController::class, 'sales'])->name('index');
         Route::post('{sale}/complete', [\App\Http\Controllers\Admin\AdminController::class, 'completeSale'])->name('complete');
     });
+
+    // Payment Link Management
+    Route::prefix('payment-links')->name('payment-links.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\PaymentLinkController::class, 'index'])->name('index');
+        Route::get('{sale}/create', [\App\Http\Controllers\Admin\PaymentLinkController::class, 'create'])->name('create');
+        Route::post('{sale}/store', [\App\Http\Controllers\Admin\PaymentLinkController::class, 'store'])->name('store');
+        Route::get('{sale}/edit', [\App\Http\Controllers\Admin\PaymentLinkController::class, 'edit'])->name('edit');
+        Route::put('{sale}/update', [\App\Http\Controllers\Admin\PaymentLinkController::class, 'update'])->name('update');
+    });
 });
 
 // Buyer Panel Routes
@@ -91,6 +100,13 @@ Route::prefix('buyer')->name('buyer.')->middleware(['auth', 'role:buyer'])->grou
         // API routes for status checks
         Route::get('bid/status', [\App\Http\Controllers\Buyer\BidController::class, 'getBidStatus'])->name('bid.status');
         Route::get('seller-transfer/status', [\App\Http\Controllers\Buyer\AuctionFlowController::class, 'getSellerTransferStatus'])->name('seller-transfer.status');
+    });
+
+    // Loan Purchase Routes
+    Route::prefix('loan/purchase')->name('loan.purchase.')->group(function () {
+        Route::get('callback', [\App\Http\Controllers\Buyer\LoanPurchaseController::class, 'callback'])->name('callback');
+        Route::get('{auction}', [\App\Http\Controllers\Buyer\LoanPurchaseController::class, 'show'])->name('show');
+        Route::post('{auction}/redirect', [\App\Http\Controllers\Buyer\LoanPurchaseController::class, 'redirectToPayment'])->name('redirect');
     });
 });
 

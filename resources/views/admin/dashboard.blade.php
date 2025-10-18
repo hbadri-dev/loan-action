@@ -68,6 +68,10 @@
                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center transition-colors">
                             انتقال وام
                         </a>
+                        <a href="{{ route('admin.payment-links.index') }}"
+                           class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded text-center transition-colors">
+                            لینک‌های پرداخت
+                        </a>
                         <a href="{{ route('admin.auctions.create') }}"
                            class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded text-center transition-colors">
                             ایجاد مزایده

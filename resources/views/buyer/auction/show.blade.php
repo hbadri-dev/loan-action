@@ -446,6 +446,7 @@
                                             ->where('buyer_id', Auth::id())
                                             ->where('status', \App\Enums\BidStatus::ACCEPTED)
                                             ->first();
+                                        $sellerSale = \App\Models\SellerSale::where('auction_id', $auction->id)->first();
                                     @endphp
 
                                     @if($userBid)
@@ -480,94 +481,94 @@
                                             </div>
                                         </div>
 
-                                        <!-- Payment Instructions -->
-                                        @php
-                                            $totalAmount = $userBid->amount + ($userBid->amount * 0.01); // Add 1% to bid amount
-                                        @endphp
-                                        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                                            <h3 class="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                                                مبلغ قابل پرداخت: {{ number_format($totalAmount) }} تومان
-                                            </h3>
-                                            <div class="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                                                <p>مبلغ پیشنهادی: {{ number_format($userBid->amount) }} تومان</p>
-                                                <p>کارمزد (۱٪): {{ number_format($userBid->amount * 0.01) }} تومان</p>
-                                                <p class="font-semibold">مجموع: {{ number_format($totalAmount) }} تومان</p>
-                                                <p class="mt-2">لطفاً مبلغ بالا را از طریق درگاه پرداخت آنلاین پرداخت کنید.</p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Payment Method -->
-                                        <div class="space-y-3">
-                                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">پرداخت آنلاین:</h4>
-
-                                            <!-- Online Payment Gateway -->
-                                            <div class="border border-blue-200 dark:border-blue-600 rounded-lg p-6">
-                                                <div class="flex items-center justify-center mb-4">
-                                                    <div class="flex items-center">
-                                                        <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                                        </svg>
-                                                        <h5 class="text-lg font-medium text-blue-900 dark:text-blue-100">پرداخت آنلاین {{ \App\Helpers\PaymentHelper::getActiveGatewayDisplayName() }}</h5>
-                                                    </div>
-                                                </div>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center">
-                                                    پرداخت امن و سریع از طریق درگاه پرداخت {{ \App\Helpers\PaymentHelper::getActiveGatewayDisplayName() }}
+                                        @if($sellerSale && $sellerSale->payment_link && $sellerSale->status->value === 'awaiting_buyer_payment')
+                                            <!-- Payment Link Ready -->
+                                            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                                                <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-4">
+                                                    لینک پرداخت آماده است
+                                                </h3>
+                                                <p class="text-sm text-blue-700 dark:text-blue-300 mb-4">
+                                                    لینک پرداخت مبلغ خرید وام توسط ادمین آماده شده است. برای پرداخت ابتدا فرم زیر را تکمیل کنید.
                                                 </p>
 
-                                                <!-- Notice Message -->
-                                                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
-                                                    <div class="flex items-start space-x-3">
-                                                        <svg class="w-5 h-5 text-blue-600 mt-0.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                        </svg>
-                                                        <p class="text-sm text-blue-700 dark:text-blue-300">
-                                                            لطفاً قبل از پرداخت، فرم زیر را تکمیل نمایید. دکمه پرداخت پس از تکمیل تمام فیلدها فعال خواهد شد.
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Payment Form with Required Fields -->
-                                                <form id="payment-form" action="{{ route('payment.initiate') }}" method="POST" class="space-y-4">
+                                                <!-- Payment Form -->
+                                                <form id="purchase-payment-form" action="{{ route('buyer.loan.purchase.redirect', $auction) }}" method="POST" class="space-y-4">
                                                     @csrf
-                                                    <input type="hidden" name="auction_id" value="{{ $auction->id }}">
-                                                    <input type="hidden" name="type" value="buyer_purchase_amount">
-                                                    <input type="hidden" name="amount" value="{{ $totalAmount }}">
 
-                                                    <!-- Required Fields -->
-                                                    <div>
-                                                        <label for="full_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                            نام و نام خانوادگی <span class="text-red-500">*</span>
-                                                        </label>
-                                                        <input type="text" id="full_name" name="full_name" required
-                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                                               placeholder="نام و نام خانوادگی خود را وارد کنید">
-                                                    </div>
-                                                    <div>
-                                                        <label for="national_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                            کد ملی <span class="text-red-500">*</span>
-                                                        </label>
-                                                        <input type="text" id="national_id" name="national_id" maxlength="10" required
-                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                                               placeholder="کد ملی ۱۰ رقمی خود را وارد کنید">
+                                                    <!-- User Information -->
+                                                    <div class="bg-white dark:bg-gray-800 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+                                                        <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-4 text-sm">اطلاعات پرداخت کننده</h4>
+
+                                                        <div class="space-y-3">
+                                                            <div>
+                                                                <label for="purchase_full_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                    نام و نام خانوادگی <span class="text-red-500">*</span>
+                                                                </label>
+                                                                <input type="text"
+                                                                       id="purchase_full_name"
+                                                                       name="full_name"
+                                                                       required
+                                                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                       placeholder="نام و نام خانوادگی خود را وارد کنید">
+                                                            </div>
+
+                                                            <div>
+                                                                <label for="purchase_national_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                                    کد ملی <span class="text-red-500">*</span>
+                                                                </label>
+                                                                <input type="text"
+                                                                       id="purchase_national_id"
+                                                                       name="national_id"
+                                                                       maxlength="10"
+                                                                       required
+                                                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                                       placeholder="کد ملی ۱۰ رقمی خود را وارد کنید">
+                                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                                    کد ملی باید ۱۰ رقم باشد
+                                                                </p>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <!-- Payment Button -->
-                                                    <div class="text-center pt-4">
-                                                        <button type="submit" id="payment-button" disabled
-                                                                class="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-gray-400 cursor-not-allowed transition-colors duration-200 shadow-lg"
-                                                                title="لطفاً ابتدا تمام فیلدهای الزامی را پر کنید">
+                                                    <div class="text-center">
+                                                        <button type="submit"
+                                                                id="purchase-payment-button"
+                                                                disabled
+                                                                class="w-full inline-flex items-center justify-center px-8 py-4 bg-gray-400 cursor-not-allowed text-white font-bold text-lg rounded-lg transition-colors shadow-lg"
+                                                                title="لطفاً ابتدا فرم را تکمیل کنید">
                                                             <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                                                             </svg>
+                                                            @php
+                                                                $totalAmount = $userBid->amount + ($userBid->amount * 0.01);
+                                                            @endphp
                                                             پرداخت {{ number_format($totalAmount) }} تومان
                                                         </button>
-                                                        <p id="form-status-message" class="text-sm font-medium mt-3" style="color: #dc2626;">
-                                                            ⚠️ لطفاً قبل از پرداخت، فرم را تکمیل کنید
+                                                        <p id="purchase-form-status-message" class="text-sm font-medium mt-2 text-red-600 dark:text-red-400">
+                                                            ⚠️ لطفاً فرم را تکمیل کنید
                                                         </p>
                                                     </div>
                                                 </form>
                                             </div>
-                                        </div>
+                                        @else
+                                            <!-- Waiting for Payment Link -->
+                                            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+                                                <div class="flex items-center space-x-4">
+                                                    <svg class="w-12 h-12 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                    <div>
+                                                        <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200">
+                                                            در انتظار آماده شدن لینک پرداخت
+                                                        </h3>
+                                                        <p class="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+                                                            لطفاً منتظر بمانید تا ادمین لینک پرداخت را برای شما آماده کند.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
 
                                         @php
                                             $purchaseReceipt = \App\Models\PaymentReceipt::where('auction_id', $auction->id)
@@ -1055,51 +1056,58 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Payment form validation
-            const paymentForm = document.getElementById('payment-form');
-            const paymentButton = document.getElementById('payment-button');
-            const fullNameInput = document.getElementById('full_name');
-            const nationalIdInput = document.getElementById('national_id');
-            const formStatusMessage = document.getElementById('form-status-message');
+            // Purchase payment form validation
+            const purchasePaymentForm = document.getElementById('purchase-payment-form');
+            const purchasePaymentButton = document.getElementById('purchase-payment-button');
+            const purchaseFullNameInput = document.getElementById('purchase_full_name');
+            const purchaseNationalIdInput = document.getElementById('purchase_national_id');
+            const purchaseFormStatusMessage = document.getElementById('purchase-form-status-message');
 
-            function validatePaymentForm() {
-                const fullName = fullNameInput?.value.trim();
-                const nationalId = nationalIdInput?.value.trim();
+            function validatePurchaseForm() {
+                if (!purchaseFullNameInput || !purchaseNationalIdInput) return;
+
+                const fullName = purchaseFullNameInput.value.trim();
+                const nationalId = purchaseNationalIdInput.value.trim();
 
                 // Check if all required fields are filled and national ID is 10 digits
                 const isValid = fullName && fullName.length >= 3 && nationalId && /^\d{10}$/.test(nationalId);
 
-                if (paymentButton && formStatusMessage) {
+                if (purchasePaymentButton && purchaseFormStatusMessage) {
                     if (isValid) {
-                        paymentButton.disabled = false;
-                        paymentButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                        paymentButton.classList.add('bg-blue-600', 'hover:bg-blue-700', 'cursor-pointer');
-                        paymentButton.title = 'آماده برای پرداخت';
-                        formStatusMessage.style.color = '#059669';
-                        formStatusMessage.textContent = '✓ فرم تکمیل شده است. می‌توانید پرداخت کنید';
+                        purchasePaymentButton.disabled = false;
+                        purchasePaymentButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                        purchasePaymentButton.classList.add('bg-green-600', 'hover:bg-green-700', 'cursor-pointer');
+                        purchasePaymentButton.title = 'آماده برای پرداخت';
+                        purchaseFormStatusMessage.classList.remove('text-red-600', 'dark:text-red-400');
+                        purchaseFormStatusMessage.classList.add('text-green-600', 'dark:text-green-400');
+                        purchaseFormStatusMessage.textContent = '✓ فرم تکمیل شده است. می‌توانید پرداخت کنید';
                     } else {
-                        paymentButton.disabled = true;
-                        paymentButton.classList.add('bg-gray-400', 'cursor-not-allowed');
-                        paymentButton.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'cursor-pointer');
-                        paymentButton.title = 'لطفاً ابتدا تمام فیلدهای الزامی را پر کنید';
-                        formStatusMessage.style.color = '#dc2626';
-                        formStatusMessage.textContent = '⚠️ لطفاً قبل از پرداخت، فرم را تکمیل کنید';
+                        purchasePaymentButton.disabled = true;
+                        purchasePaymentButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+                        purchasePaymentButton.classList.remove('bg-green-600', 'hover:bg-green-700', 'cursor-pointer');
+                        purchasePaymentButton.title = 'لطفاً ابتدا فرم را تکمیل کنید';
+                        purchaseFormStatusMessage.classList.remove('text-green-600', 'dark:text-green-400');
+                        purchaseFormStatusMessage.classList.add('text-red-600', 'dark:text-red-400');
+                        purchaseFormStatusMessage.textContent = '⚠️ لطفاً فرم را تکمیل کنید';
                     }
                 }
             }
 
-            // Add event listeners for form validation
-            if (fullNameInput) fullNameInput.addEventListener('input', validatePaymentForm);
-            if (nationalIdInput) {
-                nationalIdInput.addEventListener('input', function(e) {
+            // Add event listeners for purchase form validation
+            if (purchaseFullNameInput) {
+                purchaseFullNameInput.addEventListener('input', validatePurchaseForm);
+            }
+
+            if (purchaseNationalIdInput) {
+                purchaseNationalIdInput.addEventListener('input', function(e) {
                     // Only allow digits
                     e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                    validatePaymentForm();
+                    validatePurchaseForm();
                 });
             }
 
             // Initial validation
-            validatePaymentForm();
+            validatePurchaseForm();
 
             @if($progress && $progress->step_name === 'waiting-seller')
             // Bid edit form functionality
