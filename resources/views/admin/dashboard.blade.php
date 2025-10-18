@@ -72,6 +72,10 @@
                            class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded text-center transition-colors">
                             ایجاد مزایده
                         </a>
+                        <a href="{{ route('admin.settings.edit') }}"
+                           class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded text-center transition-colors">
+                            تنظیمات درگاه پرداخت
+                        </a>
                     </div>
                 </div>
             </div>

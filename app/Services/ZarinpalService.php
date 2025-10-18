@@ -4,13 +4,16 @@ namespace App\Services;
 
 use App\Models\Payment;
 use App\Models\PaymentTransaction;
+use App\Models\Setting;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
+use App\Services\Payments\PaymentGatewayInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
-class ZarinpalService
+class ZarinpalService implements PaymentGatewayInterface
 {
     private string $merchantId;
     private string $baseUrl;
@@ -18,7 +21,12 @@ class ZarinpalService
 
     public function __construct()
     {
-        $this->sandbox = config('services.zarinpal.sandbox', true);
+        $settingSandbox = Setting::get('zarinpal_sandbox', null);
+        if ($settingSandbox !== null) {
+            $this->sandbox = filter_var($settingSandbox, FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $this->sandbox = config('services.zarinpal.sandbox', true);
+        }
 
         if ($this->sandbox) {
             // Sandbox environment - use test merchant ID and sandbox URLs
@@ -37,6 +45,11 @@ class ZarinpalService
             'env_sandbox' => env('ZARINPAL_SANDBOX'),
             'config_sandbox' => config('services.zarinpal.sandbox')
         ]);
+    }
+
+    public function getName(): string
+    {
+        return 'zarinpal';
     }
 
     /**
@@ -278,5 +291,12 @@ class ZarinpalService
     public function convertToToman(int $amountInRial): int
     {
         return $amountInRial / 10;
+    }
+
+    public function extractCallback(Request $request): array
+    {
+        $authority = (string) $request->get('Authority', '');
+        $status = (string) $request->get('Status', '');
+        return [$authority, $status];
     }
 }

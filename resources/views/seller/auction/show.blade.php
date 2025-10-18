@@ -32,6 +32,18 @@
                 </nav>
             </div>
 
+            <!-- Flash Messages -->
+            @if(session('success'))
+                <div class="mb-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <!-- Auction Details Card -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
@@ -257,7 +269,7 @@
                                                     </h3>
                                                 </div>
                                                 <p class="text-gray-700 dark:text-gray-300 mb-6">
-                                                    پرداخت امن و سریع از طریق درگاه پرداخت زرین‌پال
+                                                    پرداخت امن و سریع از طریق درگاه پرداخت {{ \App\Helpers\PaymentHelper::getActiveGatewayDisplayName() }}
                                                 </p>
 
                                                 <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4" id="payment-form-1">
@@ -361,11 +373,11 @@
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                                                     </svg>
                                                     <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200">
-                                                        پرداخت آنلاین از طریق زرین‌پال
+                                                        پرداخت آنلاین از طریق {{ \App\Helpers\PaymentHelper::getActiveGatewayDisplayName() }}
                                                     </h3>
                                                 </div>
                                                 <p class="text-gray-700 dark:text-gray-300 mb-6">
-                                                    پرداخت امن و سریع از طریق درگاه پرداخت زرین‌پال
+                                                    پرداخت امن و سریع از طریق درگاه پرداخت {{ \App\Helpers\PaymentHelper::getActiveGatewayDisplayName() }}
                                                 </p>
 
                                                 <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4" id="payment-form-3">
@@ -424,7 +436,7 @@
                                                         امنیت پرداخت
                                                     </h4>
                                                     <p class="text-sm text-gray-600 dark:text-gray-400">
-                                                        پرداخت شما از طریق درگاه امن زرین‌پال انجام می‌شود و تمام اطلاعات محرمانه شما محفوظ خواهد ماند.
+                                                        پرداخت شما از طریق درگاه امن {{ \App\Helpers\PaymentHelper::getActiveGatewayDisplayName() }} انجام می‌شود و تمام اطلاعات محرمانه شما محفوظ خواهد ماند.
                                                     </p>
                                                 </div>
                                             </div>

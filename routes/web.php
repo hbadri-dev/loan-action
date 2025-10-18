@@ -55,6 +55,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     // Contracts Management
     Route::get('contracts', [\App\Http\Controllers\Admin\AdminController::class, 'contracts'])->name('contracts.index');
 
+    // Settings
+    Route::get('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'edit'])->name('settings.edit');
+    Route::put('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
+
     // Bids Management
     Route::prefix('bids')->name('bids.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\AdminController::class, 'bids'])->name('index');
@@ -150,11 +154,11 @@ Route::middleware('auth')->group(function () {
 });
 
 // Payment Routes
-Route::prefix('payment')->name('payment.')->middleware('auth')->group(function () {
-    Route::post('initiate', [\App\Http\Controllers\PaymentController::class, 'initiate'])->name('initiate');
-    Route::get('callback', [\App\Http\Controllers\PaymentController::class, 'callback'])->name('callback');
-    Route::get('success/{payment}', [\App\Http\Controllers\PaymentController::class, 'success'])->name('success');
-    Route::get('failed/{payment}', [\App\Http\Controllers\PaymentController::class, 'failed'])->name('failed');
+Route::prefix('payment')->name('payment.')->group(function () {
+    Route::post('initiate', [\App\Http\Controllers\PaymentController::class, 'initiate'])->name('initiate')->middleware('auth');
+    Route::match(['get', 'post'], 'callback', [\App\Http\Controllers\PaymentController::class, 'callback'])->name('callback'); // No auth middleware - gateway redirects here
+    Route::get('success/{payment}', [\App\Http\Controllers\PaymentController::class, 'success'])->name('success')->middleware('auth');
+    Route::get('failed/{payment}', [\App\Http\Controllers\PaymentController::class, 'failed'])->name('failed')->middleware('auth');
 
     // Debug route for sandbox status
     Route::get('debug/sandbox', function () {
@@ -188,6 +192,9 @@ Route::prefix('payment')->name('payment.')->middleware('auth')->group(function (
         ]);
     })->name('debug.sandbox');
 });
+
+// Seller Fee Callback Route
+Route::get('seller/fee/callback', [\App\Http\Controllers\PaymentController::class, 'sellerFeeCallback'])->name('seller.fee.callback');
 
 // Dashboard redirect based on role
 Route::get('dashboard', function () {

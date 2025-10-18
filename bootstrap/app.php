@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\EnsureRole::class,
             'otp.verified' => \App\Http\Middleware\EnsureOTPUser::class,
         ]);
+        
+        // Exclude payment callback from CSRF verification
+        $middleware->validateCsrfTokens(except: [
+            'payment/callback',
+        ]);
     })
     ->withProviders([
         \App\Providers\SmsServiceProvider::class,

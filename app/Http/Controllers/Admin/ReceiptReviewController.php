@@ -114,6 +114,9 @@ class ReceiptReviewController extends Controller
                     7
                 );
             }
+
+            // Send SMS notification to seller
+            $this->notifySellerOfBuyerPayment($receipt);
         }
 
         // Update related sale status if it's a loan transfer receipt
@@ -164,5 +167,49 @@ class ReceiptReviewController extends Controller
         $receipt->user->notify(new \App\Notifications\PaymentReceiptRejected($receipt));
 
         return redirect()->back()->with('success', 'رسید پرداخت رد شد.');
+    }
+
+    /**
+     * Notify seller that buyer has completed payment
+     */
+    private function notifySellerOfBuyerPayment(PaymentReceipt $receipt): void
+    {
+        try {
+            $auction = $receipt->auction;
+            $buyer = $receipt->user;
+            $seller = $auction->creator;
+
+            if (!$seller || !$seller->phone) {
+                \Log::warning('Cannot send SMS to seller - missing seller or phone', [
+                    'receipt_id' => $receipt->id,
+                    'auction_id' => $auction->id,
+                ]);
+                return;
+            }
+
+            $kavenegarService = app(\App\Services\SMS\KavenegarService::class);
+
+            $sent = $kavenegarService->sendBuyerPaymentCompletedSMS(
+                $seller->phone,
+                $seller->name ?: '',
+                $buyer->name ?: 'خریدار',
+                $buyer->national_id ?: 'نامشخص'
+            );
+
+            if ($sent) {
+                \Log::info('Buyer payment completion SMS sent to seller', [
+                    'receipt_id' => $receipt->id,
+                    'seller_id' => $seller->id,
+                    'buyer_id' => $buyer->id,
+                    'auction_id' => $auction->id,
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Failed to send buyer payment completion SMS to seller', [
+                'receipt_id' => $receipt->id,
+                'error' => $e->getMessage(),
+            ]);
+            // Don't throw - SMS failure shouldn't break the approval flow
+        }
     }
 }

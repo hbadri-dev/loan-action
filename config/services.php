@@ -48,4 +48,25 @@ return [
         'test_merchant_id' => '00000000-0000-0000-0000-000000000000', // Merchant ID تست برای sandbox
     ],
 
+    // Active Payments
+    'payments' => [
+        'active' => env('PAYMENT_GATEWAY', 'zarinpal'), // zarinpal | jibit | payping
+    ],
+
+    // Jibit Payment Gateway
+    'jibit' => [
+        'api_key' => env('JIBIT_API_KEY','DbnayfB3CM'),
+        'secret_key' => env('JIBIT_SECRET_KEY','WBSHMC3IWsa5_DRNgjJ6Ov86CW7CPyIWgNIT4ORQMAUoRy8IIJ'),
+        'base_url' => env('JIBIT_BASE_URL', 'https://napi.jibit.ir/ppg/v3'),
+        'callback_url' => env('JIBIT_CALLBACK_URL', env('APP_URL', 'http://localhost:8080') . '/payment/callback'),
+    ],
+
+    // Payping Payment Gateway
+    'payping' => [
+        'token' => env('PAYPING_TOKEN', 'EC34F2130B8511F10926D44E37852EE3647431A6014C2B0362C9A81CAC2BF13A-1'),
+        'sandbox' => filter_var(env('PAYPING_SANDBOX', true), FILTER_VALIDATE_BOOLEAN),
+        'callback_url' => env('PAYPING_CALLBACK_URL', env('APP_URL', 'http://localhost:8080') . '/payment/callback'),
+        'base_url' => env('PAYPING_BASE_URL', 'https://api.payping.ir/v1'),
+    ],
+
 ];

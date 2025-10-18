@@ -39,7 +39,7 @@ class ClearAuctionData extends Command
         try {
             // Clear auction-related data in correct order (respecting foreign key constraints)
             $this->clearAuctionData();
-            
+
             $this->info('✅ All auction data has been successfully removed!');
             return 0;
 
@@ -60,7 +60,7 @@ class ClearAuctionData extends Command
         $tables = [
             'payment_transactions' => 'Payment transactions',
             'payments' => 'Payments',
-            'payment_receipts' => 'Payment receipts', 
+            'payment_receipts' => 'Payment receipts',
             'loan_transfers' => 'Loan transfers',
             'buyer_progress' => 'Buyer progress',
             'seller_sales' => 'Seller sales',
@@ -135,7 +135,7 @@ class ClearAuctionData extends Command
 
         $tables = [
             'auctions',
-            'bids', 
+            'bids',
             'contract_agreements',
             'payment_receipts',
             'seller_sales',

@@ -269,6 +269,175 @@ class KavenegarService
     }
 
     /**
+     * Send template SMS with multiple tokens
+     */
+    public function sendTemplateSMSWithTokens(string $mobile, array $tokens, string $template): bool
+    {
+        try {
+            $formattedMobile = $this->formatMobile($mobile);
+
+            // Sandbox mode - just log instead of calling API
+            if ($this->sandbox) {
+                Log::info('SMS Sandbox Mode - Template SMS with tokens would be sent', [
+                    'mobile' => $mobile,
+                    'formatted_mobile' => $formattedMobile,
+                    'template' => $template,
+                    'tokens' => $tokens,
+                    'api_key' => substr($this->apiKey, 0, 8) . '...'
+                ]);
+                return true;
+            }
+
+            // Build form params with multiple tokens
+            $formParams = [
+                'receptor' => $formattedMobile,
+                'template' => $template,
+            ];
+
+            // Add tokens (token, token2, token3, ...)
+            foreach ($tokens as $index => $value) {
+                $tokenKey = $index === 0 ? 'token' : 'token' . ($index + 1);
+                $formParams[$tokenKey] = $value;
+            }
+
+            $response = $this->client->post("{$this->baseUrl}/{$this->apiKey}/verify/lookup.json", [
+                'form_params' => $formParams,
+                'timeout' => config('sms.settings.timeout', 30),
+                'connect_timeout' => config('sms.settings.connect_timeout', 10),
+            ]);
+
+            $result = json_decode($response->getBody()->getContents(), true);
+
+            // Check if the response is valid
+            if (!isset($result['return']['status'])) {
+                throw new \Exception('Invalid response from Kavenegar API: ' . json_encode($result));
+            }
+
+            // Check if status is 200 (success)
+            if ($result['return']['status'] != 200) {
+                $errorMessage = $result['return']['message'] ?? 'Unknown error';
+                throw new \Exception("Kavenegar API error: {$errorMessage} (Status: {$result['return']['status']})");
+            }
+
+            Log::info('Template SMS with tokens sent successfully', [
+                'mobile' => $mobile,
+                'formatted_mobile' => $formattedMobile,
+                'template' => $template,
+                'tokens' => $tokens,
+                'response' => $result
+            ]);
+
+            return true;
+
+        } catch (GuzzleException $e) {
+            Log::error('Template SMS service HTTP error', [
+                'mobile' => $mobile,
+                'template' => $template,
+                'tokens' => $tokens,
+                'error' => $e->getMessage(),
+                'code' => $e->getCode()
+            ]);
+            throw new \Exception('Failed to send template SMS: Network error - ' . $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error('Template SMS service error', [
+                'mobile' => $mobile,
+                'template' => $template,
+                'tokens' => $tokens,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Send buyer payment completed notification to seller
+     */
+    public function sendBuyerPaymentCompletedSMS(string $sellerMobile, string $sellerName, string $buyerName, string $buyerNationalId): bool
+    {
+        try {
+            $formattedMobile = $this->formatMobile($sellerMobile);
+
+            // Sandbox mode - just log instead of calling API
+            if ($this->sandbox) {
+                Log::info('SMS Sandbox Mode - Buyer Payment Completed SMS would be sent', [
+                    'mobile' => $sellerMobile,
+                    'formatted_mobile' => $formattedMobile,
+                    'template' => 'BuyerPaymentCompleted',
+                    'seller_name' => $sellerName,
+                    'buyer_name' => $buyerName,
+                    'buyer_national_id' => $buyerNationalId,
+                ]);
+                return true;
+            }
+
+            // Build form params - Kavenegar requires specific parameter names for multiple tokens
+            $formParams = [
+                'receptor' => $formattedMobile,
+                'template' => 'BuyerPaymentCompleted',
+                'token' => $sellerName ?: $sellerMobile,  // First token
+                'token2' => $buyerName,                    // Second token
+                'token3' => $buyerNationalId,             // Third token
+            ];
+
+            Log::info('Sending Buyer Payment Completed SMS', [
+                'form_params' => $formParams,
+                'api_url' => "{$this->baseUrl}/{$this->apiKey}/verify/lookup.json"
+            ]);
+
+            $response = $this->client->post("{$this->baseUrl}/{$this->apiKey}/verify/lookup.json", [
+                'form_params' => $formParams,
+                'timeout' => config('sms.settings.timeout', 30),
+                'connect_timeout' => config('sms.settings.connect_timeout', 10),
+            ]);
+
+            $result = json_decode($response->getBody()->getContents(), true);
+
+            Log::info('Kavenegar API Response', [
+                'result' => $result
+            ]);
+
+            // Check if the response is valid
+            if (!isset($result['return']['status'])) {
+                throw new \Exception('Invalid response from Kavenegar API: ' . json_encode($result));
+            }
+
+            // Check if status is 200 (success)
+            if ($result['return']['status'] != 200) {
+                $errorMessage = $result['return']['message'] ?? 'Unknown error';
+                throw new \Exception("Kavenegar API error: {$errorMessage} (Status: {$result['return']['status']})");
+            }
+
+            Log::info('Buyer Payment Completed SMS sent successfully', [
+                'mobile' => $sellerMobile,
+                'formatted_mobile' => $formattedMobile,
+                'seller_name' => $sellerName,
+                'buyer_name' => $buyerName,
+                'response' => $result
+            ]);
+
+            return true;
+
+        } catch (GuzzleException $e) {
+            Log::error('Failed to send Buyer Payment Completed SMS - HTTP error', [
+                'mobile' => $sellerMobile,
+                'seller_name' => $sellerName,
+                'buyer_name' => $buyerName,
+                'error' => $e->getMessage(),
+                'code' => $e->getCode()
+            ]);
+            throw new \Exception('Failed to send SMS: Network error - ' . $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error('Failed to send Buyer Payment Completed SMS', [
+                'mobile' => $sellerMobile,
+                'seller_name' => $sellerName,
+                'buyer_name' => $buyerName,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
      * Generate random OTP code (6 digits by default)
      */
     public function generateOTP(int $length = null): string

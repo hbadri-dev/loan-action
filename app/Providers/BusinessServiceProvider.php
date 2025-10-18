@@ -9,6 +9,10 @@ use App\Services\FileUploadService;
 use App\Services\LocalizationService;
 use App\Services\ReceiptService;
 use App\Services\SMS\KavenegarService;
+use App\Services\Payments\PaymentGatewayInterface;
+use App\Services\Payments\JibitService;
+use App\Services\Payments\CustomRedirectService;
+use App\Services\ZarinpalService;
 use App\Services\TransferReceiptService;
 use Illuminate\Support\ServiceProvider;
 
@@ -63,6 +67,17 @@ class BusinessServiceProvider extends ServiceProvider
         $this->app->alias(TransferReceiptService::class, 'service.transfer_receipt');
         $this->app->alias(LocalizationService::class, 'service.localization');
         $this->app->alias(ContractService::class, 'service.contract');
+
+        // Bind active payment gateway
+        $this->app->singleton(PaymentGatewayInterface::class, function ($app) {
+            $active = (string) (\App\Models\Setting::get('payment_gateway', config('services.payments.active', 'zarinpal')));
+            if ($active === 'jibit') {
+                return new JibitService();
+            } elseif ($active === 'payping') {
+                return new \App\Services\Payments\PaypingService();
+            }
+            return new ZarinpalService();
+        });
     }
 
     /**
