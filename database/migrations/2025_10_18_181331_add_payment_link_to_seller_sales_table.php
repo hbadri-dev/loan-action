@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('seller_sales', function (Blueprint $table) {
-            //
+            $table->string('payment_link')->nullable();
+            $table->boolean('payment_link_used')->default(false);
         });
     }
 
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('seller_sales', function (Blueprint $table) {
-            //
+            $table->dropColumn(['payment_link', 'payment_link_used']);
         });
     }
 };

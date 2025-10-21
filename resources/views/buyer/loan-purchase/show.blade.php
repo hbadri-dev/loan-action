@@ -176,32 +176,32 @@
                         <!-- Payment Form -->
                         <form id="payment-form" action="{{ route('buyer.loan.purchase.redirect', $auction) }}" method="POST" class="space-y-6">
                             @csrf
-                            
+
                             <!-- User Information -->
                             <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                                 <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-4">اطلاعات پرداخت کننده</h4>
-                                
+
                                 <div class="space-y-4">
                                     <div>
                                         <label for="full_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             نام و نام خانوادگی <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="text" 
-                                               id="full_name" 
-                                               name="full_name" 
+                                        <input type="text"
+                                               id="full_name"
+                                               name="full_name"
                                                required
                                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                                placeholder="نام و نام خانوادگی خود را وارد کنید">
                                     </div>
-                                    
+
                                     <div>
                                         <label for="national_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             کد ملی <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="text" 
-                                               id="national_id" 
-                                               name="national_id" 
-                                               maxlength="10" 
+                                        <input type="text"
+                                               id="national_id"
+                                               name="national_id"
+                                               maxlength="10"
                                                required
                                                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                                placeholder="کد ملی ۱۰ رقمی خود را وارد کنید">
@@ -214,7 +214,7 @@
 
                             <!-- Payment Button -->
                             <div class="text-center">
-                                <button type="submit" 
+                                <button type="submit"
                                         id="payment-button"
                                         disabled
                                         class="w-full inline-flex items-center justify-center px-8 py-4 bg-gray-400 cursor-not-allowed text-white font-bold text-lg rounded-lg transition-colors shadow-lg"
@@ -303,7 +303,7 @@
             if (fullNameInput) {
                 fullNameInput.addEventListener('input', validateForm);
             }
-            
+
             if (nationalIdInput) {
                 nationalIdInput.addEventListener('input', function(e) {
                     // Only allow digits
