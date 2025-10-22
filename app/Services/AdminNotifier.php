@@ -239,20 +239,20 @@ class AdminNotifier
         if ($action === 'bid_placed') {
             $bidAmount = number_format($context['bid_amount'] ?? 0);
             $auctionTitle = $this->cleanToken($context['auction_title'] ?? 'نامشخص');
-            
+
             // Use AdminBidPlaced template with specific tokens
             $this->notifyAdmin($action, $bidAmount, $auctionTitle, 'AdminBidPlaced');
         }
-        
+
         // Send notification for buyer payment completion
         if ($action === 'buyer_payment_completed') {
             $buyerName = $this->cleanToken($buyer->name ?? 'خریدار');
             $auctionTitle = $this->cleanToken($context['auction_title'] ?? 'نامشخص');
-            
+
             // Use AdminBuyerPaymentCompleted template with two tokens
             $this->notifyAdmin($action, $buyerName, $auctionTitle, 'AdminBuyerPaymentCompleted');
         }
-        
+
         // All other buyer actions are disabled
     }
 

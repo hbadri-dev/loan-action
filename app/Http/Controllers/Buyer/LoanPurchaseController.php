@@ -64,7 +64,7 @@ class LoanPurchaseController extends Controller
             'auction_id' => $request->get('auction_id'),
             'all_params' => $request->all()
         ]);
-        
+
         $paymentStatus = $request->get('payment');
 
         // Get auction_id from session or query parameter
@@ -83,19 +83,19 @@ class LoanPurchaseController extends Controller
         }
 
         $user = Auth::user();
-        
+
         if (!$user) {
             // Try to get user from payment record
             $payment = Payment::where('auction_id', $auction->id)
                 ->where('type', PaymentType::BUYER_PURCHASE_AMOUNT)
                 ->where('status', PaymentStatus::PENDING)
                 ->first();
-                
+
             if ($payment) {
                 $user = $payment->user;
             }
         }
-        
+
         if (!$user) {
             return redirect()->route('login')
                 ->with('error', 'لطفاً ابتدا وارد شوید.');

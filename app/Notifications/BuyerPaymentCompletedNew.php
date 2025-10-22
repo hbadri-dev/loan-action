@@ -71,15 +71,15 @@ class BuyerPaymentCompletedNew extends Notification
     {
         // Remove newlines, tabs, and extra spaces
         $token = str_replace(["\n", "\r", "\t"], '', $token);
-        
+
         // Remove multiple spaces
         $token = preg_replace('/\s+/', '', $token);
-        
+
         // If token is empty, use dash
         if (empty($token)) {
             $token = '-';
         }
-        
+
         return $token;
     }
 

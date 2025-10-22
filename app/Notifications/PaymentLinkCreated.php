@@ -70,15 +70,15 @@ class PaymentLinkCreated extends Notification
     {
         // Remove newlines, tabs, and extra spaces
         $token = str_replace(["\n", "\r", "\t"], '', $token);
-        
+
         // Remove multiple spaces
         $token = preg_replace('/\s+/', '', $token);
-        
+
         // If token is empty, use a default
         if (empty($token)) {
             $token = 'کاربر';
         }
-        
+
         return $token;
     }
 
@@ -99,5 +99,3 @@ class PaymentLinkCreated extends Notification
         ];
     }
 }
-
-
