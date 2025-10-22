@@ -57,6 +57,7 @@
                                     @elseif($receipt->type->value === 'seller_fee') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300
                                     @elseif($receipt->type->value === 'buyer_purchase_amount') bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300
                                     @elseif($receipt->type->value === 'loan_transfer') bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300
+                                    @elseif($receipt->type->value === 'loan_verification') bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300
                                     @endif">
                                     {{ $receipt->type->label() }}
                                 </span>
@@ -115,6 +116,26 @@
                                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">برای دریافت پرداخت</p>
                                     </div>
                                 </div>
+                            @endif
+
+                            @if($receipt->type->value === 'loan_verification')
+                                @if($receipt->full_name)
+                                    <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                                        <span class="text-gray-600 dark:text-gray-400">نام و نام خانوادگی:</span>
+                                        <span class="font-medium text-gray-900 dark:text-gray-100">
+                                            {{ $receipt->full_name }}
+                                        </span>
+                                    </div>
+                                @endif
+
+                                @if($receipt->national_id)
+                                    <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                                        <span class="text-gray-600 dark:text-gray-400">کد ملی:</span>
+                                        <span class="font-mono text-sm font-bold text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700 px-3 py-1 rounded">
+                                            {{ $receipt->national_id }}
+                                        </span>
+                                    </div>
+                                @endif
                             @endif
 
                             @if($receipt->reject_reason)

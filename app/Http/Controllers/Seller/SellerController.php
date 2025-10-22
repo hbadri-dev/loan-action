@@ -21,9 +21,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Services\SMS\KavenegarService;
+use App\Services\AdminNotifier;
 
 class SellerController extends Controller
 {
+    protected AdminNotifier $adminNotifier;
+
+    public function __construct(AdminNotifier $adminNotifier)
+    {
+        $this->adminNotifier = $adminNotifier;
+    }
     /**
      * Show auction details for seller
      */
@@ -653,6 +660,13 @@ class SellerController extends Controller
             // Notify buyer that their bid was accepted
             $highestBid->buyer->notify(new \App\Notifications\BidAccepted($highestBid));
         });
+
+        // Notify admin about bid acceptance
+        $this->adminNotifier->notifySellerAction('bid_accepted', $user, [
+            'auction_title' => $auction->title,
+            'bid_amount' => $highestBid->amount,
+            'buyer_name' => $highestBid->buyer->name
+        ]);
 
         return redirect()->route('seller.auction.show', $auction)
             ->with('success', 'پیشنهاد پذیرفته شد و مزایده قفل شد.');

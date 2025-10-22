@@ -83,6 +83,12 @@ class PaymentLinkController extends Controller
             ]);
         });
 
+        // Notify buyer that payment link is ready
+        $buyer = $sale->selectedBid->buyer;
+        if ($buyer) {
+            $buyer->notify(new \App\Notifications\PaymentLinkCreated($sale));
+        }
+
         return redirect()->route('admin.payment-links.index')
             ->with('success', 'لینک پرداخت با موفقیت اضافه شد.');
     }

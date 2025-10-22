@@ -8,6 +8,7 @@ enum PaymentType: string
     case SELLER_FEE = 'seller_fee';
     case BUYER_PURCHASE_AMOUNT = 'buyer_purchase_amount';
     case LOAN_TRANSFER = 'loan_transfer';
+    case LOAN_VERIFICATION = 'loan_verification';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum PaymentType: string
             self::SELLER_FEE => 'کارمزد فروشنده',
             self::BUYER_PURCHASE_AMOUNT => 'مبلغ خرید خریدار',
             self::LOAN_TRANSFER => 'فیش انتقال وام',
+            self::LOAN_VERIFICATION => 'احراز هویت وام',
         };
     }
 }

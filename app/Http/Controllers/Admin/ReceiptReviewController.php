@@ -92,6 +92,22 @@ class ReceiptReviewController extends Controller
             }
         }
 
+        // Update seller sale status if it's a loan verification
+        if ($receipt->type === PaymentType::LOAN_VERIFICATION) {
+            $sellerSale = SellerSale::where('auction_id', $receipt->auction_id)
+                ->where('seller_id', $receipt->user_id)
+                ->first();
+            if ($sellerSale) {
+                $sellerSale->update([
+                    'status' => SaleStatus::FEE_APPROVED,
+                    'current_step' => 3, // Move to step 3 (bid acceptance)
+                ]);
+            }
+
+            // Send loan verification result notification to seller
+            $receipt->user->notify(new \App\Notifications\LoanVerificationResult($receipt));
+        }
+
         // Update related sale status if it's a buyer purchase payment
         if ($receipt->type === PaymentType::BUYER_PURCHASE_AMOUNT) {
             $sellerSale = SellerSale::where('auction_id', $receipt->auction_id)->first();
@@ -163,8 +179,13 @@ class ReceiptReviewController extends Controller
             'reject_reason' => $request->reject_reason,
         ]);
 
-        // Notify user of rejection
-        $receipt->user->notify(new \App\Notifications\PaymentReceiptRejected($receipt));
+        // Send specific notification for loan verification rejection
+        if ($receipt->type === PaymentType::LOAN_VERIFICATION) {
+            $receipt->user->notify(new \App\Notifications\LoanVerificationResult($receipt));
+        } else {
+            // Notify user of rejection for other payment types
+            $receipt->user->notify(new \App\Notifications\PaymentReceiptRejected($receipt));
+        }
 
         return redirect()->back()->with('success', 'رسید پرداخت رد شد.');
     }

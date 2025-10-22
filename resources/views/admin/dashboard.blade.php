@@ -43,10 +43,14 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-8">
                 <div class="p-6">
                     <h3 class="text-lg font-medium mb-4 text-gray-900 dark:text-gray-100">دسترسی سریع</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
                         <a href="{{ route('admin.auctions.index') }}"
                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center transition-colors">
                             مزایده‌ها
+                        </a>
+                        <a href="{{ route('admin.loan-history.index') }}"
+                           class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded text-center transition-colors">
+                            تاریخچه وام‌ها
                         </a>
                         <a href="{{ route('admin.payment-receipts.index') }}"
                            class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded text-center transition-colors">

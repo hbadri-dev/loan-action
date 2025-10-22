@@ -10,6 +10,7 @@ use App\Enums\PaymentType;
 use App\Enums\PaymentStatus;
 use App\Services\BuyerProgressService;
 use App\Services\FileUploadService;
+use App\Services\AdminNotifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,11 +18,13 @@ class ReceiptController extends Controller
 {
     protected BuyerProgressService $progressService;
     protected FileUploadService $fileUploadService;
+    protected AdminNotifier $adminNotifier;
 
-    public function __construct(BuyerProgressService $progressService, FileUploadService $fileUploadService)
+    public function __construct(BuyerProgressService $progressService, FileUploadService $fileUploadService, AdminNotifier $adminNotifier)
     {
         $this->progressService = $progressService;
         $this->fileUploadService = $fileUploadService;
+        $this->adminNotifier = $adminNotifier;
     }
     /**
      * Show payment form (Step 3) - Now uses Zarinpal
@@ -116,6 +119,11 @@ class ReceiptController extends Controller
         \Log::info('Payment receipt updated successfully', [
             'payment_receipt_id' => $paymentReceipt->id,
             'image_path' => $imagePath
+        ]);
+
+        // Notify admin about payment receipt upload
+        $this->adminNotifier->notifyBuyerAction('payment_receipt_uploaded', $user, [
+            'auction_title' => $auction->title
         ]);
 
         \Log::info('Redirecting to buyer.auction.show');

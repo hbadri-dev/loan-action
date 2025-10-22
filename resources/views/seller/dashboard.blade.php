@@ -14,7 +14,7 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
                 <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg">
                     <h4 class="font-medium">مزایدات فعال</h4>
                     <p class="text-2xl font-bold">{{ $activeAuctions->total() }}</p>
@@ -33,6 +33,13 @@
                 <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg">
                     <h4 class="font-medium">فروش‌های تکمیل شده</h4>
                     <p class="text-2xl font-bold">{{ \App\Models\SellerSale::where('seller_id', auth()->id())->where('status', 'completed')->count() }}</p>
+                </div>
+
+                <div class="bg-indigo-100 dark:bg-indigo-900 p-4 rounded-lg">
+                    <h4 class="font-medium">تاریخچه وام‌ها</h4>
+                    <a href="{{ route('seller.loan-history.index') }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                        مشاهده تاریخچه
+                    </a>
                 </div>
             </div>
 

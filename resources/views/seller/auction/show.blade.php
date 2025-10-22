@@ -158,52 +158,49 @@
                             </div>
                         </div>
                     @elseif($sellerSale && $sellerSale->current_step == 2)
-                        <!-- Payment Content for Step 2 -->
+                        <!-- Loan Verification Content for Step 2 -->
                         <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 mb-8">
                             <h2 class="text-xl font-bold text-green-800 dark:text-green-200 mb-4">
-                                پرداخت کارمزد فروش
+                                احراز هویت وام
                             </h2>
                             <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-green-200 dark:border-green-700">
                                 <div class="space-y-6">
-                                    <!-- Payment Amount -->
-                                    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+                                    <!-- Loan Verification Instructions -->
+                                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
                                         <div class="text-center">
-                                            <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                                                مبلغ قابل پرداخت
+                                            <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                                                دستورالعمل احراز هویت وام
                                             </h3>
-                               <p class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
-                                   {{ number_format(200000) }} تومان
-                               </p>
-                                            <p class="text-sm text-yellow-700 dark:text-yellow-300 mt-2">
-                                                کارمزد فروشنده
+                                            <p class="text-sm text-blue-700 dark:text-blue-300 mt-2">
+                                                لطفاً اسکرین‌شات از اپلیکیشن بام بانک ملی که نشان‌دهنده وام شما است را آپلود کنید
                                             </p>
                                         </div>
                                     </div>
 
                                     @php
-                                        $sellerPayment = \App\Models\Payment::where('auction_id', $auction->id)
+                                        $loanVerification = \App\Models\PaymentReceipt::where('auction_id', $auction->id)
                                             ->where('user_id', Auth::id())
-                                            ->where('type', \App\Enums\PaymentType::SELLER_FEE)
-                                            ->where('status', \App\Enums\PaymentStatus::COMPLETED)
+                                            ->where('type', \App\Enums\PaymentType::LOAN_VERIFICATION)
+                                            ->where('status', \App\Enums\PaymentStatus::APPROVED)
                                             ->first();
 
-                                        $expiredPayment = \App\Models\Payment::where('auction_id', $auction->id)
+                                        $pendingVerification = \App\Models\PaymentReceipt::where('auction_id', $auction->id)
                                             ->where('user_id', Auth::id())
-                                            ->where('type', \App\Enums\PaymentType::SELLER_FEE)
-                                            ->where('status', \App\Enums\PaymentStatus::EXPIRED)
+                                            ->where('type', \App\Enums\PaymentType::LOAN_VERIFICATION)
+                                            ->where('status', \App\Enums\PaymentStatus::PENDING_REVIEW)
                                             ->latest()
                                             ->first();
 
-                                        $pendingPayment = \App\Models\Payment::where('auction_id', $auction->id)
+                                        $rejectedVerification = \App\Models\PaymentReceipt::where('auction_id', $auction->id)
                                             ->where('user_id', Auth::id())
-                                            ->where('type', \App\Enums\PaymentType::SELLER_FEE)
-                                            ->where('status', \App\Enums\PaymentStatus::PENDING)
+                                            ->where('type', \App\Enums\PaymentType::LOAN_VERIFICATION)
+                                            ->where('status', \App\Enums\PaymentStatus::REJECTED)
                                             ->latest()
                                             ->first();
                                     @endphp
 
-                                    @if($sellerPayment)
-                                        <!-- Payment Completed -->
+                                    @if($loanVerification)
+                                        <!-- Loan Verification Approved -->
                                         <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
                                             <div class="flex items-center space-x-4">
                                                 <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,14 +208,14 @@
                                                 </svg>
                                                 <div>
                                                     <h3 class="text-lg font-semibold text-green-800 dark:text-green-200">
-                                                        پرداخت با موفقیت انجام شد
+                                                        احراز هویت وام تأیید شد
                                                     </h3>
                                                     <p class="text-sm text-green-700 dark:text-green-300 mt-1">
-                                                        کارمزد فروشنده پرداخت شده است. می‌توانید به مرحله بعد بروید.
+                                                        اسکرین‌شات وام شما توسط ادمین تأیید شده است. می‌توانید به مرحله بعد بروید.
                                                     </p>
-                                                    @if($sellerPayment->ref_id)
+                                                    @if($loanVerification->reviewed_at)
                                                         <p class="text-xs text-green-600 dark:text-green-400 mt-2">
-                                                            شماره پیگیری: {{ $sellerPayment->ref_id }}
+                                                            تاریخ تأیید: {{ $loanVerification->reviewed_at->format('Y/m/d H:i') }}
                                                         </p>
                                                     @endif
                                                 </div>
@@ -234,49 +231,56 @@
                                                 ادامه به مرحله بعد
                                             </a>
                                         </div>
-                                    @elseif($expiredPayment)
-                                        <!-- Payment Expired -->
-                                        <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-6">
+                                    @elseif($rejectedVerification)
+                                        <!-- Loan Verification Rejected -->
+                                        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
                                             <div class="flex items-center space-x-4">
-                                                <svg class="w-12 h-12 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                <svg class="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                                 </svg>
                                                 <div>
-                                                    <h3 class="text-lg font-semibold text-orange-800 dark:text-orange-200">
-                                                        جلسه پرداخت منقضی شده است
+                                                    <h3 class="text-lg font-semibold text-red-800 dark:text-red-200">
+                                                        اسکرین‌شات وام رد شد
                                                     </h3>
-                                                    <p class="text-sm text-orange-700 dark:text-orange-300 mt-1">
-                                                        جلسه پرداخت قبلی منقضی شده است. لطفاً مجدداً تلاش کنید.
+                                                    <p class="text-sm text-red-700 dark:text-red-300 mt-1">
+                                                        اسکرین‌شات وام شما توسط ادمین رد شده است. لطفاً مجدداً تلاش کنید.
                                                     </p>
-                                                    @if($expiredPayment->created_at)
-                                                        <p class="text-xs text-orange-600 dark:text-orange-400 mt-2">
-                                                            تاریخ ایجاد: {{ $expiredPayment->created_at->format('Y/m/d H:i') }}
+                                                    @if($rejectedVerification->reject_reason)
+                                                        <p class="text-xs text-red-600 dark:text-red-400 mt-2">
+                                                            دلیل رد: {{ $rejectedVerification->reject_reason }}
                                                         </p>
                                                     @endif
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <!-- Retry Payment -->
+                                        <!-- Retry Loan Verification -->
                                         <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6 mt-4">
                                             <div class="text-center">
                                                 <div class="flex items-center justify-center mb-4">
                                                     <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                                     </svg>
                                                     <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200">
-                                                        ایجاد پرداخت جدید
+                                                        آپلود مجدد اسکرین‌شات وام
                                                     </h3>
                                                 </div>
                                                 <p class="text-gray-700 dark:text-gray-300 mb-6">
-                                                    پرداخت امن و سریع از طریق درگاه پرداخت {{ \App\Helpers\PaymentHelper::getActiveGatewayDisplayName() }}
+                                                    لطفاً اسکرین‌شات جدید از اپلیکیشن بام بانک ملی آپلود کنید
                                                 </p>
 
-                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4" id="payment-form-1">
+                                                <form action="{{ route('seller.sale.loan-verification', $auction) }}" method="POST" enctype="multipart/form-data" class="space-y-4" id="loan-verification-form-1">
                                                     @csrf
-                                                    <input type="hidden" name="auction_id" value="{{ $auction->id }}">
-                                                    <input type="hidden" name="type" value="seller_fee">
-                                                    <input type="hidden" name="amount" value="200000">
+                                                    
+                                                    <!-- Screenshot Upload -->
+                                                    <div>
+                                                        <label for="loan_screenshot_1" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                            اسکرین‌شات وام (فرمت‌های مجاز: JPG, PNG, WEBP - حداکثر 10MB) <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="file" id="loan_screenshot_1" name="loan_screenshot" required
+                                                               accept=".jpg,.jpeg,.png,.webp"
+                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                                    </div>
 
                                                     <!-- Required Fields -->
                                                     <div>
@@ -285,7 +289,7 @@
                                                         </label>
                                                         <input type="text" id="full_name_1" name="full_name" required
                                                                value="{{ Auth::user()->name }}"
-                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                               class="verification-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                                                placeholder="نام و نام خانوادگی خود را وارد کنید">
                                                     </div>
                                                     <div>
@@ -296,95 +300,76 @@
                                                                value="{{ Auth::user()->national_id }}"
                                                                pattern="[0-9]{10}"
                                                                maxlength="10"
-                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
+                                                               class="verification-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
                                                                placeholder="کد ملی 10 رقمی خود را وارد کنید">
                                                     </div>
 
-                                                    <div id="payment-warning-1" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 text-center">
+                                                    <div id="verification-warning-1" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 text-center">
                                                         <p class="text-sm text-yellow-800 dark:text-yellow-200">
-                                                            ⚠️ تکمیل فرم قبل از پرداخت اجباری است
+                                                            ⚠️ تکمیل فرم قبل از آپلود اجباری است
                                                         </p>
                                                     </div>
 
-                                                    <button type="submit" id="payment-submit-1" disabled
+                                                    <button type="submit" id="verification-submit-1" disabled
                                                             class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                                         <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                                         </svg>
-                                                        پرداخت از طریق درگاه آنلاین
+                                                        آپلود اسکرین‌شات وام
                                                     </button>
                                                 </form>
                                             </div>
                                         </div>
-                                    @elseif($pendingPayment || $expiredPayment)
-                                        <!-- Start New Payment -->
-                                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+                                    @elseif($pendingVerification)
+                                        <!-- Pending Verification -->
+                                        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
                                             <div class="text-center">
-                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4" id="payment-form-2">
-                                                    @csrf
-                                                    <input type="hidden" name="auction_id" value="{{ $auction->id }}">
-                                                    <input type="hidden" name="type" value="seller_fee">
-                                                    <input type="hidden" name="amount" value="200000">
-
-                                                    <!-- Required Fields -->
-                                                    <div>
-                                                        <label for="full_name_2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                            نام و نام خانوادگی <span class="text-red-500">*</span>
-                                                        </label>
-                                                        <input type="text" id="full_name_2" name="full_name" required
-                                                               value="{{ Auth::user()->name }}"
-                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                                               placeholder="نام و نام خانوادگی خود را وارد کنید">
-                                                    </div>
-                                                    <div>
-                                                        <label for="national_id_2" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                            کد ملی <span class="text-red-500">*</span>
-                                                        </label>
-                                                        <input type="text" id="national_id_2" name="national_id" required
-                                                               value="{{ Auth::user()->national_id }}"
-                                                               pattern="[0-9]{10}"
-                                                               maxlength="10"
-                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
-                                                               placeholder="کد ملی 10 رقمی خود را وارد کنید">
-                                                    </div>
-
-                                                    <div id="payment-warning-2" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 text-center">
-                                                        <p class="text-sm text-yellow-800 dark:text-yellow-200">
-                                                            ⚠️ تکمیل فرم قبل از پرداخت اجباری است
-                                                        </p>
-                                                    </div>
-
-                                                    <button type="submit" id="payment-submit-2" disabled
-                                                            class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                                        <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                                        </svg>
-                                                        پرداخت از طریق درگاه آنلاین
-                                                    </button>
-                                                </form>
+                                                <div class="flex items-center justify-center mb-4">
+                                                    <svg class="w-8 h-8 text-yellow-600 dark:text-yellow-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                    <h3 class="text-lg font-semibold text-yellow-800 dark:text-yellow-200">
+                                                        در انتظار تأیید ادمین
+                                                    </h3>
+                                                </div>
+                                                <p class="text-yellow-700 dark:text-yellow-300 mb-4">
+                                                    اسکرین‌شات وام شما در انتظار بررسی و تأیید ادمین است.
+                                                </p>
+                                                @if($pendingVerification->created_at)
+                                                    <p class="text-xs text-yellow-600 dark:text-yellow-400">
+                                                        تاریخ آپلود: {{ $pendingVerification->created_at->format('Y/m/d H:i') }}
+                                                    </p>
+                                                @endif
                                             </div>
                                         </div>
                                     @else
-                                        <!-- Payment Gateway -->
+                                        <!-- Loan Verification Form -->
                                         <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
                                             <div class="text-center">
                                                 <div class="flex items-center justify-center mb-4">
                                                     <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                                     </svg>
                                                     <h3 class="text-lg font-semibold text-blue-800 dark:text-blue-200">
-                                                        پرداخت آنلاین از طریق {{ \App\Helpers\PaymentHelper::getActiveGatewayDisplayName() }}
+                                                        آپلود اسکرین‌شات وام
                                                     </h3>
                                                 </div>
                                                 <p class="text-gray-700 dark:text-gray-300 mb-6">
-                                                    پرداخت امن و سریع از طریق درگاه پرداخت {{ \App\Helpers\PaymentHelper::getActiveGatewayDisplayName() }}
+                                                    لطفاً اسکرین‌شات از اپلیکیشن بام بانک ملی که نشان‌دهنده وام شما است را آپلود کنید
                                                 </p>
 
-                                                <form action="{{ route('payment.initiate') }}" method="POST" class="space-y-4" id="payment-form-3">
+                                                <form action="{{ route('seller.sale.loan-verification', $auction) }}" method="POST" enctype="multipart/form-data" class="space-y-4" id="loan-verification-form-3">
                                                     @csrf
-                                                    <input type="hidden" name="auction_id" value="{{ $auction->id }}">
-                                                    <input type="hidden" name="type" value="seller_fee">
-                                                    <input type="hidden" name="amount" value="200000">
+                                                    
+                                                    <!-- Screenshot Upload -->
+                                                    <div>
+                                                        <label for="loan_screenshot_3" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                            اسکرین‌شات وام (فرمت‌های مجاز: JPG, PNG, WEBP - حداکثر 10MB) <span class="text-red-500">*</span>
+                                                        </label>
+                                                        <input type="file" id="loan_screenshot_3" name="loan_screenshot" required
+                                                               accept=".jpg,.jpeg,.png,.webp"
+                                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                                    </div>
 
                                                     <!-- Required Fields -->
                                                     <div>
@@ -393,7 +378,7 @@
                                                         </label>
                                                         <input type="text" id="full_name_3" name="full_name" required
                                                                value="{{ Auth::user()->name }}"
-                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                               class="verification-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                                                placeholder="نام و نام خانوادگی خود را وارد کنید">
                                                     </div>
                                                     <div>
@@ -404,22 +389,22 @@
                                                                value="{{ Auth::user()->national_id }}"
                                                                pattern="[0-9]{10}"
                                                                maxlength="10"
-                                                               class="payment-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
+                                                               class="verification-form-input w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white font-mono text-center tracking-wider"
                                                                placeholder="کد ملی 10 رقمی خود را وارد کنید">
                                                     </div>
 
-                                                    <div id="payment-warning-3" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 text-center">
+                                                    <div id="verification-warning-3" class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 text-center">
                                                         <p class="text-sm text-yellow-800 dark:text-yellow-200">
-                                                            ⚠️ تکمیل فرم قبل از پرداخت اجباری است
+                                                            ⚠️ تکمیل فرم قبل از آپلود اجباری است
                                                         </p>
                                                     </div>
 
-                                                    <button type="submit" id="payment-submit-3" disabled
+                                                    <button type="submit" id="verification-submit-3" disabled
                                                             class="w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                                         <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                                         </svg>
-                                                        پرداخت از طریق درگاه آنلاین
+                                                        آپلود اسکرین‌شات وام
                                                     </button>
                                                 </form>
                                             </div>
@@ -433,10 +418,10 @@
                                                 </svg>
                                                 <div>
                                                     <h4 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                                                        امنیت پرداخت
+                                                        امنیت اطلاعات
                                                     </h4>
                                                     <p class="text-sm text-gray-600 dark:text-gray-400">
-                                                        پرداخت شما از طریق درگاه امن {{ \App\Helpers\PaymentHelper::getActiveGatewayDisplayName() }} انجام می‌شود و تمام اطلاعات محرمانه شما محفوظ خواهد ماند.
+                                                        اسکرین‌شات شما به صورت امن ذخیره می‌شود و تنها توسط ادمین قابل مشاهده است.
                                                     </p>
                                                 </div>
                                             </div>
@@ -1106,19 +1091,21 @@
                 const form = document.getElementById(formId);
                 if (!form) return;
 
-                const formNumber = formId.replace('payment-form-', '');
+                const formNumber = formId.replace('loan-verification-form-', '');
                 const fullNameInput = document.getElementById('full_name_' + formNumber);
                 const nationalIdInput = document.getElementById('national_id_' + formNumber);
-                const submitButton = document.getElementById('payment-submit-' + formNumber);
-                const warningDiv = document.getElementById('payment-warning-' + formNumber);
+                const screenshotInput = document.getElementById('loan_screenshot_' + formNumber);
+                const submitButton = document.getElementById('verification-submit-' + formNumber);
+                const warningDiv = document.getElementById('verification-warning-' + formNumber);
 
-                if (!fullNameInput || !nationalIdInput || !submitButton || !warningDiv) return;
+                if (!fullNameInput || !nationalIdInput || !screenshotInput || !submitButton || !warningDiv) return;
 
                 const fullName = fullNameInput.value.trim();
                 const nationalId = nationalIdInput.value.trim();
+                const screenshot = screenshotInput.files.length > 0;
 
-                // Check if both fields are filled and national ID is 10 digits
-                const isValid = fullName.length > 0 && nationalId.length === 10;
+                // Check if all fields are filled and national ID is 10 digits
+                const isValid = fullName.length > 0 && nationalId.length === 10 && screenshot;
 
                 if (isValid) {
                     submitButton.disabled = false;
@@ -1140,8 +1127,19 @@
                 }
             });
 
+            // Add file change listeners to screenshot inputs
+            const screenshotInputs = document.querySelectorAll('#loan_screenshot_1, #loan_screenshot_2, #loan_screenshot_3');
+            screenshotInputs.forEach(screenshotInput => {
+                if (screenshotInput) {
+                    screenshotInput.addEventListener('change', function(e) {
+                        const formId = e.target.closest('form').id;
+                        validateForm(formId);
+                    });
+                }
+            });
+
             // Initial validation on page load
-            ['payment-form-1', 'payment-form-2', 'payment-form-3'].forEach(formId => {
+            ['loan-verification-form-1', 'loan-verification-form-2', 'loan-verification-form-3'].forEach(formId => {
                 validateForm(formId);
             });
         });

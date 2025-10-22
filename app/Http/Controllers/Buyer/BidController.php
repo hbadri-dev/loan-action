@@ -10,6 +10,7 @@ use App\Enums\AuctionStatus;
 use App\Enums\BidStatus;
 use App\Services\BiddingService;
 use App\Services\BuyerProgressService;
+use App\Services\AdminNotifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,11 +19,13 @@ class BidController extends Controller
 {
     protected BiddingService $biddingService;
     protected BuyerProgressService $progressService;
+    protected AdminNotifier $adminNotifier;
 
-    public function __construct(BiddingService $biddingService, BuyerProgressService $progressService)
+    public function __construct(BiddingService $biddingService, BuyerProgressService $progressService, AdminNotifier $adminNotifier)
     {
         $this->biddingService = $biddingService;
         $this->progressService = $progressService;
+        $this->adminNotifier = $adminNotifier;
     }
     /**
      * Show bid submission form (Step 4)
@@ -62,6 +65,12 @@ class BidController extends Controller
 
             // Update buyer progress to step 4 (waiting for seller)
             $this->progressService->updateProgress($auction, $user, 'waiting-seller', 4);
+
+            // Notify admin about bid placement
+            $this->adminNotifier->notifyBuyerAction('bid_placed', $user, [
+                'auction_title' => $auction->title,
+                'bid_amount' => $request->amount
+            ]);
 
             $message = $auction->bids()->where('buyer_id', $user->id)->count() > 1
                 ? 'پیشنهاد شما بروزرسانی شد.'

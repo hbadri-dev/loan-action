@@ -12,12 +12,19 @@ use App\Enums\SaleStatus;
 use App\Enums\BidStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\PaymentType;
+use App\Services\AdminNotifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class LoanPurchaseController extends Controller
 {
+    protected AdminNotifier $adminNotifier;
+
+    public function __construct(AdminNotifier $adminNotifier)
+    {
+        $this->adminNotifier = $adminNotifier;
+    }
     /**
      * Show payment link to buyer
      */
@@ -52,6 +59,12 @@ class LoanPurchaseController extends Controller
      */
     public function callback(Request $request)
     {
+        \Log::info('LoanPurchaseController::callback called', [
+            'payment_status' => $request->get('payment'),
+            'auction_id' => $request->get('auction_id'),
+            'all_params' => $request->all()
+        ]);
+        
         $paymentStatus = $request->get('payment');
 
         // Get auction_id from session or query parameter
@@ -70,6 +83,23 @@ class LoanPurchaseController extends Controller
         }
 
         $user = Auth::user();
+        
+        if (!$user) {
+            // Try to get user from payment record
+            $payment = Payment::where('auction_id', $auction->id)
+                ->where('type', PaymentType::BUYER_PURCHASE_AMOUNT)
+                ->where('status', PaymentStatus::PENDING)
+                ->first();
+                
+            if ($payment) {
+                $user = $payment->user;
+            }
+        }
+        
+        if (!$user) {
+            return redirect()->route('login')
+                ->with('error', 'لطفاً ابتدا وارد شوید.');
+        }
 
         // Find accepted bid
         $acceptedBid = Bid::where('auction_id', $auction->id)
@@ -126,6 +156,26 @@ class LoanPurchaseController extends Controller
                     ]
                 );
             });
+
+            // Notify seller about buyer payment completion
+            $seller = $sellerSale->auction->seller;
+            \Log::info('About to notify seller', [
+                'seller_id' => $seller ? $seller->id : 'null',
+                'seller_name' => $seller ? $seller->name : 'null',
+                'seller_phone' => $seller ? $seller->phone : 'null',
+                'sale_id' => $sellerSale->id
+            ]);
+            if ($seller) {
+                $seller->notify(new \App\Notifications\BuyerPaymentCompletedNew($sellerSale));
+                \Log::info('Seller notification sent successfully');
+            } else {
+                \Log::error('Seller not found for sale', ['sale_id' => $sellerSale->id]);
+            }
+
+            // Notify admin about buyer payment completion
+            $this->adminNotifier->notifyBuyerAction('buyer_payment_completed', $user, [
+                'auction_title' => $auction->title
+            ]);
 
             return redirect()->route('buyer.auction.show', $auction)
                 ->with('success', 'پرداخت با موفقیت تأیید شد. منتظر انتقال وام توسط فروشنده باشید.');

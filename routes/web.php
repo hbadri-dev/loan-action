@@ -79,6 +79,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
         Route::get('{sale}/edit', [\App\Http\Controllers\Admin\PaymentLinkController::class, 'edit'])->name('edit');
         Route::put('{sale}/update', [\App\Http\Controllers\Admin\PaymentLinkController::class, 'update'])->name('update');
     });
+
+    // Loan History Management
+    Route::prefix('loan-history')->name('loan-history.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\LoanHistoryController::class, 'index'])->name('index');
+        Route::get('{auction}', [\App\Http\Controllers\Admin\LoanHistoryController::class, 'show'])->name('show');
+        Route::get('export', [\App\Http\Controllers\Admin\LoanHistoryController::class, 'export'])->name('export');
+    });
 });
 
 // Buyer Panel Routes
@@ -108,6 +115,12 @@ Route::prefix('buyer')->name('buyer.')->middleware(['auth', 'role:buyer'])->grou
         Route::get('{auction}', [\App\Http\Controllers\Buyer\LoanPurchaseController::class, 'show'])->name('show');
         Route::post('{auction}/redirect', [\App\Http\Controllers\Buyer\LoanPurchaseController::class, 'redirectToPayment'])->name('redirect');
     });
+
+    // Loan History Routes
+    Route::prefix('loan-history')->name('loan-history.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Buyer\LoanHistoryController::class, 'index'])->name('index');
+        Route::get('{auction}', [\App\Http\Controllers\Buyer\LoanHistoryController::class, 'show'])->name('show');
+    });
 });
 
 // Seller Panel Routes
@@ -133,12 +146,19 @@ Route::prefix('seller')->name('seller.')->middleware(['auth', 'role:seller'])->g
     Route::prefix('sale/{auction}')->name('sale.')->group(function () {
         // Action routes for show page functionality
         Route::post('continue', [\App\Http\Controllers\Seller\SaleFlowController::class, 'continueToContract'])->name('continue');
+        Route::post('loan-verification', [\App\Http\Controllers\Seller\SaleFlowController::class, 'uploadLoanVerification'])->name('loan-verification');
         Route::post('accept-bid', [\App\Http\Controllers\Seller\SaleFlowController::class, 'acceptBid'])->name('accept-bid');
         Route::post('loan-transfer/receipt', [\App\Http\Controllers\Seller\SaleFlowController::class, 'uploadLoanTransferReceipt'])->name('loan-transfer.receipt');
 
         // API routes for status checks
         Route::get('buyer-payment/status', [\App\Http\Controllers\Seller\SaleFlowController::class, 'getBuyerPaymentStatus'])->name('buyer-payment.status');
         Route::get('transfer-confirmation/status', [\App\Http\Controllers\Seller\SaleFlowController::class, 'getTransferConfirmationStatus'])->name('transfer-confirmation.status');
+    });
+
+    // Loan History Routes
+    Route::prefix('loan-history')->name('loan-history.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Seller\LoanHistoryController::class, 'index'])->name('index');
+        Route::get('{auction}', [\App\Http\Controllers\Seller\LoanHistoryController::class, 'show'])->name('show');
     });
 });
 

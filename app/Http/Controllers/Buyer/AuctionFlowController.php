@@ -12,6 +12,7 @@ use App\Enums\BidStatus;
 use App\Services\SMS\KavenegarService;
 use App\Services\BuyerProgressService;
 use App\Services\BiddingService;
+use App\Services\AdminNotifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,11 +20,13 @@ class AuctionFlowController extends Controller
 {
     protected BuyerProgressService $progressService;
     protected BiddingService $biddingService;
+    protected AdminNotifier $adminNotifier;
 
-    public function __construct(BuyerProgressService $progressService, BiddingService $biddingService)
+    public function __construct(BuyerProgressService $progressService, BiddingService $biddingService, AdminNotifier $adminNotifier)
     {
         $this->progressService = $progressService;
         $this->biddingService = $biddingService;
+        $this->adminNotifier = $adminNotifier;
     }
 
     /**
@@ -466,6 +469,11 @@ class AuctionFlowController extends Controller
         // Update progress to confirm-transfer step
         $this->progressService->updateProgress($auction, $user, 'confirm-transfer', 8);
 
+        // Notify admin about loan transfer confirmation
+        $this->adminNotifier->notifyBuyerAction('loan_transfer_confirmed', $user, [
+            'auction_title' => $auction->title
+        ]);
+
         return redirect()->route('buyer.auction.complete', $auction)
             ->with('success', 'انتقال وام تأیید شد.');
     }
@@ -582,6 +590,12 @@ class AuctionFlowController extends Controller
             \Log::info('Payment receipt created/updated for purchase amount', [
                 'payment_receipt_id' => $paymentReceipt->id,
                 'image_path' => $imagePath
+            ]);
+
+            // Notify admin about purchase payment upload
+            $this->adminNotifier->notifyBuyerAction('purchase_payment_uploaded', $user, [
+                'auction_title' => $auction->title,
+                'amount' => $userBid ? $userBid->amount : 0
             ]);
 
             \Log::info('Redirecting to buyer.auction.show for purchase payment');

@@ -116,12 +116,17 @@
                                             @elseif($receipt->type->value === 'seller_fee') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300
                                             @elseif($receipt->type->value === 'buyer_purchase_amount') bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300
                                             @elseif($receipt->type->value === 'loan_transfer') bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300
+                                            @elseif($receipt->type->value === 'loan_verification') bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300
                                             @endif">
                                             {{ $receipt->type->label() }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                        {{ number_format($receipt->amount) }} تومان
+                                        @if($receipt->type->value === 'loan_verification')
+                                            <span class="text-gray-500 dark:text-gray-400">احراز هویت</span>
+                                        @else
+                                            {{ number_format($receipt->amount) }} تومان
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div>

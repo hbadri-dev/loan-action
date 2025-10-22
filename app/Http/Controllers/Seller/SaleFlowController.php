@@ -8,17 +8,28 @@ use App\Models\SellerSale;
 use App\Models\ContractAgreement;
 use App\Models\LoanTransfer;
 use App\Models\Bid;
+use App\Models\PaymentReceipt;
 use App\Enums\SaleStatus;
 use App\Enums\ContractStatus;
 use App\Enums\BidStatus;
 use App\Enums\AuctionStatus;
+use App\Enums\PaymentType;
+use App\Enums\PaymentStatus;
 use App\Services\SMS\KavenegarService;
+use App\Services\AdminNotifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SaleFlowController extends Controller
 {
+    protected AdminNotifier $adminNotifier;
+
+    public function __construct(AdminNotifier $adminNotifier)
+    {
+        $this->adminNotifier = $adminNotifier;
+    }
+
     /**
      * Start sale process
      */
@@ -43,6 +54,11 @@ class SaleFlowController extends Controller
                 'current_step' => 1,
             ]
         );
+
+        // Notify admin about sale creation
+        $this->adminNotifier->notifySellerAction('sale_created', $user, [
+            'auction_title' => $auction->title
+        ]);
 
         return redirect()->route('seller.sale.details', $auction);
     }
@@ -71,7 +87,7 @@ class SaleFlowController extends Controller
     }
 
     /**
-     * Continue from details to payment (Step 1 -> Step 2)
+     * Continue from details to loan verification (Step 1 -> Step 2)
      * Skip contract step as requested
      */
     public function continueToContract(Request $request, Auction $auction)
@@ -89,14 +105,70 @@ class SaleFlowController extends Controller
                 ->with('error', 'فروش یافت نشد.');
         }
 
-        // Skip contract step and go directly to payment step
+        // Skip contract step and go directly to loan verification step
         $sellerSale->update([
             'current_step' => 2,
             'status' => SaleStatus::FEE_APPROVED // Skip contract confirmation
         ]);
 
         return redirect()->route('seller.auction.show', $auction)
-            ->with('success', 'مرحله اول تکمیل شد و به مرحله پرداخت منتقل شدید.');
+            ->with('success', 'مرحله اول تکمیل شد و به مرحله احراز هویت وام منتقل شدید.');
+    }
+
+    /**
+     * Upload loan verification screenshot (Step 2)
+     */
+    public function uploadLoanVerification(Request $request, Auction $auction)
+    {
+        $request->validate([
+            'loan_screenshot' => 'required|image|mimes:jpg,jpeg,png,webp|max:10240', // 10MB max
+            'full_name' => 'required|string|max:255',
+            'national_id' => 'required|string|size:10|regex:/^\d{10}$/',
+        ]);
+
+        $user = Auth::user();
+
+        $sellerSale = SellerSale::where('auction_id', $auction->id)
+            ->where('seller_id', $user->id)
+            ->first();
+
+        if (!$sellerSale) {
+            return redirect()->route('seller.dashboard')
+                ->with('error', 'فروش یافت نشد.');
+        }
+
+        // Store the uploaded file
+        $imagePath = $request->file('loan_screenshot')->store('loan-verifications', 'public');
+
+        // Update user information
+        $user->update([
+            'name' => $request->full_name,
+            'national_id' => $request->national_id,
+        ]);
+
+        // Create or update payment receipt for loan verification
+        $paymentReceipt = PaymentReceipt::updateOrCreate(
+            [
+                'auction_id' => $auction->id,
+                'user_id' => $user->id,
+                'type' => PaymentType::LOAN_VERIFICATION,
+            ],
+            [
+                'amount' => 0, // No payment required for verification
+                'image_path' => $imagePath,
+                'status' => PaymentStatus::PENDING_REVIEW,
+                'full_name' => $request->full_name,
+                'national_id' => $request->national_id,
+            ]
+        );
+
+        // Notify admin about loan verification upload
+        $this->adminNotifier->notifySellerAction('loan_verification_uploaded', $user, [
+            'auction_title' => $auction->title
+        ]);
+
+        return redirect()->route('seller.auction.show', $auction)
+            ->with('success', 'اسکرین‌شات وام آپلود شد و در انتظار تأیید ادمین است.');
     }
 
     /**
@@ -364,6 +436,24 @@ class SaleFlowController extends Controller
             $highestBid->buyer->notify(new \App\Notifications\BidAccepted($highestBid));
         });
 
+        // Notify admin about bid acceptance
+        \Log::info('About to notify admin of bid acceptance', [
+            'seller_id' => $user->id,
+            'seller_name' => $user->name,
+            'auction_id' => $auction->id,
+            'auction_title' => $auction->title,
+            'bid_amount' => $highestBid->amount,
+            'buyer_name' => $highestBid->buyer->name
+        ]);
+
+        $this->adminNotifier->notifySellerAction('bid_accepted', $user, [
+            'auction_title' => $auction->title,
+            'bid_amount' => $highestBid->amount,
+            'buyer_name' => $highestBid->buyer->name
+        ]);
+
+        \Log::info('Admin notification completed');
+
         return redirect()->route('seller.sale.awaiting-buyer-payment', $auction)
             ->with('success', 'پیشنهاد پذیرفته شد و مزایده قفل شد.');
     }
@@ -485,6 +575,11 @@ class SaleFlowController extends Controller
         $sellerSale->update([
             'status' => SaleStatus::LOAN_TRANSFERRED,
             'current_step' => 7,
+        ]);
+
+        // Notify admin about loan transfer upload
+        $this->adminNotifier->notifySellerAction('loan_transfer_uploaded', $user, [
+            'auction_title' => $auction->title
         ]);
 
         return redirect()->route('seller.sale.awaiting-transfer-confirmation', $auction)

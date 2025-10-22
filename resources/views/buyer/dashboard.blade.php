@@ -14,7 +14,7 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
                 <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg">
                     <h4 class="font-medium">پیشنهادات من</h4>
                     <p class="text-2xl font-bold">{{ auth()->user()->bids()->count() }}</p>
@@ -28,6 +28,13 @@
                 <div class="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-lg">
                     <h4 class="font-medium">در جریان</h4>
                     <p class="text-2xl font-bold">{{ auth()->user()->bids()->whereIn('status', ['pending', 'highest', 'accepted'])->count() }}</p>
+                </div>
+
+                <div class="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg">
+                    <h4 class="font-medium">تاریخچه وام‌ها</h4>
+                    <a href="{{ route('buyer.loan-history.index') }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                        مشاهده تاریخچه
+                    </a>
                 </div>
             </div>
 

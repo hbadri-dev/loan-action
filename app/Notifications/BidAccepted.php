@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Bid;
+use App\Notifications\Channels\SmsChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -22,7 +23,7 @@ class BidAccepted extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'sms'];
+        return ['database', SmsChannel::class];
     }
 
     /**
@@ -58,17 +59,35 @@ class BidAccepted extends Notification
 
     /**
      * Get the SMS representation of the notification.
-     * Uses SellerConfirmationNotice template from Kavenegar
+     * Uses SellerConfirmationNoticeNew template from Kavenegar
      */
     public function toSms(object $notifiable): array
     {
-        // Use buyer's phone number as token (fallback to name if phone is not available)
-        $token = $notifiable->phone ?? $notifiable->name ?? 'کاربر';
+        $buyerName = $this->cleanToken($notifiable->name ?? 'کاربر');
 
         return [
             'phone' => $notifiable->phone,
-            'template' => 'SellerConfirmationNotice',
-            'token' => $token,
+            'template' => 'SellerConfirmationNoticeNew',
+            'token' => $buyerName,
         ];
+    }
+
+    /**
+     * Clean token for Kavenegar (remove spaces, newlines, special chars)
+     */
+    private function cleanToken(string $token): string
+    {
+        // Remove newlines, tabs, and extra spaces
+        $token = str_replace(["\n", "\r", "\t"], '', $token);
+
+        // Remove multiple spaces
+        $token = preg_replace('/\s+/', '', $token);
+
+        // If token is empty, use a default
+        if (empty($token)) {
+            $token = 'کاربر';
+        }
+
+        return $token;
     }
 }

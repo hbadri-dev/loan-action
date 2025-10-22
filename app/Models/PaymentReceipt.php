@@ -24,6 +24,8 @@ class PaymentReceipt extends Model
         'reviewed_by',
         'reviewed_at',
         'reject_reason',
+        'full_name',
+        'national_id',
     ];
 
     protected function casts(): array
