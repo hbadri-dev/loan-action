@@ -258,7 +258,7 @@ class AdminNotifier
 
     /**
      * Notify admin about seller actions
-     * Enabled for: loan_verification_uploaded, bid_accepted
+     * Enabled for: loan_verification_uploaded, bid_accepted, loan_transfer_uploaded
      */
     public function notifySellerAction(string $action, User $seller, array $context = []): void
     {
@@ -279,6 +279,15 @@ class AdminNotifier
 
             // Use AdminBidAccepted template with three tokens
             $this->notifyAdminWithThreeTokens($action, $sellerName, $bidAmount, $auctionTitle, 'AdminBidAccepted');
+        }
+
+        // Send notification for loan transfer upload
+        if ($action === 'loan_transfer_uploaded') {
+            $sellerName = $this->cleanToken($seller->name ?? 'فروشنده');
+            $auctionTitle = $this->cleanToken($context['auction_title'] ?? 'نامشخص');
+
+            // Use AdminBuyerPaymentCompleted template with two tokens (temporary fix)
+            $this->notifyAdmin($action, $sellerName, $auctionTitle, 'AdminBuyerPaymentCompleted');
         }
 
         // All other seller actions are disabled

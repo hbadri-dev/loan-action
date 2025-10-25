@@ -804,6 +804,12 @@ class SellerController extends Controller
             'current_step' => 7,
         ]);
 
+        // Notify admin about loan transfer upload
+        $adminNotifier = new \App\Services\AdminNotifier();
+        $adminNotifier->notifySellerAction('loan_transfer_uploaded', $user, [
+            'auction_title' => $auction->title
+        ]);
+
         return redirect()->route('seller.sale.awaiting-transfer-confirmation', $auction)
             ->with('success', 'رسید انتقال وام آپلود شد.');
     }

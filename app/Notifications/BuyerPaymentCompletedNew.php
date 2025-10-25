@@ -58,9 +58,7 @@ class BuyerPaymentCompletedNew extends Notification
         return [
             'phone' => $notifiable->phone,
             'template' => 'BuyerPaymentCompletedNew',
-            'token' => $sellerName,
-            'token2' => $buyerName,
-            'token3' => $buyerNationalId,
+            'tokens' => [$sellerName, $buyerName, $buyerNationalId],
         ];
     }
 
@@ -69,11 +67,14 @@ class BuyerPaymentCompletedNew extends Notification
      */
     private function cleanToken(string $token): string
     {
-        // Remove newlines, tabs, and extra spaces
-        $token = str_replace(["\n", "\r", "\t"], '', $token);
+        // Remove newlines, tabs, and all whitespace characters
+        $token = str_replace(["\n", "\r", "\t", " "], '', $token);
 
-        // Remove multiple spaces
-        $token = preg_replace('/\s+/', '', $token);
+        // Remove underscores and other separators
+        $token = str_replace(['_', '-', '.', ',', '،', '؛', ':', ';'], '', $token);
+
+        // Remove any remaining special characters except Persian/Arabic letters and numbers
+        $token = preg_replace('/[^\p{L}\p{N}]/u', '', $token);
 
         // If token is empty, use dash
         if (empty($token)) {

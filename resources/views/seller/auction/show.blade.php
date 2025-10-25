@@ -271,7 +271,7 @@
 
                                                 <form action="{{ route('seller.sale.loan-verification', $auction) }}" method="POST" enctype="multipart/form-data" class="space-y-4" id="loan-verification-form-1">
                                                     @csrf
-                                                    
+
                                                     <!-- Screenshot Upload -->
                                                     <div>
                                                         <label for="loan_screenshot_1" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -360,7 +360,7 @@
 
                                                 <form action="{{ route('seller.sale.loan-verification', $auction) }}" method="POST" enctype="multipart/form-data" class="space-y-4" id="loan-verification-form-3">
                                                     @csrf
-                                                    
+
                                                     <!-- Screenshot Upload -->
                                                     <div>
                                                         <label for="loan_screenshot_3" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

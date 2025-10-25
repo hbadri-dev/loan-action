@@ -163,11 +163,16 @@ class LoanPurchaseController extends Controller
                 'seller_id' => $seller ? $seller->id : 'null',
                 'seller_name' => $seller ? $seller->name : 'null',
                 'seller_phone' => $seller ? $seller->phone : 'null',
-                'sale_id' => $sellerSale->id
+                'sale_id' => $sellerSale->id,
+                'buyer_name' => $sellerSale->selectedBid->buyer->name ?? 'null',
+                'buyer_national_id' => $sellerSale->selectedBid->buyer->national_id ?? 'null'
             ]);
             if ($seller) {
                 $seller->notify(new \App\Notifications\BuyerPaymentCompletedNew($sellerSale));
-                \Log::info('Seller notification sent successfully');
+                \Log::info('Seller notification sent successfully', [
+                    'seller_phone' => $seller->phone,
+                    'template' => 'BuyerPaymentCompletedNew'
+                ]);
             } else {
                 \Log::error('Seller not found for sale', ['sale_id' => $sellerSale->id]);
             }
